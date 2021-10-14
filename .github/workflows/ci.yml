@@ -1,0 +1,50 @@
+name: CI workflow
+
+on:
+  workflow_dispatch:
+  push:
+    # Run only on branches/commits and not tags
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    name: Run unit tests
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Check Docker version
+        run: docker --version
+
+      - name: Install Dapr
+        uses: dapr/setup-dapr@v1
+
+      - name: Initialize Dapr
+        shell: pwsh
+        run: |
+          Write-Output "::group::dapr init"
+          dapr init
+          Write-Output "::endgroup::"
+          dapr --version
+
+      - name: Initialize vehicleApp projects
+        shell: pwsh
+        run: |
+          Write-Output "::group::sender init"
+          pip3 install -r ./sender/requirements.txt 
+          Write-Output "::endgroup::"
+          Write-Output "::group::receiver init"
+          cd receiver 
+          sudo npm install
+          Write-Output "::endgroup::"
+
+      - name: Start vehicleApp with docker-compose
+        shell: pwsh
+        run: .sdv/Start-SDVVehicleApp.ps1 -InPipeline
+
