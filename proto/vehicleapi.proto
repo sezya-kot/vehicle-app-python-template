@@ -11,20 +11,21 @@
 * SPDX-License-Identifier: EPL-2.0
 ********************************************************************************/
 
-{
-    "python.linting.pylintEnabled": false,
-    "python.linting.flake8Enabled": true,
-    "python.linting.flake8Args": ["--ignore", "E121", "E402", "F481", "E501", "F841"],
-    "python.linting.enabled": true,
-    "python.analysis.extraPaths": [
-        "./proto"
-    ],
-    "vsmqtt.brokerProfiles": [
-        {
-            "name": "mosquitto",
-            "host": "localhost",
-            "port": 1883,
-            "clientId": "vsmqtt_client"
-        }
-    ]
+syntax = "proto3";
+
+package vehicleapi;
+
+// The SeatController service definition.
+service SeatController {
+  // Set Position
+  rpc SetPosition (SetPositionRequest) returns (SetPositionResponse) {}
+}
+
+// The request message containing the target position.
+message SetPositionRequest {
+  int32 position = 1;
+}
+
+// The empty response message 
+message SetPositionResponse {
 }

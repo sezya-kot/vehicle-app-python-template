@@ -1,3 +1,16 @@
+# /********************************************************************************
+# * Copyright (c) 2021 Contributors to the Eclipse Foundation
+# *
+# * See the NOTICE file(s) distributed with this work for additional
+# * information regarding copyright ownership.
+# *
+# * This program and the accompanying materials are made available under the
+# * terms of the Eclipse Public License 2.0 which is available at
+# * http://www.eclipse.org/legal/epl-2.0
+# *
+# * SPDX-License-Identifier: EPL-2.0
+# ********************************************************************************/
+
 name: CI workflow
 
 on:
@@ -24,6 +37,8 @@ jobs:
 
       - name: Install Dapr
         uses: dapr/setup-dapr@v1
+        with:
+          version: "1.4.0"
 
       - name: Initialize Dapr
         shell: pwsh
@@ -36,15 +51,17 @@ jobs:
       - name: Initialize vehicleApp projects
         shell: pwsh
         run: |
-          Write-Output "::group::sender init"
-          pip3 install -r ./sender/requirements.txt 
-          Write-Output "::endgroup::"
-          Write-Output "::group::receiver init"
-          cd receiver 
-          sudo npm install
+          Write-Output "::group::Initialize vehicleApp"
+          Import-Module ./.sdv/Sdv.psm1 -Force
+          $VerbosePreference="continue"
+          Find-SdvVehicleApp | Get-SdvComponent | Initialize-SdvComponent
           Write-Output "::endgroup::"
 
-      - name: Start vehicleApp with docker-compose
+      - name: Start mqtt
+        shell: bash
+        run: docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto:1.6.9
+
+      - name: Test SeatAdjuster vehicleApp 
         shell: pwsh
-        run: .sdv/Start-SDVVehicleApp.ps1 -InPipeline
+        run: .sdv/Test-SdvVehicleApp.ps1 SeatAdjuster -InPipeline
 

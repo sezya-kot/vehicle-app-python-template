@@ -21,6 +21,13 @@ ARG ENABLE_NONROOT_DOCKER="true"
 # [Option] Use the OSS Moby Engine instead of the licensed Docker Engine
 ARG USE_MOBY="true"
 
+ENV USE_PROXIES="true"
+ENV HTTP_PROXY="http://host.docker.internal:3128"
+ENV HTTPS_PROXY="http://host.docker.internal:3128"
+ENV FTP_PROXY="http://host.docker.internal:3128"
+ENV ALL_PROXY="http://host.docker.internal:3128"
+ENV NO_PROXY=""
+
 # Install needed packages and setup non-root user. Use a separate RUN statement to add your
 # own dependencies. A user of "automatic" attempts to reuse an user ID if one already exists.
 ARG USERNAME=automatic
@@ -34,13 +41,15 @@ COPY sdv/ /tmp/sdv/
 
 RUN /bin/bash /tmp/sdv/container-create.sh 2>&1 | tee -a /usr/local/share/container-create.log
 
+
 # Add daprd to the path for the VS Code Dapr extension.
 ENV PATH=$PATH:/home/vscode/.dapr/bin
 
 VOLUME [ "/var/lib/docker" ]
 
-# Setting the ENTRYPOINT to docker-init.sh will start up the Docker Engine
-# inside the container "overrideCommand": false is set in devcontainer.json.
+# Setting the ENTRYPOINT to docker-init.sh will start up the Docker Engine 
+# inside the container "overrideCommand": false is set in devcontainer.json. 
 # The script will also execute CMD if you need to alter startup behaviors.
 ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
 CMD [ "sleep", "infinity" ]
+

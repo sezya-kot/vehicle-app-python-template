@@ -1,275 +1,110 @@
-# Example vehicleApp
+# VehicleApp using Python
 
-This tutorial will demonstrate how to implement a Python vehicleApp.
+This Python vehicleApp repository includes a sample vehicleApp based on the Software defined vehicle platform. 
 
-## Prerequisites
-This quickstart requires you to have the following installed on your machine:
-- [Docker](https://docs.docker.com/)
-- [Node.js version 8 or greater](https://nodejs.org/en/) 
-- [Python 3.x](https://www.python.org/downloads/): Note: When running this quickstart on Windows, it best to install Python from python.org rather than from the Windows store. 
+Note: this is a template repository. Please create your own repository from this template repository by clicking the green button `Use this template`.
 
-## Step 1 - Setup Dapr 
+## VehicleApp Development with Visual Studio Code
 
-Follow [instructions](https://docs.dapr.io/getting-started/install-dapr/) to download and install the Dapr CLI and initialize Dapr.
+### System Requirements
+
+* Docker Engine/[Docker Desktop](https://www.docker.com/products/docker-desktop)
+* [Visual Studio Code](https://code.visualstudio.com)
+  * The extension [Remote-Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) is installed, e.g. with `code --install-extension ms-vscode-remote.remote-containers`
+
+<details>
+      <summary>:see_no_evil: If you working behind a corporate proxy: Configure proxy for .devcontainer [click here] </summary>
+
+> Disclaimer: Non proxy configuration is used by default
 
 
-## Step 2 - Run the Node.js app with Dapr
+1. In Windows: Edit environment variables for your account
+2. Create environment variable with name: `DEVCONTAINER_PROXY` with the value `.Proxy`
+   * Don't forget (dot) in value of the environment variable
+3. Restart Visual Studio Code to pick up new environment variable
+4. Optional (in case of any problems): Make sure you clean all images and volumes in Docker Desktop, otherwise cache might be used
 
-Open a new terminal and navigate to the `./receiver` directory and follow the steps below:
+### Troubleshooting
+If for some reason the devcontainer is not working, then check the `.docker\config.json` file in User profile directory.
 
-<!-- STEP
-expected_stdout_lines:
-expected_stderr_lines:
-name: "npm install"
-working_dir: node
--->
+The `.docker\config.json` has to have following proxy settings:
 
-1. Install dependencies: 
+```json
+{
+   "credsStore":"desktop",
+   "proxies":{
+         "default":{
+            "httpProxy":"http://host.docker.internal:3128",
+            "httpsProxy":"http://host.docker.internal:3128",
+            "noProxy":"host.docker.internal,localhost,127.0.0.1,.bosch.com"
+         }
+      },
+      "stackOrchestrator":"swarm"
+   }
+}
+```
+</details>
+
+### Getting started
+
+1. Clone and set up the environment using a [Visual Studio Code development container](https://code.visualstudio.com/docs/remote/create-dev-container#:~:text=%20Create%20a%20development%20container%20%201%20Path,additional%20software%20in%20your%20dev%20container.%20More%20).
+   * Start Visual Studio Code
+   * Press <kbd>F1</kbd> and run the command `Remote-Containers: Clone Repository within Container Volume...`
+     * Select `Clone a repository from GitHub in a Container Volume` and choose the repository / branch to clone
+     * Enter the GitHub organization and repository name (e.g. `MyOrg/MyFirstVehicleApp`) and select the repository from the list
+     * Select the branch to clone from the list
+     > If the development container fails to build successfully (e.g. due to network issues) then wait for the current build to finish and then press <kbd>F1</kbd> and run the command `Remote-Containers: Rebuild Container Without Cache`
+
+1. Start the VehicleApi Mock
 
    ```bash
-   npm install
+   dapr run --app-id vehicleapi --app-protocol grpc --app-port 50051 --components-path ./.dapr/components --config ./.dapr/config.yaml  python3 ./vehicleapi/vehicleapi.py
    ```
 
-<!-- END_STEP -->
-
-This will install `express` and `body-parser`, dependencies that are shown in the `package.json`.
-
-<!-- STEP
-expected_stdout_lines:
-  - "You're up and running! Both Dapr and your app logs will appear here."
-  - "== APP == Got a new order! Order ID: 42"
-  - "== APP == Successfully persisted state."
-  - "== APP == Got a new order! Order ID: 42"
-  - "== APP == Successfully persisted state."
-  - "== APP == Got a new order! Order ID: 1"
-  - "== APP == Successfully persisted state."
-  - "== APP == Got a new order! Order ID: 2"
-  - "== APP == Successfully persisted state."
-  - "== APP == Got a new order! Order ID: 3"
-  - "== APP == Successfully persisted state."
-  - "== APP == Got a new order! Order ID: 4"
-  - "== APP == Successfully persisted state."
-  - "== APP == Got a new order! Order ID: 5"
-  - "== APP == Successfully persisted state."
-  - "Exited Dapr successfully"
-  - "Exited App successfully"
-expected_stderr_lines:
-output_match_mode: substring
-name: "run npm app"
-background: true
-working_dir: node
-sleep: 5
--->
-
-2. Run Node.js app with Dapr: 
-   ```bash
-   dapr run --app-id nodeapp --app-port 3000 --dapr-http-port 3500 node app.js
-   ```
-
-<!-- END_STEP -->
-
-The command should output text that looks like the following, along with logs:
-
-```
-Starting Dapr with id nodeapp. HTTP Port: 3500. gRPC Port: 9165
-You're up and running! Both Dapr and your app logs will appear here.
-...
-```
-> **Note**: the `--app-port` (the port the app runs on) is configurable. The Node app happens to run on port 3000, but you could configure it to run on any other port. Also note that the Dapr `--app-port` parameter is optional, and if not supplied, a random available port is used.
-
-The `dapr run` command looks for the default components directory which for Linux/MacOS is `$HOME/.dapr/components` and for Windows is `%USERPROFILE%\.dapr\components` which holds yaml definition files for components Dapr will be using at runtime. When running locally, the yaml files which provide default definitions for a local development environment are placed in this default components directory. Review the `statestore.yaml` file in the `components` directory:
-
-```yml
-apiVersion: dapr.io/v1alpha1
-kind: Component
-metadata:
-  name: statestore
-spec:
-  type: state.redis
-  version: v1
-...
-```
-
-You can see the yaml file defined the state store to be Redis and is naming it `statestore`. This is the name which was used in `app.js` to make the call to the state store in the application: 
-
-```js
-const stateStoreName = `statestore`;
-const stateUrl = `http://localhost:${daprPort}/v1.0/state/${stateStoreName}`;
-```
-
-While in this tutorial the default yaml files were used, usually a developer would modify them or create custom yaml definitions depending on the application and scenario.
-
-> **Optional**: Now it would be a good time to get acquainted with the [Dapr dashboard](https://docs.dapr.io/reference/cli/dapr-dashboard/). Which is a convenient interface to check status and information of applications running on Dapr. The following command will make it available on http://localhost:9999/.
-
-```bash 
-dapr dashboard -p 9999
-```
-
-## Step 3 - Post messages to the service
-
-Now that Dapr and the Node.js app are running, you can send POST messages against it, using different tools. **Note**: here the POST message is sent to port 3500 - if you used a different port, be sure to update your URL accordingly.
-
-First, POST the message by using Dapr cli in a new terminal:
-
-<!-- STEP
-expected_stdout_lines:
-  - "App invoked successfully"
-expected_stderr_lines:
-output_match_mode: substring
-name: dapr invoke
-working_dir: node
--->
-
-```bash
-dapr invoke --app-id nodeapp --method neworder --data-file sample.json
-```
-
-<!-- END_STEP -->
-
-## Step 4 - Confirm successful persistence
-
-Now, to verify the order was successfully persisted to the state store, create a GET request against: `http://localhost:3500/v1.0/invoke/nodeapp/method/order`. **Note**: Again, be sure to reflect the right port if you chose a port other than 3500.
-
-<!-- STEP
-expected_stdout_lines: 
-  - '{"orderId":"42"}'
-expected_stderr_lines:
-name: Persistence test curl
--->
-
-```bash
-curl http://localhost:3500/v1.0/invoke/nodeapp/method/order
-```
-
-<!-- END_STEP -->
-
-or use Dapr CLI
-
-<!-- STEP
-expected_stdout_lines: 
-  - '{"orderId":"42"}'
-  - "App invoked successfully"
-expected_stderr_lines:
-output_match_mode: substring
-name: Persistence test dapr invoke
--->
-
-```bash
-dapr invoke --app-id nodeapp --method order --verb GET
-```
-
-<!-- END_STEP -->
-
-## Step 5 - Run the Python app with Dapr
-
-
-Open a **new** terminal and go to the `./sender` directory.
-
-<!-- STEP
-name: "Install python requirements"
--->
-
-1. Install dependencies:
+1. Start and check sample vehicleApp
 
    ```bash
-   pip3 install requests
+   dapr run --app-id app-skeleton --app-protocol grpc --app-port 50008 --config ./.dapr/config.yaml --components-path ./.dapr/components  python3 ./src/client.py 
    ```
 
-<!-- END_STEP -->
+1. Debug the sample vehicleApp
 
-<!-- STEP
-expected_stdout_lines:
-  - "You're up and running! Both Dapr and your app logs will appear here."
-  - "Exited Dapr successfully"
-  - "Exited App successfully"
-expected_stderr_lines:
-output_match_mode: substring
-name: "run python app"
-background: true
-working_dir: python
-sleep: 30
--->
+   * Press <kbd>F5</kbd> to start the vehicleVapp and see the log output on the `DEBUG CONSOLE`    
 
-2. Start the Python App with Dapr: 
+1. Run unit test and adjust tests
+   * Run the unit tests from the Visual Studio Code test runner by clicking on the Testrunner in the toolbar and press on the play button
+     
+
+1. dapr Dashboard
+   * The dapr dashboard provides provides an overview over running dapr components and configuration.
+   * To launch the dashboard in a web browser, open a terminal and type `dapr dashboard`   
+   
+1. Zipkin Tracing
+   * Open forwarded ports in VS Code and add port 9411 if not available
+   * Click on `Open in Browser` on forwarded port to open the Zipkin Tracing in the web browser.
+     
+1. Cleanup
+
+   To stop your services from running, simply stop the "dapr run" process. Alternatively, you can spin down each of your services with the Dapr CLI "stop" command. For example, to spin down both services, run these commands in a new terminal: 
+
+   <!-- STEP
+   expected_stdout_lines: 
+     - 'app stopped successfully: nodeapp'
+     - 'app stopped successfully: pythonapp'
+   expected_stderr_lines:
+   output_match_mode: substring
+   name: Shutdown dapr
+   -->
 
    ```bash
-   dapr run --app-id pythonapp python3 app.py
+   dapr stop --app-id app-skeleton 
    ```
 
-<!-- END_STEP -->
+   ```bash
+   dapr stop --app-id vehicleapi
+   ```
 
-3. If all went well, the **other** terminal, running the Node App, should log entries like these:
+   <!-- END_STEP -->
 
-    ```
-    Got a new order! Order ID: 1
-    Successfully persisted state
-    Got a new order! Order ID: 2
-    Successfully persisted state
-    Got a new order! Order ID: 3
-    Successfully persisted state
-    ```
+   To see that services have stopped running, run `dapr list`, noting that your services no longer appears!
 
-> **Known Issue**: If you are running python3 on Windows from the Microsoft Store, and you get the following error message:
-
-    exec: "python3": executable file not found in %!P(MISSING)ATH%!(NOVERB)
-
-> This is due to golang being unable to properly execute Microsoft Store aliases. You can use the following command instead of the above:
-
-    dapr run --app-id pythonapp cmd /c "python3 app.py"
-
-> For more info please see [this](https://github.com/dapr/quickstarts/issues/240) issue.
-
-4. Now, perform a GET request a few times and see how the orderId changes every second (enter it into the web browser, use Postman, or curl):
-
-    ```http
-    GET http://localhost:3500/v1.0/invoke/nodeapp/method/order
-    ```
-    ```json
-    {
-        "orderId": 3
-    }
-    ```
-
-> **Note**: It is not required to run `dapr init` in the **second** terminal because dapr was already setup on your local machine initially, running this command again would fail.
-
-## Step 6 - Cleanup
-
-To stop your services from running, simply stop the "dapr run" process. Alternatively, you can spin down each of your services with the Dapr CLI "stop" command. For example, to spin down both services, run these commands in a new terminal: 
-
-<!-- STEP
-expected_stdout_lines: 
-  - 'app stopped successfully: nodeapp'
-  - 'app stopped successfully: pythonapp'
-expected_stderr_lines:
-output_match_mode: substring
-name: Shutdown dapr
--->
-
-```bash
-dapr stop --app-id nodeapp
-```
-
-```bash
-dapr stop --app-id pythonapp
-```
-
-<!-- END_STEP -->
-
-To see that services have stopped running, run `dapr list`, noting that your services no longer appears!
-
-## [Optional Steps] VS Code Debugging
-
-If you are using Visual Studio Code, you can debug this application using the preconfigured launch.json and task.json files in the .vscode folder.
-The .vscode folder has already been modified in the project to allow users to launch a compound configuration called "Node/Python Dapr" which will run both applications and allow you to debug in VS Code.
-
-For more information on how to configure the files visit [How-To: Debug multiple Dapr applications](https://docs.dapr.io/developing-applications/ides/vscode/vscode-how-to-debug-multiple-dapr-apps/)
-
-**Note**: Dapr offers a preview [Dapr Visual Studio Code extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-dapr) for local development which enables users a variety of features related to better managing their Dapr applications and debugging of your Dapr applications for all supported Dapr languages which are .NET, Go, PHP, Python and Java.
-
-## Next steps
-
-Now that you've gotten Dapr running locally on your machine, consider these next steps:
-- Explore additional quickstarts such as [pub-sub](../pub-sub), [bindings](../bindings) or the [distributed calculator app](../distributed-calculator).
-- Run this hello world application in Kubernetes via the [Hello Kubernetes](../hello-kubernetes) quickstart.
-- Learn more about Dapr in the [Dapr overview](https://docs.dapr.io/concepts/overview/) documentation.
-- Explore [Dapr concepts](https://docs.dapr.io/concepts/) such as building blocks and components in the Dapr documentation.
