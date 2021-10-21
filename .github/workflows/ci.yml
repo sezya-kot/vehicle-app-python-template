@@ -53,8 +53,7 @@ jobs:
         run: |
           Write-Output "::group::Initialize vehicleApp"
           Import-Module ./.sdv/Sdv.psm1 -Force
-          $VerbosePreference="continue"
-          Find-SdvVehicleApp | Get-SdvComponent | Initialize-SdvComponent
+          Find-SdvVehicleApp | Get-SdvComponent | Initialize-SdvComponent -Verbose
           Write-Output "::endgroup::"
 
       - name: Start mqtt
