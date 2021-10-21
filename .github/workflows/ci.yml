@@ -64,4 +64,3 @@ jobs:
       - name: Test SeatAdjuster vehicleApp 
         shell: pwsh
         run: .sdv/Test-SdvVehicleApp.ps1 SeatAdjuster -InPipeline
-
