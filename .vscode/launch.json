@@ -33,7 +33,10 @@
             "program": "${workspaceFolder}/src/client.py",
             "console": "integratedTerminal",
             "preLaunchTask": "daprd-debug-SeatAdjuster-client",
-            "postDebugTask": "daprd-down-SeatAdjuster-client"
+            "postDebugTask": "daprd-down-SeatAdjuster-client",
+            "env": {
+                "DAPR_GRPC_PORT":"50001"
+            }
         },
         {
             "type": "python",

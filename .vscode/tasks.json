@@ -21,7 +21,13 @@
 			"config": "./.dapr/config.yaml",
 			"appProtocol": "grpc",
 			"label": "daprd-debug-SeatAdjuster-vehicleapi",
-			"type": "daprd"
+			"type": "daprd",
+			"args": [
+                "-dapr-grpc-port",
+                "52001",
+				"-dapr-http-port",
+				"3501"
+            ],
 		},
 		{
 			"appId": "vehicleapi",
@@ -36,7 +42,13 @@
 			"appProtocol": "grpc",
 			"metricsPort": 9091,
 			"label": "daprd-debug-SeatAdjuster-client",
-			"type": "daprd"
+			"type": "daprd",
+			"args": [
+                "-dapr-grpc-port",
+                "50001",
+				"-dapr-http-port",
+				"3500"
+            ],
 		},
 		{
 			"appId": "client",
