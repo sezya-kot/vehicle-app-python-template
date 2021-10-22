@@ -43,7 +43,10 @@ services:
   # dapr run --app-id client --app-protocol grpc --app-port 50008 --config ./.dapr/config.yaml --components-path ./.dapr/components  python3 ./src/client.py 
   ############################
   client:
-    build: .
+    build: 
+      dockerfile: ./src/Dockerfile
+      context: .
+
     depends_on:
       - mosquitto
       - placement
@@ -81,4 +84,4 @@ services:
     networks:
       - dapr-network
 networks:
-    dapr-network:
+  dapr-network:
