@@ -19,6 +19,7 @@ from dapr.ext.grpc import App
 import logging
 from seat_adjuster import SeatAdjuster
 import json
+from VehicleSdk import VehicleSdk
 
 app = App()
 
@@ -31,6 +32,6 @@ def onSeatPositionUpdate(event: v1.Event) -> None:
 
 if __name__ == '__main__':
     logging.basicConfig()
-    seatAdjuster = SeatAdjuster()
+    seatAdjuster = SeatAdjuster(VehicleSdk)
     seatAdjuster.start()
     app.run(50008)
