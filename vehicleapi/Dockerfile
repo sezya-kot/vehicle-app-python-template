@@ -9,6 +9,8 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 WORKDIR /vehicleapi
 COPY . .
 RUN pip3 install -r requirements.txt
+
 EXPOSE 50051
+
 ENTRYPOINT ["python"]
 CMD ["vehicleapi.py"]

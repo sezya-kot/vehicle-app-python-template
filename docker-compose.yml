@@ -11,7 +11,7 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-version: '3'
+version: '3.9'
 services:
   ############################
   # vehicleapi + Dapr sidecar
@@ -81,7 +81,9 @@ services:
     image: "eclipse-mosquitto:1.6.9"
     ports:
       - "1884:1883"
+      - "9002:9001"      
     networks:
       - dapr-network
 networks:
   dapr-network:
+    driver: bridge
