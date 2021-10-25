@@ -70,6 +70,10 @@ jobs:
           pip install pytest
           pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/unittests/client.xml ./src
 
+      - name: show unit test results
+        shell: bash
+        run: cat ./.sdv/tmp/unittests/client.xml
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
