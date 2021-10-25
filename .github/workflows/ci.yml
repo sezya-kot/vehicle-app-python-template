@@ -66,7 +66,9 @@ jobs:
 
       - name: unit test
         shell: bash
-        run: /bin/python -m pytest --rootdir /workspaces/vehicle-app-python-template --override-ini junit_family=xunit1 --junit-xml=.sdv/tmp/unittests/client.xml /workspaces/vehicle-app-python-template
+        run: |
+          pip install pytest
+          /bin/python -m pytest --rootdir /workspaces/vehicle-app-python-template --override-ini junit_family=xunit1 --junit-xml=.sdv/tmp/unittests/client.xml /workspaces/vehicle-app-python-template
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -87,16 +89,16 @@ jobs:
         with:
           string: ${{ github.repository }}
           
-      - name: Build multi-arch image
-        id: image_build
-        uses: docker/build-push-action@v2
-        with:
-          pull: true
-          push: false
-          outputs: |
-            type=oci,dest=./vapp-container-image.tar
-          context: .
-          file: src/Dockerfile
-          platforms: linux/amd64,linux/arm64
-          labels: |
-            org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
+      # - name: Build multi-arch image
+      #   id: image_build
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     pull: true
+      #     push: false
+      #     outputs: |
+      #       type=oci,dest=./vapp-container-image.tar
+      #     context: .
+      #     file: src/Dockerfile
+      #     platforms: linux/amd64,linux/arm64
+      #     labels: |
+      #       org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
