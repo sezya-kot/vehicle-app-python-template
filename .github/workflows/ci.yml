@@ -68,7 +68,7 @@ jobs:
         shell: bash
         run: |
           pip install pytest
-          /bin/python -m pytest --rootdir /workspaces/vehicle-app-python-template --override-ini junit_family=xunit1 --junit-xml=.sdv/tmp/unittests/client.xml /workspaces/vehicle-app-python-template
+          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/unittests/client.xml ./src
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
