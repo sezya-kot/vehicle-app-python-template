@@ -38,9 +38,14 @@ class SeatAdjuster:
     def setSeatPosition(self, pos: int):
         port = os.getenv('DAPR_GRPC_PORT')
         try:
-            self.Sdk.SetPosition(pos, port)
-        except:
-            print('Failed to connect to vehicleapi')  
+            print("Request setting seat position to ", pos, flush=True)
+            response = self.Sdk.SetPosition(pos, port)
+            print(f'New seat position returned from vehicle api is "{pos}"', flush=True)
+            return response
+        except (Exception) as e:
+            template = "Failed to connect to vehicleapi. An exception of type {0} occurred. Arguments:\n{1!r}"
+            message = template.format(type(e).__name__, e.args)
+            print (message)
 
     def processing_loop(self):
         self.is_running = True
@@ -50,15 +55,5 @@ class SeatAdjuster:
         sleep(1)
         while self.is_running:
             pos = pos + 1
-            print("Request setting seat position to ", pos, flush=True)
-            self.setSeatPosition(pos)
-            # port = os.getenv('DAPR_GRPC_PORT')
-            # try:
-            #     with grpc.insecure_channel(f'localhost:{port}') as channel:
-            #         stub = vehicleapi_pb2_grpc.SeatControllerStub(channel)
-            #         response = stub.SetPosition.with_call(vehicleapi_pb2.SetPositionRequest(position=pos),
-            #                                             metadata=(('dapr-app-id', 'vehicleapi'),))
-            # except:
-            #     print('Failed to connect to vehicleapi')  
-            # channel.close()
+            response = self.setSeatPosition(pos)
             sleep(5)

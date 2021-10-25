@@ -12,7 +12,7 @@
 #********************************************************************************/
 
 param(
-    [Parameter(Mandatory=$true, Position=0)]
+    [Parameter(ParameterSetName="ByName", Mandatory=$false, Position=0)]
     [string]$Name,
     [switch]$InPipeline,
     [switch]$UseDockerCompose

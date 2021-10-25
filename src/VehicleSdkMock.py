@@ -11,16 +11,6 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-from VehicleSdkMock import VehicleSdkMock
-from seat_adjuster import SeatAdjuster
-
-
-def test_some():
-    mock = VehicleSdkMock()
-    sut = SeatAdjuster(mock)
-
-    response = sut.setSeatPosition(5)
-
-    assert response == 5
-    pass
-
+class VehicleSdkMock:
+    def SetPosition(self, pos: int, port: int):
+        return pos
