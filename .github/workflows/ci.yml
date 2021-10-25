@@ -63,3 +63,36 @@ jobs:
       - name: Test SeatAdjuster vehicleApp 
         shell: pwsh
         run: .sdv/Test-SdvVehicleApp.ps1 SeatAdjuster -InPipeline
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: github-repository-name-case-adjusted
+        name: Prepare repository name in lower case for docker upload. This supports repository names in mixed case
+        uses: ASzc/change-string-case-action@v1
+        with:
+          string: ${{ github.repository }}
+          
+      - name: Build multi-arch image
+        id: image_build
+        uses: docker/build-push-action@v2
+        with:
+          pull: true
+          push: false
+          outputs: |
+            type=oci,dest=./vapp-container-image.tar
+          context: .
+          file: src/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}

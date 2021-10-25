@@ -34,4 +34,4 @@ dapr init
 echo "#######################################################"
 echo "### Initializing vehicleApp project                 ###"
 echo "#######################################################"
-pwsh -Command "Import-Module ./.sdv/Sdv.psm1; Find-SdvVehicleApp | Get-SdvComponent | Initialize-SdvComponent -Verbose"
+pwsh -Command "Import-Module ./.sdv/Sdv.psm1; Find-SdvVehicleApp -Recurse | Get-SdvComponent | Initialize-SdvComponent -Verbose"
