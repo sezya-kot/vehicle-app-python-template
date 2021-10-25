@@ -171,9 +171,14 @@ Function Find-SdvVehicleApp {
         [string]$BaseFolder = ".",
 
         [Parameter(ParameterSetName = "FilterByName", Mandatory = $true)]
-        [string]$Name
-    )
-    $Configurations = Get-ChildItem -Path $BaseFolder -Include "vehicleApp.json" -Recurse | Import-SdvVehicleAppConfiguration
+        [string]$Name,
+
+        [Parameter(ParameterSetName = "WithBaseFolder", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FilterByName", Mandatory = $false)]
+        [switch]$Recurse
+     )
+
+    $Configurations = Get-ChildItem -Path $BaseFolder -Filter "vehicleApp.json" -Recurse:$Recurse | Import-SdvVehicleAppConfiguration
     switch ($PsCmdlet.ParameterSetName) {
         "FilterByName" {
             $Configurations = $Configurations | Where-Object { $_.Name -eq $Name }
