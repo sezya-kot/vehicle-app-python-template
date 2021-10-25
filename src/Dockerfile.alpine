@@ -1,0 +1,14 @@
+FROM hypriot/rpi-alpine
+
+WORKDIR /web
+
+RUN apk add --update --no-cache python py-pip python-dev gcc musl-dev make linux-headers && \
+    python -m pip install grpcio
+
+COPY ./src /src
+COPY ./vehicleapi /vehicleapi
+WORKDIR /src
+RUN pip3 install -r requirements.txt
+
+ENTRYPOINT ["python"]
+CMD ["client.py"]

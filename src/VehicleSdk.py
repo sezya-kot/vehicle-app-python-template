@@ -26,3 +26,4 @@ class VehicleSdk:
             response = stub.SetPosition.with_call(vehicleapi_pb2.SetPositionRequest(position=pos),
                                                     metadata=(('dapr-app-id', 'vehicleapi'),))
         channel.close()
+        return response
