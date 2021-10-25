@@ -11,30 +11,36 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-
+import os
 from threading import Thread
 from time import sleep
-import grpc
-import sys
-import os
-sys.path.insert(1, os.path.join(os.path.dirname(__file__), '..', 'vehicleapi'))
-from vehicleapi import vehicleapi_pb2
-from vehicleapi import vehicleapi_pb2_grpc
+from typing import NewType
+from VehicleSdk import VehicleSdk
 
 
 class SeatAdjuster:
-    def __init__(self) -> None:
+    Sdk: VehicleSdk
+
+    def __init__(self, vehicleSdk) -> None:
+        self.Sdk  = vehicleSdk
+
+    def start(self):
         self.is_running = False
         self.worker_thread = Thread(
             target=self.processing_loop
         )
-
-    def start(self):
         self.worker_thread.start()
 
     def stop(self):
         self.is_running = False
         self.worker_thread.join()
+
+    def setSeatPosition(self, pos: int):
+        port = os.getenv('DAPR_GRPC_PORT')
+        try:
+            self.Sdk.SetPosition(pos, port)
+        except:
+            print('Failed to connect to vehicleapi')  
 
     def processing_loop(self):
         self.is_running = True
@@ -45,13 +51,14 @@ class SeatAdjuster:
         while self.is_running:
             pos = pos + 1
             print("Request setting seat position to ", pos, flush=True)
-            port = os.getenv('DAPR_GRPC_PORT')
-            try:
-                with grpc.insecure_channel(f'localhost:{port}') as channel:
-                    stub = vehicleapi_pb2_grpc.SeatControllerStub(channel)
-                    response = stub.SetPosition.with_call(vehicleapi_pb2.SetPositionRequest(position=pos),
-                                                        metadata=(('dapr-app-id', 'vehicleapi'),))
-            except:
-                print('Failed to connect to vehicleapi')  
-            channel.close()
+            self.setSeatPosition(pos)
+            # port = os.getenv('DAPR_GRPC_PORT')
+            # try:
+            #     with grpc.insecure_channel(f'localhost:{port}') as channel:
+            #         stub = vehicleapi_pb2_grpc.SeatControllerStub(channel)
+            #         response = stub.SetPosition.with_call(vehicleapi_pb2.SetPositionRequest(position=pos),
+            #                                             metadata=(('dapr-app-id', 'vehicleapi'),))
+            # except:
+            #     print('Failed to connect to vehicleapi')  
+            # channel.close()
             sleep(5)
