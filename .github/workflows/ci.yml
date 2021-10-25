@@ -69,10 +69,24 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-        
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build multi-arch image
+        id: image_build
+        uses: docker/build-push-action@v2
+        with:
+          pull: true
+          push: false
+          outputs: |
+            type=oci,dest=./vapp-container-image.tar
+          context: .
+          file: src/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
