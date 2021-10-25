@@ -68,11 +68,13 @@ jobs:
         shell: bash
         run: |
           pip install pytest
-          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/unittests/client.xml ./src
+          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/SeatAdjuster.xml ./src
 
-      - name: show unit test results
-        shell: bash
-        run: cat ./.sdv/tmp/unittests/client.xml
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: ./.sdv/tmp/UnitTest/SeatAdjuster.xml
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
