@@ -101,7 +101,7 @@ jobs:
           VAPP_VERSION: ${{ github.sha }}
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
         run: |
-          Import-Module .sdv/Sdv.psm1 -force
+          Import-Module ./.sdv/Sdv.psm1 -force
           foreach($Component in (Find-SdvVehicleApp | Get-SdvComponent)) {
             $Dockerfile = Join-Path $Component.Folder -ChildPath "DockerFile"
             $ImageName = $Component.Name
