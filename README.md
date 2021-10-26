@@ -108,3 +108,10 @@ The `.docker\config.json` has to have following proxy settings:
 
    To see that services have stopped running, run `dapr list`, noting that your services no longer appears!
 
+1. Recompile Protobuf 
+
+   To recompile the proto files, the following command can be used. 
+   ```bash
+   python3 -m grpc_tools.protoc --proto_path=./proto/ --python_out=./vehicleapi/    --grpc_python_out=./vehicleapi/ ./proto/vehicleapi.proto
+   ```
+
