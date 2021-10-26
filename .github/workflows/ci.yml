@@ -32,6 +32,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Enable once the ACTIONS_REPOSITORY_TOKEN org secret is set
+      # - name: Clone actions repository
+      #   uses: actions/checkout@v2
+      #   run: git clone https://github.com/SoftwareDefinedVehicle/swdc-actions.git 
+      #   with:
+      #     repository: SoftwareDefinedVehicle/swdc-actions
+      #     token: ${{ secrets.ACTIONS_REPOSITORY_TOKEN }}
+      #     path: "./.github/swdc-actions"
+
       - name: Check Docker version
         run: docker --version
 
@@ -64,13 +73,30 @@ jobs:
         shell: bash
         run: |
           pip install pytest
-          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/SeatAdjuster.xml ./src
+          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml ./src
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: ./.sdv/tmp/UnitTest/SeatAdjuster.xml
+          files: ./.sdv/tmp/UnitTest/junit.xml
+
+      - name: Package unit test files
+        uses: ./.github/swdc-actions/documentation/package
+        with:
+          name: "UnitTest"
+          type: "UnitTest"
+          schema: "JUnit"
+          sourcePath: ./.sdv/tmp/UnitTest/junit.xml
+          packagePath: ./.sdv/tmp/Documentation/renderer
+
+      - name: Upload test results as artifacts
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: 'test-results'
+          path: |
+            .sdv/tmp/Documentation/renderer/*
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -90,7 +116,8 @@ jobs:
         uses: ASzc/change-string-case-action@v1
         with:
           string: ${{ github.repository }}
-          
+
+      # Enable once the build time is acceptable    
       # - name: Build multi-arch image
       #   id: image_build
       #   uses: docker/build-push-action@v2
