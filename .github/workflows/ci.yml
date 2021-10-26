@@ -117,6 +117,7 @@ jobs:
             Write-Output ("::group::Building image '{0}'" -f $ImageName)
           
             $DockerFile = Join-Path $Component.Folder -ChildPath "Dockerfile"
+            $DockerFolder = $Component.DockerFolder
             Write-Output ("Building image '{0}' from folder '{1}' with docker file '{2}'" -f $ImageName, $DockerFolder $DockerFile)
             docker build -t $ImageName -f $DockerFile $DockerFolder
 
