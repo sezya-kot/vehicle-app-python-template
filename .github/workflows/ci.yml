@@ -95,6 +95,18 @@ jobs:
         with:
           string: ${{ github.repository }}
           
+      - name: Build image
+        shell: pwsh
+        env:
+          VAPP_NAME: "client"
+          VAPP_VERSION: ${{ github.sha }}
+          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
+        run: |
+          docker build -t client -f ./src/Dockerfile .
+          $ID = docker images client -q
+          docker tag $ID ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/${VAPP_NAME}:$VAPP_VERSION
+          docker push ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/${VAPP_NAME}:$VAPP_VERSION
+
       # - name: Build multi-arch image
       #   id: image_build
       #   uses: docker/build-push-action@v2
