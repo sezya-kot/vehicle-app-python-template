@@ -105,7 +105,7 @@ jobs:
       #     labels: |
       #       org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
                
-      - name: Build image
+      - name: Building images
         shell: pwsh
         env:
           VAPP_VERSION: ${{ github.sha }}
@@ -126,6 +126,13 @@ jobs:
             Exit-LoggingGroup
           }
 
+      - name: Uploading images
+        shell: pwsh
+        env:
+          VAPP_VERSION: ${{ github.sha }}
+          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
+        run: |
+          Import-Module ./.sdv/Sdv.psm1 -force
           foreach($Component in (Find-SdvVehicleApp | Get-SdvComponent)) {
             Enter-LoggingGroup ("Uploading image of component '{0}'" -f $Component.Name)
             $ImageName = $Component.Name
