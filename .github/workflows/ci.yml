@@ -60,10 +60,6 @@ jobs:
         shell: bash
         run: docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto:1.6.9
 
-      - name: Test SeatAdjuster vehicleApp 
-        shell: pwsh
-        run: .sdv/Test-SdvVehicleApp.ps1 SeatAdjuster -InPipeline
-
       - name: unit test
         shell: bash
         run: |
@@ -95,6 +91,20 @@ jobs:
         with:
           string: ${{ github.repository }}
           
+      # - name: Build multi-arch image
+      #   id: image_build
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     pull: true
+      #     push: false
+      #     outputs: |
+      #       type=oci,dest=./vapp-container-image.tar
+      #     context: .
+      #     file: src/Dockerfile
+      #     platforms: linux/amd64,linux/arm64
+      #     labels: |
+      #       org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
+               
       - name: Build image
         shell: pwsh
         env:
@@ -126,16 +136,8 @@ jobs:
             Write-Output "::endgroup::"
           }
 
-      # - name: Build multi-arch image
-      #   id: image_build
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     pull: true
-      #     push: false
-      #     outputs: |
-      #       type=oci,dest=./vapp-container-image.tar
-      #     context: .
-      #     file: src/Dockerfile
-      #     platforms: linux/amd64,linux/arm64
-      #     labels: |
-      #       org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
+
+      - name: Test SeatAdjuster vehicleApp 
+        shell: pwsh
+        run: .sdv/Test-SdvVehicleApp.ps1 
+
