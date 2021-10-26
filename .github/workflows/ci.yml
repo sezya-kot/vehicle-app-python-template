@@ -113,7 +113,7 @@ jobs:
         run: |
           Import-Module ./.sdv/Sdv.psm1 -force
           foreach($Component in (Find-SdvVehicleApp | Get-SdvComponent)) {
-            Write-Output ("::group::Building image for component '{0}'" -f $Component.Name)
+            Enter-LoggingGroup ("Building image for component '{0}'" -f $Component.Name)
           
             $ImageName = $Component.Name
             $DockerFile = Join-Path $Component.Folder -ChildPath "Dockerfile"
@@ -123,11 +123,11 @@ jobs:
 
             Write-Output "Listing local images"
             docker image list
-            Write-Output "::endgroup::"
+            Exit-LoggingGroup
           }
 
           foreach($Component in (Find-SdvVehicleApp | Get-SdvComponent)) {
-            Write-Output ("::group::Uploading image of component '{0}'" -f $Component.Name)
+            Enter-LoggingGroup ("Uploading image of component '{0}'" -f $Component.Name)
             $ImageName = $Component.Name
 
             Write-Output "Listing local images"
@@ -138,12 +138,12 @@ jobs:
             Write-Output ("Selected id '{0}'" -f $ID)
 
             $GHCRPath = "ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/${ImageName}:$env:VAPP_VERSION"
-            Write-Output ("Tagging '{0}'' with '{1}'" -f $ID, $GHCRPath)
+            Write-Output ("Tagging '{0}' with '{1}'" -f $ID, $GHCRPath)
             docker tag $ID $GHCRPath 
 
             Write-Output ("Pushing '{0}'" -f $GHCRPath)
             docker push $GHCRPath 
-            Write-Output "::endgroup::"
+            Exit-LoggingGroup
           }
 
 
