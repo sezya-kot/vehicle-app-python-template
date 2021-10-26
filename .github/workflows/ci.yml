@@ -103,12 +103,27 @@ jobs:
         run: |
           Import-Module ./.sdv/Sdv.psm1 -force
           foreach($Component in (Find-SdvVehicleApp | Get-SdvComponent)) {
-            $Dockerfile = Join-Path $Component.Folder -ChildPath "DockerFile"
             $ImageName = $Component.Name
+            Write-Output ("::group::Building image '{0}'" -f $ImageName)
+          
+            $Dockerfile = Join-Path $Component.Folder -ChildPath "Dockerfile"
+            Write-Output ("Building '{0}' with Dockerfile '{1}'" -f $ImageName, $Dockerfile)
             docker build -t $ImageName -f $Dockerfile .
+
+            Write-Output "Listing image"
+            docker image list
+
+            Write-Output ("Getting id of '{0}'" -f $ImageName)
             $ID = docker images $ImageName -q
-            docker tag $ID ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/${ImageName}:$env:VAPP_VERSION
-            docker push ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/${ImageName}:$env:VAPP_VERSION
+            Write-Output ("Selected id '{0}'" -f $ID)
+
+            $GHCRPath = ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/${ImageName}:$env:VAPP_VERSION
+            Write-Output ("Tagging '{0}'' with '{1}'" -f $ID, $GHCRPath)
+            docker tag $ID $GHCRPath 
+
+            Write-Output ("Pushing '{0}'" -f $GHCRPath)
+            docker push $GHCRPath 
+            Write-Output "::endgroup::"
           }
 
       # - name: Build multi-arch image
