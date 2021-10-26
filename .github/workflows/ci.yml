@@ -121,14 +121,16 @@ jobs:
             Write-Output ("Building image '{0}' from folder '{1}' with docker file '{2}'" -f $ImageName, $DockerFolder, $DockerFile)
             docker build -t $ImageName -f $DockerFile $DockerFolder
 
-            Write-Output "Listing images"
+            Write-Output "Listing local images"
             docker image list
             Write-Output "::endgroup::"
           }
-          
+
           foreach($Component in (Find-SdvVehicleApp | Get-SdvComponent)) {
             Write-Output ("::group::Uploading image of component '{0}'" -f $Component.Name)
-            Write-Output "Listing image"
+            $ImageName = $Component.Name
+
+            Write-Output "Listing local images"
             docker image list
 
             Write-Output ("Getting id of '{0}'" -f $ImageName)
