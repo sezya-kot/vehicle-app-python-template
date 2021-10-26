@@ -14,13 +14,16 @@
 param(
     [Parameter(ParameterSetName="ByName", Mandatory=$false, Position=0)]
     [string]$Name,
-    [switch]$InPipeline,
     [switch]$UseDockerCompose
 )
 
 Import-Module $PSScriptRoot/Sdv.psm1 -Force
 
-$Configuration = Find-SdvVehicleApp -Name $Name
+if ($PsCmdlet.ParameterSetName -eq "ByName") {
+    $Configuration = Find-SdvVehicleApp -Name $Name
+} else {
+    $Configuration = Find-SdvVehicleApp
+}
 
 $Configuration | Get-SdvComponent | Start-SdvComponent
 
