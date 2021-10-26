@@ -116,9 +116,9 @@ jobs:
             $ImageName = $Component.Name
             Write-Output ("::group::Building image '{0}'" -f $ImageName)
           
-            $Dockerfile = Join-Path $Component.Folder -ChildPath "Dockerfile"
-            Write-Output ("Building '{0}' with Dockerfile '{1}'" -f $ImageName, $Dockerfile)
-            docker build -t $ImageName -f $Dockerfile .
+            $DockerFile = Join-Path $Component.Folder -ChildPath "Dockerfile"
+            Write-Output ("Building image '{0}' from folder '{1}' with docker file '{2}'" -f $ImageName, $DockerFolder $DockerFile)
+            docker build -t $ImageName -f $DockerFile $DockerFolder
 
             Write-Output "Listing image"
             docker image list
@@ -127,7 +127,7 @@ jobs:
             $ID = docker images $ImageName -q
             Write-Output ("Selected id '{0}'" -f $ID)
 
-            $GHCRPath = ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/${ImageName}:$env:VAPP_VERSION
+            $GHCRPath = "ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/${ImageName}:$env:VAPP_VERSION"
             Write-Output ("Tagging '{0}'' with '{1}'" -f $ID, $GHCRPath)
             docker tag $ID $GHCRPath 
 

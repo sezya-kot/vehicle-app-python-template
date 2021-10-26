@@ -263,6 +263,10 @@ Function Import-SdvVehicleAppConfiguration {
                     Write-Verbose ("Warning. Component '{0}' has no start program configured and auto detect did not find a start program.")
                 }
             }
+            if ([string]::IsNullOrEmpty($Component.DockerFolder)) {
+                Write-Verbose ("Docker folder not provided in configuration. Setting docker folder to component folder'{0}'" -f $Component.Folder)
+                $Component | Add-Member -MemberType NoteProperty -Name "DockerFolder" -Value $Component.Folder
+            }
         }  
         
         return $Configuration
