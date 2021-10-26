@@ -112,6 +112,6 @@ The `.docker\config.json` has to have following proxy settings:
 
    To recompile the proto files, the following command can be used. 
    ```bash
-   python3 -m grpc_tools.protoc --proto_path=./proto/ --python_out=./proto/    --grpc_python_out=./proto/ ./proto/vehicleapi.proto
+   python3 -m grpc_tools.protoc --proto_path=./proto/ --python_out=./vehicleapi/    --grpc_python_out=./vehicleapi/ ./proto/vehicleapi.proto
    ```
 
