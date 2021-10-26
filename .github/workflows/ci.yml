@@ -98,14 +98,18 @@ jobs:
       - name: Build image
         shell: pwsh
         env:
-          VAPP_NAME: "client"
           VAPP_VERSION: ${{ github.sha }}
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
         run: |
-          docker build -t client -f ./src/Dockerfile .
-          $ID = docker images client -q
-          docker tag $ID ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$($env:VAPP_NAME):$env:VAPP_VERSION
-          docker push ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$($env:VAPP_NAME):$env:VAPP_VERSION
+          Import-Module .sdv/Sdv.psm1 -force
+          foreach($Component in (Find-SdvVehicleApp | Get-SdvComponent)) {
+            $Dockerfile = Join-Path $Component.Folder -ChildPath "DockerFile"
+            $ImageName = $Component.Name
+            docker build -t $ImageName -f $Dockerfile .
+            $ID = docker images $ImageName -q
+            docker tag $ID ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$ImageName:$env:VAPP_VERSION
+            docker push ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$ImageName:$env:VAPP_VERSION
+          }
 
       # - name: Build multi-arch image
       #   id: image_build
