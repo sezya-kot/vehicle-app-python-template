@@ -1,0 +1,35 @@
+{
+  "name": "renderer",
+  "version": "1.0.0",
+  "description": "Markdown renderer",
+  "dependencies": {
+    "@actions/core": "^1.4.0",
+    "fs": "0.0.1-security",
+    "guid-typescript": "^1.0.9",
+    "handlebars": "4.7.7",
+    "xml2js": "^0.4.23"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/cucumber-js -p default"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cucumber/cucumber": "^7.3.0",
+    "@cucumber/pretty-formatter": "^1.0.0-alpha.0",
+    "@types/chai": "^4.2.19",
+    "@types/chai-string": "^1.4.2",
+    "@types/cucumber": "^7.0.0",
+    "@types/node": "^15.12.2",
+    "@types/xml2js": "^0.4.8",
+    "@vercel/ncc": "0.28.6",
+    "chai": "^4.3.4",
+    "chai-string": "^1.5.0",
+    "cucumber": "^6.0.5",
+    "cucumber-console-formatter": "^1.0.0",
+    "cucumber-tsflow": "^4.0.0-rc.1",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.4"
+  }
+}

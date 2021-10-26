@@ -1,0 +1,12 @@
+name: Hello World
+descripton: Some description
+inputs:
+  who-to-greet:
+    description: 'Who to greet'
+    required: true
+outputs:
+  time: 
+    description: 'The greeting time'
+runs:
+  using: 'node12'
+  main: "dist/index.js"

@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "test": "echo 'Global test are currently not supported. Switch to the folder of a specific action and run npm test from there'"
+  }
+}
