@@ -107,8 +107,8 @@ jobs:
             $ImageName = $Component.Name
             docker build -t $ImageName -f $Dockerfile .
             $ID = docker images $ImageName -q
-            docker tag $ID ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$ImageName:$env:VAPP_VERSION
-            docker push ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$ImageName:$env:VAPP_VERSION
+            docker tag $ID ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/${ImageName}:$env:VAPP_VERSION
+            docker push ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/${ImageName}:$env:VAPP_VERSION
           }
 
       # - name: Build multi-arch image
