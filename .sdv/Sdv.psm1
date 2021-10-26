@@ -11,18 +11,24 @@
 #* SPDX-License-Identifier: EPL-2.0
 #********************************************************************************/
 
+
+Function Test-GithubActions
+{
+    return ($env:GITHUB_ACTIONS -eq "true")
+}
+
 Function Enter-LoggingGroup {
     param(
         [Parameter(Position = 0)]
         [string]$Name
     )
-    if ($InPipeline) {
+    if (Test-GithubActions) {
         Write-Output ("::group::{0}" -f $Name)
     }
 }
 
 Function Exit-LoggingGroup {
-    if ($InPipeline) {
+    if (Test-GithubActions) {
         Write-Output "::endgroup::"
     }
 }
