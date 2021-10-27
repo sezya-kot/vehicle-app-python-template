@@ -195,6 +195,9 @@ jobs:
     needs: [build-images, unit-tests]
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2    
+
       - name: Test SeatAdjuster vehicleApp 
         shell: pwsh
         run: ./.sdv/Test-SdvVehicleApp.ps1     
