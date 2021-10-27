@@ -335,7 +335,7 @@ Function Start-SdvVehicleApp
     Find-SdvVehicleApp -Name $Name  | Get-SdvComponent | Start-SdvComponent
 }
 
-Function Start-SdvVehicleApp
+Function Stop-SdvVehicleApp
 {
     param(
         [Parameter(Mandatory=$true, Position=0)]
