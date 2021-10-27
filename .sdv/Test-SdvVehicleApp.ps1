@@ -25,8 +25,13 @@ if ($PsCmdlet.ParameterSetName -eq "ByName") {
     $Configuration = Find-SdvVehicleApp
 }
 
+Enter-LoggingGroup ("Starting application {0}" -f $Component.Name)
 $Configuration | Get-SdvComponent | Start-SdvComponent
+Exit-LoggingGroup
 
+Write-SdvLogging "Waiting 10 seconds"
 Start-Sleep 10
 
+Enter-LoggingGroup ("Stopping application {0}" -f $Component.Name)
 $Configuration | Get-SdvComponent | Stop-SdvComponent 
+Exit-LoggingGroup
