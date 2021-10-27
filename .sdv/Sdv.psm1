@@ -35,10 +35,53 @@ Function Exit-LoggingGroup {
 
 Function Write-SdvLogging {
     param(
+        [Parameter(Mandatory=$true, Position=0)]
         [string]$Message
     )
     Write-Output ($Message)
 }
+
+Function Write-SdvError {
+    param(
+        [Parameter(Mandatory=$true, Position=0)]
+        [string]$Message,
+
+        [Parameter(Mandatory=$false)]
+        [string]$File,
+
+        [Parameter(Mandatory=$false)]
+        [string]$Line,
+
+        [Parameter(Mandatory=$false)]
+        [string]$EndLine,
+
+        [Parameter(Mandatory=$false)]
+        [string]$Title
+    )
+    $Parameter = @()
+
+    if (-not [string]::IsNullOrEmpty($File)) {
+        $Parameter += ("file={0}" -f $File)
+    }
+
+    if (-not [string]::IsNullOrEmpty($Line)) {
+        $Parameter += ("line={0}" -f $Line)
+    }
+
+    if (-not [string]::IsNullOrEmpty($EndLine)) {
+        $Parameter += ("endLine={0}" -f $EndLine)
+    }
+
+    if (-not [string]::IsNullOrEmpty($Title)) {
+        $Parameter += ("title={0}" -f $Title)
+    }
+
+    $ParameterList = $Parameter -join ","
+
+    $ErrorMessage = ("::error {0}::{1}" -f $ParameterList, $Message)
+    Write-SdvLogging ($ErrorMessage)
+}
+
 
 Function Start-VehicleAppWithDockerCompose {
     Enter-LoggingGroup "build vehicleApp"
