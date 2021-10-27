@@ -196,7 +196,31 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2    
+        uses: actions/checkout@v2  
+      - name: Install Dapr
+        uses: dapr/setup-dapr@v1
+        with:
+          version: "1.4.0"
+
+      - name: Initialize Dapr
+        shell: pwsh
+        run: |
+          Write-Output "::group::dapr init"
+          dapr init
+          Write-Output "::endgroup::"
+          dapr --version
+
+      - name: Initialize vehicleApp projects
+        shell: pwsh
+        run: |
+          Write-Output "::group::Initialize vehicleApp"
+          Import-Module ./.sdv/Sdv.psm1 -Force
+          Find-SdvVehicleApp | Get-SdvComponent | Initialize-SdvComponent -Verbose
+          Write-Output "::endgroup::"
+
+      - name: Start mqtt
+        shell: bash
+        run: docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto:1.6.9          
 
       - name: Test SeatAdjuster vehicleApp 
         shell: pwsh
