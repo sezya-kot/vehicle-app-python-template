@@ -11,31 +11,14 @@
 #* SPDX-License-Identifier: EPL-2.0
 #********************************************************************************/
 
-param(
-    [Parameter(ParameterSetName="ByName", Mandatory=$false, Position=0)]
-    [string]$Name,
-    [switch]$UseDockerCompose
-)
+Set-PSRepository PSGallery -InstallationPolicy Trusted 
+Install-Module Pester
 
-Import-Module $PSScriptRoot/Sdv.psm1 -Force
-if ($PsCmdlet.ParameterSetName -eq "ByName") {
-    $Configuration = Find-SdvVehicleApp -Name $Name
-} else {
-    $Configuration = Find-SdvVehicleApp
-}
+$Configuration = New-PesterConfiguration
+$Configuration.Run.Path = "./.sdv/"
+$Configuration.TestResult.Enabled = $true
+$Configuration.TestResult.OutputFormat = "JUnitXml"
+$Configuration.TestResult.OutputPath = ".sdv/tmp/IntegrationTest/junit.xml"
+$Configuration.Output.Verbosity = "Detailed"
 
-Enter-LoggingGroup ("Starting application {0}" -f $Component.Name)
-try {
-    $Configuration | Get-SdvComponent | Start-SdvComponent
-    Exit-LoggingGroup
-
-    Write-SdvLogging "Waiting 10 seconds"
-    Start-Sleep 10
-
-    Enter-LoggingGroup ("Stopping application {0}" -f $Component.Name)
-    $Configuration | Get-SdvComponent | Stop-SdvComponent 
-    Exit-LoggingGroup
-} catch {
-    Write-SdvError ("Failed to run integration tests: {0}" -f $_)
-    throw $_
-}
+Invoke-Pester -Configuration $Configuration
