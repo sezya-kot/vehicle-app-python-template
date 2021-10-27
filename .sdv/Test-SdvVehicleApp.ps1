@@ -18,7 +18,6 @@ param(
 )
 
 Import-Module $PSScriptRoot/Sdv.psm1 -Force
-
 if ($PsCmdlet.ParameterSetName -eq "ByName") {
     $Configuration = Find-SdvVehicleApp -Name $Name
 } else {
@@ -26,12 +25,16 @@ if ($PsCmdlet.ParameterSetName -eq "ByName") {
 }
 
 Enter-LoggingGroup ("Starting application {0}" -f $Component.Name)
-$Configuration | Get-SdvComponent | Start-SdvComponent
-Exit-LoggingGroup
+try {
+    $Configuration | Get-SdvComponent | Start-SdvComponent
+    Exit-LoggingGroup
 
-Write-SdvLogging "Waiting 10 seconds"
-Start-Sleep 10
+    Write-SdvLogging "Waiting 10 seconds"
+    Start-Sleep 10
 
-Enter-LoggingGroup ("Stopping application {0}" -f $Component.Name)
-$Configuration | Get-SdvComponent | Stop-SdvComponent 
-Exit-LoggingGroup
+    Enter-LoggingGroup ("Stopping application {0}" -f $Component.Name)
+    $Configuration | Get-SdvComponent | Stop-SdvComponent 
+    Exit-LoggingGroup
+} catch {
+    Write-SdvError ("Failed to run integration tests: {0}" -f $_)
+}
