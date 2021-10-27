@@ -122,15 +122,14 @@ Function Start-SdvComponent {
         $ComponentScriptBlock = [scriptblock]::Create($CommandLine)
         $Job = Start-Job -Name $Name -ScriptBlock $ComponentScriptBlock   
         
-        Write-SdvLogging ("Started job {0} ({1})" -f $Job.Id, $Job.Command)
+        Write-SdvLogging ("Started backgound job {0} to run dapr app '{1}'. Command line was: {2}" -f $Job.Id, $Name, $Job.Command)
         
         Write-SdvLogging ("Waiting for $Name to start")
         do {
             $Applications = dapr list -o json | ConvertFrom-Json
-            $ApplicationCount = ($Applications | Measure-Object).Count
-            Write-SdvLogging ("Found '{0}' application(s): '{1}'" -f $ApplicationCount, ($Applications.appId -join "', '"))
             $JobState = ($Job | Get-Job).State
-            if ("Completed" -eq $JobState) {
+            Write-SdvLogging ("Background job state is '{0}'. Waiting for dapr app '{1}' to start. Currently running dapr apps(s): '{2}'" -f $JobState, $Name, ($Applications.appId -join "', '"))
+            if ($JobState -in  @("Completed", "Failed")) {
                 $ApplicationHasStopped = $true
             }
             $ApplicationIsRunning = $Applications.appId -contains $Name
