@@ -41,9 +41,6 @@ jobs:
       #     token: ${{ secrets.ACTIONS_REPOSITORY_TOKEN }}
       #     path: "./.github/swdc-actions"
 
-      - name: Check Docker version
-        run: docker --version
-
       - name: Install Dapr
         uses: dapr/setup-dapr@v1
         with:
@@ -98,6 +95,17 @@ jobs:
           path: |
             .sdv/tmp/Documentation/renderer/*
 
+  build-images:
+      runs-on: ubuntu-latest
+      name: Building images
+
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2      
+
+      - name: Check Docker version
+        run: docker --version    
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -148,9 +156,10 @@ jobs:
             Write-Output ("Building image '{0}' from folder '{1}' with docker file '{2}'" -f $ImageName, $DockerFolder, $DockerFile)
             docker build -t $ImageName -f $DockerFile $DockerFolder
 
-            Write-Output "Listing local images"
+            Write-Output "Listing all local images"
             docker image list
             Exit-LoggingGroup
+            docker image list $ImageName
           }
 
       - name: Uploading images
@@ -180,8 +189,12 @@ jobs:
             Exit-LoggingGroup
           }
 
+  integration-tests:
+    runs-on: ubuntu-latest
+    name: Integration Tests
+    needs: [build-images, unit-tests]
 
+    steps:
       - name: Test SeatAdjuster vehicleApp 
         shell: pwsh
-        run: .sdv/Test-SdvVehicleApp.ps1 
-
+        run: .sdv/Test-SdvVehicleApp.ps1     
