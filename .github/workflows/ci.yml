@@ -197,4 +197,4 @@ jobs:
     steps:
       - name: Test SeatAdjuster vehicleApp 
         shell: pwsh
-        run: .sdv/Test-SdvVehicleApp.ps1     
+        run: ./.sdv/Test-SdvVehicleApp.ps1     
