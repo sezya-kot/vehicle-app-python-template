@@ -37,4 +37,5 @@ try {
     Exit-LoggingGroup
 } catch {
     Write-SdvError ("Failed to run integration tests: {0}" -f $_)
+    throw $_
 }
