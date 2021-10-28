@@ -26,7 +26,9 @@ ENV HTTP_PROXY="http://host.docker.internal:3128"
 ENV HTTPS_PROXY="http://host.docker.internal:3128"
 ENV FTP_PROXY="http://host.docker.internal:3128"
 ENV ALL_PROXY="http://host.docker.internal:3128"
-ENV NO_PROXY=""
+ENV NO_PROXY="localhost,127.0.0.1"
+# Force dapr to use localhost traffic
+ENV DAPR_HOST_IP="127.0.0.1"
 
 # Install needed packages and setup non-root user. Use a separate RUN statement to add your
 # own dependencies. A user of "automatic" attempts to reuse an user ID if one already exists.
