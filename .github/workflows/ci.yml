@@ -153,7 +153,7 @@ jobs:
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
           format: 'template'
-          template: '@docker/trivy/junit.tpl'
+          template: '@.sdv/junit.tpl'
           output: 'junit.xml'      
 
       - name: Show scan results (client)
@@ -168,6 +168,22 @@ jobs:
           schema: "JUnit"
           sourcePath: ./junit.xml
           packagePath: .sdv/Documentation/renderer
+
+      - name: Upload trivy report as artifacts
+        if: ${{ always() && steps.image_build_client.outcome == 'success' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: |
+            .iotea/Documentation/renderer/VulnerabilityScan/*
+
+      - name: Publish Trivy Scan Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: ${{ always() && steps.image_build_client.outcome == 'success' }}
+        with:
+          check_name: Trivy Scan Results
+          comment_title: Trivy Scan Results
+          files: ./junit.xml          
 
       - name: Build multi-arch image (vehicleapi)
         id: image_build_vehicleapi
