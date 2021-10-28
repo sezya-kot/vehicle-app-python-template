@@ -163,7 +163,7 @@ jobs:
       - name: Package vulnerability scan files (client)
         uses: ./.github/swdc-actions/documentation/package
         with:
-          name: "VulnerabilityScan"
+          name: "VulnerabilityScan-client"
           type: "VulnerabilityScan"
           schema: "JUnit"
           sourcePath: ./junit.xml
@@ -175,7 +175,7 @@ jobs:
         with:
           name: test-results
           path: |
-            .iotea/Documentation/renderer/VulnerabilityScan/*
+            .iotea/Documentation/renderer/*
 
       - name: Publish Trivy Scan Results
         uses: EnricoMi/publish-unit-test-result-action@v1
