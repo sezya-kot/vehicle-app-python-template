@@ -175,7 +175,7 @@ jobs:
         with:
           name: test-results
           path: |
-            .iotea/Documentation/renderer/*
+            .sdv/Documentation/renderer/*
 
       - name: Publish Trivy Scan Results
         uses: EnricoMi/publish-unit-test-result-action@v1
