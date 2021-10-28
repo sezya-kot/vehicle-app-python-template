@@ -15,13 +15,13 @@ name: CI workflow (matrix)
 
 on:
   workflow_dispatch:
-  # push:
-  #   # Run only on branches/commits and not tags
-  #   branches:
-  #     - '**'
-  # pull_request:
-  #   branches:
-  #     - main
+  push:
+    # Run only on branches/commits and not tags
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
 
 jobs:
   unit-tests:
@@ -203,8 +203,8 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: ${{ always() && steps.image_build.outcome == 'success' }}
         with:
-          check_name: Trivy Scan Results
-          comment_title: Trivy Scan Results
+          check_name: Trivy Scan Results (${{ matrix.component.Name }})
+          comment_title: Trivy Scan Results (${{ matrix.component.Name }})
           files: ./junit.xml          
 
       - name: "Push image to ghcr (${{ matrix.component.Name }})"
