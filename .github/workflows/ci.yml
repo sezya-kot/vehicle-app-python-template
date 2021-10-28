@@ -11,17 +11,17 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-name: CI workflow
+name: CI workflow (matrix)
 
 on:
   workflow_dispatch:
-  push:
-    # Run only on branches/commits and not tags
-    branches:
-      - '**'
-  pull_request:
-    branches:
-      - main
+  # push:
+  #   # Run only on branches/commits and not tags
+  #   branches:
+  #     - '**'
+  # pull_request:
+  #   branches:
+  #     - main
 
 jobs:
   unit-tests:
@@ -95,9 +95,31 @@ jobs:
           path: |
             .sdv/tmp/Documentation/renderer/*
 
-  build-images:
+  initialize-matrix:
       runs-on: ubuntu-latest
-      name: Building images
+      name: Setting up build matrix
+      outputs:
+        deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
+ 
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2   
+
+      - name: Get matrix data
+        id: export-deployment-matrix
+        shell: pwsh
+        run: |
+          Import-Module ./.sdv/Sdv.psm1 -Force
+          $MatrixJson = Find-SdvVehicleApp | Get-SdvComponent | ConvertTo-Json -Compress
+          Write-Output "::set-output name=deployment-matrix::$MatrixJson"
+
+  build-images:
+      name: "Building image (${{ matrix.component.Name }})"
+      runs-on: ubuntu-latest
+      needs: initialize-matrix
+      strategy: 
+        matrix: 
+          component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
 
       steps:
       - name: Checkout repository
@@ -125,30 +147,30 @@ jobs:
         with:
           string: ${{ github.repository }}
 
-      - name: Build multi-arch image (client)
-        id: image_build_client
+      - name: "Build multi-arch image (${{ matrix.component.Name }})"
+        id: image_build
         uses: docker/build-push-action@v2
         with:
           pull: true
           push: false
           outputs: |
-            type=oci,dest=./seatadjuster-client.tar
-          context: .
-          file: src/Dockerfile
+            type=oci,dest=./seatadjuster-${{ matrix.component.Name }}.tar
+          context: ${{ matrix.component.DockerFolder }}
+          file: ${{ matrix.component.Folder }}/Dockerfile
           platforms: linux/amd64
           labels: |
             org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
 
-      - name: Inspect tar image with skopeo (client)
+      - name: "Inspect tar image with skopeo (${{ matrix.component.Name }})"
         run: |
-          skopeo inspect --raw oci-archive:seatadjuster-client.tar | jq
-          skopeo inspect oci-archive:seatadjuster-client.tar
-          skopeo copy oci-archive:seatadjuster-client.tar docker-archive:seatadjuster-client-arch.tar
+          skopeo inspect --raw oci-archive:seatadjuster-${{ matrix.component.Name }}.tar | jq
+          skopeo inspect oci-archive:seatadjuster-${{ matrix.component.Name }}.tar
+          skopeo copy oci-archive:seatadjuster-${{ matrix.component.Name }}.tar docker-archive:seatadjuster-${{ matrix.component.Name }}-arch.tar
 
-      - name: Scan docker image for vulnerabilities (client)
+      - name: "Scan docker image for vulnerabilities (${{ matrix.component.Name }})"
         uses: aquasecurity/trivy-action@0.0.18
         with:
-          input: seatadjuster-client-arch.tar
+          input: seatadjuster-${{ matrix.component.Name }}-arch.tar
           exit-code: '1'
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
@@ -156,110 +178,47 @@ jobs:
           template: '@.sdv/junit.tpl'
           output: 'junit.xml'      
 
-      - name: Show scan results (client)
+      - name: "Show scan results (${{ matrix.component.Name }})"
         if: ${{ always() }}
         run: cat ./junit.xml
 
-      - name: Package vulnerability scan files (client)
+      - name: "Package vulnerability scan files (${{ matrix.component.Name }})"
         uses: ./.github/swdc-actions/documentation/package
         with:
-          name: "VulnerabilityScan-client"
+          name: "VulnerabilityScan-${{ matrix.component.Name }}"
           type: "VulnerabilityScan"
           schema: "JUnit"
           sourcePath: ./junit.xml
           packagePath: .sdv/Documentation/renderer
 
-      - name: Upload trivy report as artifacts (client)
-        if: ${{ always() && steps.image_build_client.outcome == 'success' }}
+      - name: "Upload trivy report as artifacts (${{ matrix.component.Name }})"
+        if: ${{ always() && steps.image_build.outcome == 'success' }}
         uses: actions/upload-artifact@v2
         with:
           name: test-results
           path: |
             .sdv/Documentation/renderer/*
 
-      - name: Publish Trivy Scan Results (client)
+      - name: "Publish Trivy Scan Results (${{ matrix.component.Name }})"
         uses: EnricoMi/publish-unit-test-result-action@v1
-        if: ${{ always() && steps.image_build_client.outcome == 'success' }}
+        if: ${{ always() && steps.image_build.outcome == 'success' }}
         with:
           check_name: Trivy Scan Results
           comment_title: Trivy Scan Results
           files: ./junit.xml          
 
-      - name: Push image to ghcr (client)
-        if: ${{ steps.image_build_client.outcome == 'success' }}
+      - name: "Push image to ghcr (${{ matrix.component.Name }})"
+        if: ${{ steps.image_build.outcome == 'success' }}
         env:
-          VAPP_NAME: client_amd64
+          VAPP_NAME: ${{ matrix.component.Name }}_amd64
           VAPP_VERSION: ${{ github.sha }}
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
         shell: bash
         run: |
-          skopeo copy --all oci-archive:seatadjuster-client.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION"
-          skopeo copy --all oci-archive:seatadjuster-client.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:latest"
+          skopeo copy --all oci-archive:seatadjuster-${{ matrix.component.Name }}.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION"
+          skopeo copy --all oci-archive:seatadjuster-${{ matrix.component.Name }}.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:latest"
           skopeo inspect --raw "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" | jq
           skopeo inspect "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION"
-
-      - name: Build multi-arch image (vehicleapi)
-        id: image_build_vehicleapi
-        uses: docker/build-push-action@v2
-        with:
-          pull: true
-          push: false
-          outputs: |
-            type=oci,dest=./seatadjuster-vehicleapi.tar
-          context: vehicleapi
-          file: vehicleapi/Dockerfile
-          platforms: linux/amd64
-          labels: |
-
-            org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}    
-      - name: Building images
-        shell: pwsh
-        env:
-          VAPP_VERSION: ${{ github.sha }}
-          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
-        run: |
-          Import-Module ./.sdv/Sdv.psm1 -force
-          foreach($Component in (Find-SdvVehicleApp | Get-SdvComponent)) {
-            Enter-LoggingGroup ("Building image for component '{0}'" -f $Component.Name)
-          
-            $ImageName = $Component.Name
-            $DockerFile = Join-Path $Component.Folder -ChildPath "Dockerfile"
-            $DockerFolder = $Component.DockerFolder
-            Write-Output ("Building image '{0}' from folder '{1}' with docker file '{2}'" -f $ImageName, $DockerFolder, $DockerFile)
-            docker build -t $ImageName -f $DockerFile $DockerFolder
-
-            Write-Output "Listing all local images"
-            docker image list
-            Exit-LoggingGroup
-            docker image list $ImageName
-          }
-
-      - name: Uploading images
-        shell: pwsh
-        env:
-          VAPP_VERSION: ${{ github.sha }}
-          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
-        run: |
-          Import-Module ./.sdv/Sdv.psm1 -force
-          foreach($Component in (Find-SdvVehicleApp | Get-SdvComponent)) {
-            Enter-LoggingGroup ("Uploading image of component '{0}'" -f $Component.Name)
-            $ImageName = $Component.Name
-
-            Write-Output "Listing local images"
-            docker image list
-
-            Write-Output ("Getting id of '{0}'" -f $ImageName)
-            $ID = docker images $ImageName -q
-            Write-Output ("Selected id '{0}'" -f $ID)
-
-            $GHCRPath = "ghcr.io/$env:GIT_HUB_REPOSITORY_NAME_LOWER_CASE/${ImageName}:$env:VAPP_VERSION"
-            Write-Output ("Tagging '{0}' with '{1}'" -f $ID, $GHCRPath)
-            docker tag $ID $GHCRPath 
-
-            Write-Output ("Pushing '{0}'" -f $GHCRPath)
-            docker push $GHCRPath 
-            Exit-LoggingGroup
-          }
 
   integration-tests:
     runs-on: ubuntu-latest
