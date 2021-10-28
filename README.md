@@ -69,7 +69,11 @@ The `.docker\config.json` has to have following proxy settings:
 
 1. Debug the sample vehicleApp
 
+> If opening the devcontainer for the first time, a manual reload of the dapr extension is required. 
+
    * Press <kbd>F5</kbd> to start the vehicleVapp and see the log output on the `DEBUG CONSOLE`    
+
+   * To debug the vehicleAPI Mock and the vehicle app together, choose the "SeatAdjuster" compound configuration and run it. 
 
 1. Run unit test and adjust tests
    * Run the unit tests from the Visual Studio Code test runner by clicking on the Testrunner in the toolbar and press on the play button
