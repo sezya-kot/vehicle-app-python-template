@@ -169,7 +169,7 @@ jobs:
           sourcePath: ./junit.xml
           packagePath: .sdv/Documentation/renderer
 
-      - name: Upload trivy report as artifacts
+      - name: Upload trivy report as artifacts (client)
         if: ${{ always() && steps.image_build_client.outcome == 'success' }}
         uses: actions/upload-artifact@v2
         with:
@@ -177,13 +177,26 @@ jobs:
           path: |
             .sdv/Documentation/renderer/*
 
-      - name: Publish Trivy Scan Results
+      - name: Publish Trivy Scan Results (client)
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: ${{ always() && steps.image_build_client.outcome == 'success' }}
         with:
           check_name: Trivy Scan Results
           comment_title: Trivy Scan Results
           files: ./junit.xml          
+
+      - name: Push image to ghcr (client)
+        if: ${{ steps.image_build_client.outcome == 'success' }}
+        env:
+          VAPP_NAME: client_amd64
+          VAPP_VERSION: ${{ github.sha }}
+          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
+        shell: bash
+        run: |
+          skopeo copy --all oci-archive:vapp-container-image.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION"
+          skopeo copy --all oci-archive:vapp-container-image.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:latest"
+          skopeo inspect --raw "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" | jq
+          skopeo inspect "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION"
 
       - name: Build multi-arch image (vehicleapi)
         id: image_build_vehicleapi
@@ -197,8 +210,8 @@ jobs:
           file: vehicleapi/Dockerfile
           platforms: linux/amd64
           labels: |
-            org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}    
 
+            org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}    
       - name: Building images
         shell: pwsh
         env:
