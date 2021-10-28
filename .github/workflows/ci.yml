@@ -135,7 +135,7 @@ jobs:
             type=oci,dest=./seatadjuster-client.tar
           context: .
           file: src/Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           labels: |
             org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
 
@@ -149,7 +149,7 @@ jobs:
             type=oci,dest=./seatadjuster-vehicleapi.tar
           context: vehicleapi
           file: vehicleapi/Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           labels: |
             org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}    
 
