@@ -125,21 +125,34 @@ jobs:
         with:
           string: ${{ github.repository }}
 
-      # Enable once the build time is acceptable    
-      # - name: Build multi-arch image
-      #   id: image_build
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     pull: true
-      #     push: false
-      #     outputs: |
-      #       type=oci,dest=./vapp-container-image.tar
-      #     context: .
-      #     file: src/Dockerfile
-      #     platforms: linux/amd64,linux/arm64
-      #     labels: |
-      #       org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
-               
+      - name: Build multi-arch image
+        id: image_build
+        uses: docker/build-push-action@v2
+        with:
+          pull: true
+          push: false
+          outputs: |
+            type=oci,dest=./seatadjuster-client.tar
+          context: .
+          file: src/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
+
+      - name: Build multi-arch image
+        id: image_build
+        uses: docker/build-push-action@v2
+        with:
+          pull: true
+          push: false
+          outputs: |
+            type=oci,dest=./seatadjuster-vehicleapi.tar
+          context: vehicleapi
+          file: vehicleapi/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}    
+
       - name: Building images
         shell: pwsh
         env:
