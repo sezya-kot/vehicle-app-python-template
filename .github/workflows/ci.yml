@@ -125,8 +125,8 @@ jobs:
         with:
           string: ${{ github.repository }}
 
-      - name: Build multi-arch image
-        id: image_build
+      - name: Build multi-arch image (client)
+        id: image_build_client
         uses: docker/build-push-action@v2
         with:
           pull: true
@@ -139,8 +139,8 @@ jobs:
           labels: |
             org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
 
-      - name: Build multi-arch image
-        id: image_build
+      - name: Build multi-arch image (vehicleapi)
+        id: image_build_vehicleapi
         uses: docker/build-push-action@v2
         with:
           pull: true
