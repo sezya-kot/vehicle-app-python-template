@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #********************************************************************************
 #* Copyright (c) 2021 Contributors to the Eclipse Foundation
 #*
@@ -17,15 +18,18 @@ find /tmp/library-scripts/ -type f -iname "*.sh" -exec chmod +x {} \;
 find /tmp/sdv/ -type f -iname "*.sh" -exec chmod +x {} \;
 
 echo "#######################################################"
+echo "### Checking proxies                                ###"
+echo "#######################################################"
+/tmp/proxy-script/configure-proxies.sh
+
+echo "#######################################################"
 echo "### Executing common-debian.sh                      ###"
 echo "#######################################################"
-/tmp/proxy-script/configure-proxies.sh 2>&1 | tee -a /usr/local/share/common-debian.log
 yes | /tmp/library-scripts/common-debian.sh 2>&1 | tee -a /usr/local/share/common-debian.log
 
 echo "#######################################################"
 echo "### Executing docker-in-docker-debian.sh            ###"
 echo "#######################################################" 
-/tmp/proxy-script/configure-proxies.sh 2>&1 | tee -a /usr/local/share/docker-in-docker-debian.log
 yes | /tmp/library-scripts/docker-in-docker-debian.sh 2>&1 | tee -a /usr/local/share/docker-in-docker-debian.log
 
 echo "#######################################################"

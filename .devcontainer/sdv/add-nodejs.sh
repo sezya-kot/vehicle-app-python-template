@@ -11,17 +11,15 @@
 #* SPDX-License-Identifier: EPL-2.0
 #********************************************************************************/
 
-echo "#######################################################"
-echo "### Checking proxy configuration                    ###"
-echo "#######################################################"
-/tmp/proxy-script/configure-proxies.sh
+export HTTP_PROXY=${HTTP_PROXY}
+export HTTPS_PROXY=${HTTPS_PROXY}
+export NO_PROXY=${NO_PROXY}
 
 echo "#######################################################"
 echo "### Installing OS updates                           ###"
 echo "#######################################################"
 sudo apt-get update
 sudo apt-get upgrade -y
-
 sudo apt-get install -y wget ca-certificates
 
 echo "#######################################################"
