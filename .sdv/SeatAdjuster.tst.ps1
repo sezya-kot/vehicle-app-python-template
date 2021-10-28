@@ -1,5 +1,5 @@
 BeforeAll {
-    Import-Module $PSScriptRoot/Sdv.psm1 -Force
+    Import-Module ./.sdv/Sdv.psm1 -Force
 
     Enter-LoggingGroup ("Starting application {0}" -f $Component.Name)
     Find-SdvVehicleApp | Get-SdvComponent | Start-SdvComponent

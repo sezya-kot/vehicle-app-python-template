@@ -11,11 +11,9 @@
 #* SPDX-License-Identifier: EPL-2.0
 #********************************************************************************/
 
-Set-PSRepository PSGallery -InstallationPolicy Trusted 
-Install-Module Pester
-
 $Configuration = New-PesterConfiguration
 $Configuration.Run.Path = "./.sdv/"
+$Configuration.Run.TestExtension = ".tst.ps1"
 $Configuration.TestResult.Enabled = $true
 $Configuration.TestResult.OutputFormat = "JUnitXml"
 $Configuration.TestResult.OutputPath = ".sdv/tmp/IntegrationTest/junit.xml"
