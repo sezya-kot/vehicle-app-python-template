@@ -259,7 +259,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2  
 
-      - name: Clone actions repository
+      - name: Clone actions repository 
         uses: actions/checkout@v2
         with:
           repository: SoftwareDefinedVehicle/swdc-actions
