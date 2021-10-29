@@ -19,7 +19,7 @@ on:
       name:
         description: 'commit hash to run workflow on'
         required: false
-        default: ${{ github.sha }}
+        default: ''
   release:
     types: [published, edited]
 
@@ -35,14 +35,21 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14.x'
-
+      - uses: haya14busa/action-cond@v1
+        id: condval
+        with:
+          cond: ${{ !github.event.inputs.name }}
+          if_true: ${{ github.event.inputs.name }}
+          if_false: ${{ github.sha }}
+      # - name: Use conditional value
+      #   run: echo "${{ steps.condval.outputs.value }}"
       - name: Wait for CI workflow
         uses: fountainhead/action-wait-for-check@v1.0.0
         id: wait-for-CI
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           checkName: "Integration Tests"
-          ref:  ${{ github.event.inputs.name }}
+          ref:  ${{ steps.condval.outputs.value }}
           timeoutSeconds: 600
 
       - name: Package render action
@@ -57,7 +64,7 @@ jobs:
         with:
           workflow: ci.yml
           workflow_conclusion: success
-          commit:  ${{ github.event.inputs.name }}
+          commit:  ${{ steps.condval.outputs.value }}
           path: .vehicleApp/Documentation/Inbox
 
       - name: Render documentation (test-results)
