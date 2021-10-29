@@ -73,13 +73,6 @@ jobs:
           outboxPath: .vehicleApp/Documentation/Outbox
           templatePath: ./.github/swdc-actions/documentation/renderer/templates
 
-      - name: Render documentation (trivy-scan-results)
-        uses: ./.github/swdc-actions/documentation/renderer
-        with:
-          inboxPath: .vehicleApp/Documentation/Inbox/trivy-scan-results
-          outboxPath: .vehicleApp/Documentation/Outbox
-          templatePath: ./.github/swdc-actions/documentation/renderer/templates
-
       - name: Upload generated documentation as an artifacts
         uses: actions/upload-artifact@v2
         if: always()
