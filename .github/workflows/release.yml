@@ -1,0 +1,94 @@
+# /********************************************************************************
+# * Copyright (c) 2021 Contributors to the Eclipse Foundation
+# *
+# * See the NOTICE file(s) distributed with this work for additional
+# * information regarding copyright ownership.
+# *
+# * This program and the accompanying materials are made available under the
+# * terms of the Eclipse Public License 2.0 which is available at
+# * http://www.eclipse.org/legal/epl-2.0
+# *
+# * SPDX-License-Identifier: EPL-2.0
+# ********************************************************************************/
+
+name: Release workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'commit hash to run workflow on'
+        required: false
+        default: ${{ github.sha }}
+  release:
+    types: [published, edited]
+
+jobs:
+  release-documentation:
+    name: Generate release documentation
+    runs-on: ubuntu-latest
+    env:
+      TEST_RESULT_FOLDER_NAME: test-results
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+
+      - name: Wait for CI workflow
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        id: wait-for-CI
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Run unit and integration tests"
+          ref:  ${{ github.event.inputs.name }}
+          timeoutSeconds: 600
+
+      - name: Package render action
+        run: |
+          cd ./.github/swdc-actions/documentation/renderer
+          npm install --save-dev @vercel/ncc
+          npm install
+          tsc ./src/action.ts
+          $(npm bin)/ncc build ./src/action.js -o ../../dist/documentation/render
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: ci.yml
+          workflow_conclusion: success
+          commit:  ${{ github.event.inputs.name }}
+          path: .vehicleApp/Documentation/Inbox
+
+      - name: Render documentation (test-results)
+        uses: ./.github/swdc-actions/documentation/renderer
+        with:
+          inboxPath: .vehicleApp/Documentation/Inbox/test-results
+          outboxPath: .vehicleApp/Documentation/Outbox
+          templatePath: ./.github/swdc-actions/documentation/renderer/templates
+
+      - name: Render documentation (trivy-scan-results)
+        uses: ./.github/swdc-actions/documentation/renderer
+        with:
+          inboxPath: .vehicleApp/Documentation/Inbox/trivy-scan-results
+          outboxPath: .vehicleApp/Documentation/Outbox
+          templatePath: ./.github/swdc-actions/documentation/renderer/templates
+
+      - name: Upload generated documentation as an artifacts
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: generated-documentation
+          path: |
+            .vehicleApp/Documentation/Outbox/
+      - name: zip
+        run: |
+          zip -r .vehicleApp/Documentation/release-documentation-md.zip .vehicleApp/Documentation/Outbox
+      - name: Upload assets
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            .vehicleApp/Documentation/release-documentation-md.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
