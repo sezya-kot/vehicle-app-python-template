@@ -32,14 +32,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Enable once the ACTIONS_REPOSITORY_TOKEN org secret is set
-      # - name: Clone actions repository
-      #   uses: actions/checkout@v2
-      #   run: git clone https://github.com/SoftwareDefinedVehicle/swdc-actions.git 
-      #   with:
-      #     repository: SoftwareDefinedVehicle/swdc-actions
-      #     token: ${{ secrets.ACTIONS_REPOSITORY_TOKEN }}
-      #     path: "./.github/swdc-actions"
+      - name: Clone actions repository
+        uses: actions/checkout@v2
+        run: git clone https://github.com/SoftwareDefinedVehicle/swdc-actions.git 
+        with:
+          repository: SoftwareDefinedVehicle/swdc-actions
+          token: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
+          path: "./.github/swdc-actions"
 
       - name: Install Dapr
         uses: dapr/setup-dapr@v1
