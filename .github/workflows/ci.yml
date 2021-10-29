@@ -148,6 +148,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2      
 
+      - name: Clone actions repository
+        uses: actions/checkout@v2
+        with:
+          repository: SoftwareDefinedVehicle/swdc-actions
+          token: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
+          path: "./.github/swdc-actions"
+
       - name: Check Docker version
         run: docker --version    
 
@@ -251,6 +258,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2  
+
+      - name: Clone actions repository
+        uses: actions/checkout@v2
+        with:
+          repository: SoftwareDefinedVehicle/swdc-actions
+          token: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
+          path: "./.github/swdc-actions"
+
       - name: Install Dapr
         uses: dapr/setup-dapr@v1
         with:
