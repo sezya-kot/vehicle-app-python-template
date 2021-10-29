@@ -32,6 +32,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Clone actions repository 
+        uses: actions/checkout@v2
+        with:
+          repository: SoftwareDefinedVehicle/swdc-actions
+          ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
+          path: "./.github/swdc-actions"      
+
       - uses: actions/setup-node@v1
         with:
           node-version: '14.x'
@@ -71,13 +78,6 @@ jobs:
         uses: ./.github/swdc-actions/documentation/renderer
         with:
           inboxPath: .vehicleApp/Documentation/Inbox/test-results
-          outboxPath: .vehicleApp/Documentation/Outbox
-          templatePath: ./.github/swdc-actions/documentation/renderer/templates
-
-      - name: Render documentation (trivy-scan-results)
-        uses: ./.github/swdc-actions/documentation/renderer
-        with:
-          inboxPath: .vehicleApp/Documentation/Inbox/trivy-scan-results
           outboxPath: .vehicleApp/Documentation/Outbox
           templatePath: ./.github/swdc-actions/documentation/renderer/templates
 
