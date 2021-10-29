@@ -15,6 +15,11 @@ name: Release workflow
 
 on:
   workflow_dispatch:
+    inputs:
+      name:
+        description: 'commit hash to run workflow on'
+        required: false
+        default: ${{ github.sha }}
   release:
     types: [published, edited]
 
@@ -36,8 +41,8 @@ jobs:
         id: wait-for-CI
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: "Run unit and integration tests"
-          ref: ${{ github.sha }}
+          checkName: "Integration Tests"
+          ref:  ${{ github.event.inputs.name }}
           timeoutSeconds: 600
 
       - name: Package render action
@@ -52,7 +57,7 @@ jobs:
         with:
           workflow: ci.yml
           workflow_conclusion: success
-          commit: ${{ github.sha }}
+          commit:  ${{ github.event.inputs.name }}
           path: .vehicleApp/Documentation/Inbox
 
       - name: Render documentation (test-results)
