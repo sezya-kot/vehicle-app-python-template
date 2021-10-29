@@ -37,6 +37,7 @@ jobs:
         with:
           repository: SoftwareDefinedVehicle/swdc-actions
           ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
+          ssh-strict: false
           path: "./.github/swdc-actions"
 
       - name: Install Dapr
