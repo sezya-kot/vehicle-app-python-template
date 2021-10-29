@@ -69,15 +69,22 @@ jobs:
       - name: unit test
         shell: bash
         run: |
-          pip install pytest pytest-cov coverage2clover
+          pip install pytest pytest-cov coverage2clover coveragepy-lcov
           pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=xml:.sdv/tmp/CodeCoverage/cobertura-coverage.xml --cov-branch ./src
           coverage2clover -i .sdv/tmp/CodeCoverage/cobertura-coverage.xml -o .sdv/tmp/CodeCoverage/clover.xml
+          coverage-lcov --data_file_path ./.coverage --output_file_path .sdv/tmp/CodeCoverage/lcov.info
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
           files: ./.sdv/tmp/UnitTest/junit.xml
+
+      - name: Add code coverage comment to pr
+        uses: romeovs/lcov-reporter-action@v0.2.21
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          lcov-file: .sdv/tmp/CodeCoverage/lcov.info
 
       - name: Package unit test files
         uses: ./.github/swdc-actions/documentation/package
