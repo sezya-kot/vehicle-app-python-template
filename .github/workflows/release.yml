@@ -19,7 +19,6 @@ on:
       name:
         description: 'commit hash to run workflow on'
         required: false
-        default: "${{ github.sha }}"
   release:
     types: [published, edited]
 
