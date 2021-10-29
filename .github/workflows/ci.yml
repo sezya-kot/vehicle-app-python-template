@@ -69,8 +69,9 @@ jobs:
       - name: unit test
         shell: bash
         run: |
-          pip install pytest
-          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml ./src
+          pip install pytest pytest-cov coverage2clover
+          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=xml:.sdv/tmp/CodeCoverage/cobertura-coverage.xml --cov-branch ./src
+          coverage2clover -i .sdv/tmp/CodeCoverage/cobertura-coverage.xml -o .sdv/tmp/CodeCoverage/clover.xml
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
@@ -87,6 +88,15 @@ jobs:
           sourcePath: ./.sdv/tmp/UnitTest/junit.xml
           packagePath: ./.sdv/tmp/Documentation/renderer
 
+      - name: Package code coverage files
+        uses: ./.github/swdc-actions/documentation/package
+        with:
+          name: "CodeCoverage"
+          type: "CodeCoverage"
+          schema: "Cobertura"
+          sourcePath: .sdv/tmp/CodeCoverage
+          packagePath: .sdv/tmp/Documentation/renderer
+
       - name: Upload test results as artifacts
         uses: actions/upload-artifact@v2
         if: always()
@@ -94,6 +104,13 @@ jobs:
           name: 'test-results'
           path: |
             .sdv/tmp/Documentation/renderer/*
+
+      - name: Checking unit test code coverage
+        id: test-coverage
+        uses: johanvanhelden/gha-clover-test-coverage-check@v1
+        with:
+          percentage: "45"
+          filename: ".sdv/tmp/CodeCoverage/clover.xml"
 
   initialize-matrix:
       runs-on: ubuntu-latest
