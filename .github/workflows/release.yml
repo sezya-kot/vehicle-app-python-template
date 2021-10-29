@@ -19,7 +19,7 @@ on:
       name:
         description: 'commit hash to run workflow on'
         required: false
-        default: ${{ github.sha }}
+        default: "${{ github.sha }}"
   release:
     types: [published, edited]
 
@@ -31,6 +31,13 @@ jobs:
       TEST_RESULT_FOLDER_NAME: test-results
     steps:
       - uses: actions/checkout@v2
+
+      - name: Clone actions repository 
+        uses: actions/checkout@v2
+        with:
+          repository: SoftwareDefinedVehicle/swdc-actions
+          ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
+          path: "./.github/swdc-actions"      
 
       - uses: actions/setup-node@v1
         with:
