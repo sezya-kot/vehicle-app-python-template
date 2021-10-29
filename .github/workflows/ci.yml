@@ -69,7 +69,8 @@ jobs:
       - name: unit test
         shell: bash
         run: |
-          pip install pytest pytest-cov coverage2clover coveragepy-lcov
+          pip install pytest pytest-cov coverage2clover 
+          pip install coveragepy-lcov --no-warn-conflicts
           pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=xml:.sdv/tmp/CodeCoverage/cobertura-coverage.xml --cov-branch ./src
           coverage2clover -i .sdv/tmp/CodeCoverage/cobertura-coverage.xml -o .sdv/tmp/CodeCoverage/clover.xml
           coverage-lcov --data_file_path ./.coverage --output_file_path .sdv/tmp/CodeCoverage/lcov.info
