@@ -1,7 +1,7 @@
-FROM ubuntu:20.04
+FROM ghcr.io/softwaredefinedvehicle/vehicle-app-python-template/client_base_amd64
 
 RUN apt-get update 
-RUN apt-get upgrade
+RUN apt-get upgrade -y
 RUN apt-get install -y python3
 RUN apt-get install -y python3-pip
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10 

@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ghcr.io/softwaredefinedvehicle/vehicle-app-python-template/vehicleapi_base_amd64
 
 RUN apt-get update 
 RUN apt-get upgrade
