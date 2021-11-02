@@ -56,3 +56,8 @@ echo "#######################################################"
 echo "### Executing add-python.sh                         ###"
 echo "#######################################################"
 /tmp/sdv/add-python.sh 2>&1 | tee -a /usr/local/share/add-python.log
+
+echo "#######################################################"
+echo "### Executing add-helm.sh                           ###"
+echo "#######################################################"
+/tmp/sdv/add-helm.sh 2>&1 | tee -a /usr/local/share/add-helm.log
