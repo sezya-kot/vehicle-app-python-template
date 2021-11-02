@@ -409,7 +409,7 @@ jobs:
 
       - name: Test SeatAdjuster vehicleApp 
         shell: pwsh
-        run: ./.sdv/Test-SdvVehicleApp.ps1     
+        run: ./IntegrationTests/Test-SdvVehicleApp.ps1     
 
       - name: Publish Integration Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
