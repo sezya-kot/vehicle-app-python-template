@@ -241,7 +241,7 @@ jobs:
         if: ${{ steps.image_build.outcome == 'success' }}
         env:
           VAPP_NAME: ${{ matrix.component.Name }}_base_amd64
-          VAPP_VERSION: ${{ github.sha }}
+          VAPP_VERSION: latest
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
         shell: bash
         run: |
