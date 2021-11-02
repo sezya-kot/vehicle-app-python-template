@@ -35,7 +35,7 @@ jobs:
           $MatrixJson = Find-SdvVehicleApp | Get-SdvComponent | ConvertTo-Json -Compress
           Write-Output "::set-output name=deployment-matrix::$MatrixJson"
 
-  build-images:
+  build-base-images:
       name: "Building base image (${{ matrix.component.Name }})"
       runs-on: ubuntu-latest
       needs: initialize-matrix
@@ -86,7 +86,7 @@ jobs:
             type=oci,dest=./seatadjuster-${{ matrix.component.Name }}-base.tar
           context: ${{ matrix.component.DockerFolder }}
           file: ${{ matrix.component.Folder }}/Dockerfile.base
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/aarch64
           labels: |
             org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
 
@@ -99,7 +99,7 @@ jobs:
       - name: "Scan base docker image for vulnerabilities (${{ matrix.component.Name }})"
         uses: aquasecurity/trivy-action@0.0.18
         with:
-          input: seatadjuster-${{ matrix.component.Name }}-arch.tar
+          input: seatadjuster-${{ matrix.component.Name }}-base-arch.tar
           exit-code: '1'
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
@@ -107,20 +107,20 @@ jobs:
           template: '@.sdv/junit.tpl'
           output: 'junit.xml'      
 
-      - name: "Show scan results (${{ matrix.component.Name }})"
+      - name: "Show base image scan results (${{ matrix.component.Name }})"
         if: ${{ always() }}
         run: cat ./junit.xml
 
-      - name: "Package vulnerability scan files (${{ matrix.component.Name }})"
+      - name: "Package base image vulnerability scan files (${{ matrix.component.Name }})"
         uses: ./.github/swdc-actions/documentation/package
         with:
-          name: "VulnerabilityScan-${{ matrix.component.Name }}"
+          name: "VulnerabilityScan-base-${{ matrix.component.Name }}"
           type: "VulnerabilityScan"
           schema: "JUnit"
           sourcePath: ./junit.xml
           packagePath: .sdv/Documentation/renderer
 
-      - name: "Upload trivy report as artifacts (${{ matrix.component.Name }})"
+      - name: "Upload base image trivy report as artifacts (${{ matrix.component.Name }})"
         if: ${{ always() && steps.image_build.outcome == 'success' }}
         uses: actions/upload-artifact@v2
         with:
@@ -128,23 +128,24 @@ jobs:
           path: |
             .sdv/Documentation/renderer/*
 
-      - name: "Publish Trivy Scan Results (${{ matrix.component.Name }})"
+      - name: "Publish base image trivy scan results (${{ matrix.component.Name }})"
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: ${{ always() && steps.image_build.outcome == 'success' }}
         with:
-          check_name: Trivy Scan Results (${{ matrix.component.Name }})
-          comment_title: Trivy Scan Results (${{ matrix.component.Name }})
+          check_name: Trivy Base Image Scan Results (${{ matrix.component.Name }})
+          comment_title: Trivy Base Image Scan Results (${{ matrix.component.Name }})
           files: ./junit.xml          
 
       - name: "Push base image to ghcr (${{ matrix.component.Name }})"
         if: ${{ steps.image_build.outcome == 'success' }}
         env:
-          VAPP_NAME: ${{ matrix.component.Name }}_base_amd64
-          VAPP_VERSION: ${{ github.sha }}
+          VAPP_NAME: ${{ matrix.component.Name }}_base
+          VAPP_VERSION: latest
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
         shell: bash
         run: |
           skopeo copy --all oci-archive:seatadjuster-${{ matrix.component.Name }}-base.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:latest"
           skopeo inspect --raw "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" | jq
           skopeo inspect "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION"
+
 
