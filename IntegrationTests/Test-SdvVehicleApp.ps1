@@ -12,7 +12,7 @@
 #********************************************************************************/
 
 $Configuration = New-PesterConfiguration
-$Configuration.Run.Path = "./.sdv/"
+$Configuration.Run.Path = "./IntegrationTests/"
 $Configuration.Run.TestExtension = ".tst.ps1"
 $Configuration.TestResult.Enabled = $true
 $Configuration.TestResult.OutputFormat = "JUnitXml"
