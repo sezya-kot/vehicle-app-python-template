@@ -1,4 +1,4 @@
-FROM ghcr.io/softwaredefinedvehicle/vehicle-app-python-template/client_base_amd64
+FROM ghcr.io/softwaredefinedvehicle/vehicle-app-python-template/client_base
 
 RUN apt-get update 
 RUN apt-get upgrade -y

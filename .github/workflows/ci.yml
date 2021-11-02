@@ -187,7 +187,7 @@ jobs:
             type=oci,dest=./seatadjuster-${{ matrix.component.Name }}-base.tar
           context: ${{ matrix.component.DockerFolder }}
           file: ${{ matrix.component.Folder }}/Dockerfile.base
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/aarch64
           labels: |
             org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
 
@@ -240,7 +240,7 @@ jobs:
       - name: "Push base image to ghcr (${{ matrix.component.Name }})"
         if: ${{ steps.image_build.outcome == 'success' }}
         env:
-          VAPP_NAME: ${{ matrix.component.Name }}_base_amd64
+          VAPP_NAME: ${{ matrix.component.Name }}_base
           VAPP_VERSION: latest
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
         shell: bash
@@ -302,7 +302,7 @@ jobs:
             type=oci,dest=./seatadjuster-${{ matrix.component.Name }}.tar
           context: ${{ matrix.component.DockerFolder }}
           file: ${{ matrix.component.Folder }}/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/aarch64
           labels: |
             org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
 
@@ -355,7 +355,7 @@ jobs:
       - name: "Push image to ghcr (${{ matrix.component.Name }})"
         if: ${{ steps.image_build.outcome == 'success' }}
         env:
-          VAPP_NAME: ${{ matrix.component.Name }}_amd64
+          VAPP_NAME: ${{ matrix.component.Name }}
           VAPP_VERSION: ${{ github.sha }}
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
         shell: bash
