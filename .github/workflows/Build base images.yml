@@ -76,7 +76,7 @@ jobs:
         with:
           string: ${{ github.repository }}
 
-      - name: "(${{ matrix.component.Name }}) Build base multi-arch image"
+      - name: "${{ matrix.component.Name }} -- Build base multi-arch image"
         id: image_build
         uses: docker/build-push-action@v2
         with:
@@ -90,13 +90,13 @@ jobs:
           labels: |
             org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
 
-      - name: " (${{ matrix.component.Name }}) Inspect tar image with skopeo"
+      - name: "${{ matrix.component.Name }} -- Inspect tar image with skopeo"
         run: |
           skopeo inspect --raw oci-archive:seatadjuster-${{ matrix.component.Name }}-base.tar | jq
           skopeo inspect oci-archive:seatadjuster-${{ matrix.component.Name }}-base.tar
           skopeo copy oci-archive:seatadjuster-${{ matrix.component.Name }}-base.tar docker-archive:seatadjuster-${{ matrix.component.Name }}-base-arch.tar
 
-      - name: " (${{ matrix.component.Name }}) Scan base docker image for vulnerabilities"
+      - name: "${{ matrix.component.Name }} -- Scan base docker image for vulnerabilities"
         uses: aquasecurity/trivy-action@0.0.18
         with:
           input: seatadjuster-${{ matrix.component.Name }}-base-arch.tar
@@ -107,11 +107,11 @@ jobs:
           template: '@.sdv/junit.tpl'
           output: 'junit.xml'      
 
-      - name: " (${{ matrix.component.Name }}) Show base image scan results"
+      - name: "${{ matrix.component.Name }} -- Show base image scan results"
         if: ${{ always() }}
         run: cat ./junit.xml
 
-      - name: " (${{ matrix.component.Name }}) Package base image vulnerability scan files"
+      - name: "${{ matrix.component.Name }} -- Package base image vulnerability scan files"
         uses: ./.github/swdc-actions/documentation/package
         with:
           name: "VulnerabilityScan-base-${{ matrix.component.Name }}"
@@ -120,7 +120,7 @@ jobs:
           sourcePath: ./junit.xml
           packagePath: .sdv/Documentation/renderer
 
-      - name: " (${{ matrix.component.Name }}) Upload base image trivy report as artifacts"
+      - name: "${{ matrix.component.Name }} -- Upload base image trivy report as artifacts"
         if: ${{ always() && steps.image_build.outcome == 'success' }}
         uses: actions/upload-artifact@v2
         with:
@@ -128,7 +128,7 @@ jobs:
           path: |
             .sdv/Documentation/renderer/*
 
-      - name: " (${{ matrix.component.Name }}) Publish base image trivy scan results"
+      - name: "${{ matrix.component.Name }} -- Publish base image trivy scan results"
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: ${{ always() && steps.image_build.outcome == 'success' }}
         with:
@@ -136,7 +136,7 @@ jobs:
           comment_title: Trivy Base Image Scan Results (${{ matrix.component.Name }})
           files: ./junit.xml          
 
-      - name: " (${{ matrix.component.Name }}) Push base image to ghcr"
+      - name: "${{ matrix.component.Name }} -- Push base image to ghcr"
         if: ${{ steps.image_build.outcome == 'success' }}
         env:
           VAPP_NAME: ${{ matrix.component.Name }}_base
