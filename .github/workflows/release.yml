@@ -100,6 +100,14 @@ jobs:
       TEST_RESULT_FOLDER_NAME: test-results
     steps:
       - uses: actions/checkout@v2
+# below step will the deleted this is for testing purpose only 
+      - id: get-ota-credentials
+        run: |
+          token=$( callEndpoint | jq '.' )
+          echo "::set-output name=ota_credentials::${{OTA_SYSTEM_CREDENTIALS}}"
+
+      - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
+# till here ^^
 
       - name: Clone actions repository 
         uses: actions/checkout@v2
@@ -251,9 +259,6 @@ jobs:
           tagAsLatest: false
           sourceRegistry: "ghcr.io/${{github.repository}}"
           targetRegistry:  ${{ env.REGISTRY }}
-          otaUrl: ${{ env.VCSS_URL_ENDPOINT }}
-          clientId: ${{ env.CLIENT_ID }}
-          clientSecret: ${{ env.CLIENT_SECRET }}
 
   deploy-prod:
     runs-on: ubuntu-latest
