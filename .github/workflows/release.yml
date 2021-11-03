@@ -95,6 +95,8 @@ jobs:
   release-documentation:
     name: Generate release documentation
     runs-on: ubuntu-latest
+    outputs:
+      ota_credentials: ${{ steps.get-ota-credentials.outputs.ota_credentials}}
     env:
       TEST_RESULT_FOLDER_NAME: test-results
     steps:
@@ -102,14 +104,14 @@ jobs:
 # below step will the deleted this is for testing purpose only 
       - id: get-ota-credentials
         run: |
-          echo "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
+          Write-Output "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
       - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials}}
         # outputs:
         #   ota-creds: ${{ fromJson(steps.get-ota-credentials.outputs.ota_credentials) }}
 
       # - uses: actions/checkout@v2
       #   id: test-pasring
-      # - run: echo ${{ ota-creds.REGISTRY_USER }}
+      - run: echo ${{ ota_credentials.REGISTRY_USER }}
 # till here ^^
 
       - name: Clone actions repository 
