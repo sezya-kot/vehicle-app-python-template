@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}
+  labels:
+    {{- include "helm.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "app1"
+        dapr.io/app-port: "80"
+        dapr.io/log-level: "debug"
+      labels:
+        {{- include "helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: SeatAdjusterApp
+          image: "{{ .Values.imageSeatAdjusterApp.repository }}:{{ .Values.imageSeatAdjusterApp.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.imageSeatAdjusterApp.pullPolicy }}
+          ports:
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        - name: VehicleApi
+          image: "{{ .Values.imageVehicleApi.repository }}:{{ .Values.imageVehicleApi.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.imageVehicleApi.pullPolicy }}
+          ports:
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}            
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
