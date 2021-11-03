@@ -106,7 +106,7 @@ jobs:
           token=$( callEndpoint | jq '.' )
           echo "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
 
-      - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
+      - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials.REGISTRY_USER }}
 # till here ^^
 
       - name: Clone actions repository 
@@ -191,10 +191,7 @@ jobs:
       url: https://www.bosch-mobility-solutions.com/en/about-us/current-news/software-defined-vehicles/
 
     env:
-      REGISTRY: ${{secrets.VCSS_ACR_ENDPOINT}}
-      CLIENT_ID: ${{secrets.VCSS_CLIENT_ID}}
-      CLIENT_SECRET: ${{secrets.VCSS_CLIENT_SECRET}}
-      VCSS_URL_ENDPOINT: "${{ secrets.VCSS_URL_ENDPOINT }}"
+      REGISTRY: ${{ steps.get-ota-credentials.outputs.ota_credentials.CONTAINER_REGISTRY }}
 
     steps:
       - uses: actions/checkout@v2
@@ -227,8 +224,8 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.VCSS_ACR_USER }}
-          password: ${{ secrets.VCSS_ACR_PASSWORD }}
+          username: ${{ steps.get-ota-credentials.outputs.ota_credentials.REGISTRY_USER }}
+          password: ${{ steps.get-ota-credentials.outputs.ota_credentials.REGISTRY_PASSWORD }}
 
       - name: Package render action
         run: |
