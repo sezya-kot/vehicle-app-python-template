@@ -185,12 +185,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - id: get-ota-credentials
-        run: |
-          token=$( callEndpoint | jq '.' )
-          echo "::set-output name=ota_credentials::${{OTA_SYSTEM_CREDENTIALS}}"
+      # - id: get-ota-credentials
+      #   run: |
+      #     token=$( callEndpoint | jq '.' )
+      #     echo "::set-output name=ota_credentials::${{OTA_SYSTEM_CREDENTIALS}}"
 
-      - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
+      # - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
 
       - id: get_version
         uses: battila7/get-version-action@v2
