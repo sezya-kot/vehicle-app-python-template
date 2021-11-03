@@ -41,7 +41,6 @@ jobs:
           Import-Module ./.sdv/Sdv.psm1 -Force
           $MatrixJson = Find-SdvVehicleApp | Get-SdvComponent | ConvertTo-Json -Compress
           Write-Output "::set-output name=deployment-matrix::$MatrixJson"
-
   copy-images:
     name: "Copy image (${{ matrix.component.Name }})"
     runs-on: ubuntu-latest
@@ -105,7 +104,6 @@ jobs:
         run: |
           token=$( callEndpoint | jq '.' )
           echo "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
-
       - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
 # till here ^^
 
@@ -127,7 +125,6 @@ jobs:
           npm install
           tsc ./src/action.ts
           $(npm bin)/ncc build ./src/action.js -o ../../dist/documentation/render
-
       - uses: haya14busa/action-cond@v1
         id: condval
         with:
@@ -168,11 +165,9 @@ jobs:
           name: generated-documentation
           path: |
             .vehicleApp/Documentation/Outbox/
-
       - name: zip
         run: |
           zip -r .vehicleApp/Documentation/release-documentation-md.zip .vehicleApp/Documentation/Outbox
-
       - name: Upload assets
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -188,8 +183,6 @@ jobs:
     needs: [release-documentation, copy-images]
 
     steps:
-
-    
       - name: Checkout repository
         uses: actions/checkout@v2       
 
@@ -206,8 +199,6 @@ jobs:
           VAPP_VERSION: ${{ github.sha }}
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}  
           TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
-          run: |
-            echo "Upload helm chart"
-            export HELM_EXPERIMENTAL_OCI=1
-            helm push helm-0.1.0.tgz oci://${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}/helm
-            
+        run: |
+          echo "Upload helm chart"
+          helm push helm-0.1.0.tgz oci://${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}/helm
