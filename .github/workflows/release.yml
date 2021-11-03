@@ -43,7 +43,7 @@ jobs:
           Write-Output "::set-output name=deployment-matrix::$MatrixJson"
 
   copy-images:
-      name: "Building image (${{ matrix.component.Name }})"
+      name: "Copy image (${{ matrix.component.Name }})"
       runs-on: ubuntu-latest
       needs: initialize-matrix
       strategy: 
@@ -54,12 +54,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2      
 
-      - name: Clone actions repository 
-        uses: actions/checkout@v2
-        with:
-          repository: SoftwareDefinedVehicle/swdc-actions
-          ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
-          path: "./.github/swdc-actions"
+      # - name: Clone actions repository 
+      #   uses: actions/checkout@v2
+      #   with:
+      #     repository: SoftwareDefinedVehicle/swdc-actions
+      #     ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
+      #     path: "./.github/swdc-actions"
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
@@ -68,19 +68,26 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Login to OPS Azure Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.VCSS_ACR_USER }}
+          password: ${{ secrets.VCSS_ACR_PASSWORD }}
+
       - id: github-repository-name-case-adjusted
         name: Prepare repository name in lower case for docker upload. This supports repository names in mixed case
         uses: ASzc/change-string-case-action@v1
         with:
           string: ${{ github.repository }}
 
-      - name: "${{ matrix.component.Name }} -- Inspect tar image with skopeo"
+      - name: "${{ matrix.component.Name }} -- copy image from ghcr to acr"
         env:
           VAPP_NAME: ${{ matrix.component.Name }}
           VAPP_VERSION: ${{ github.sha }}
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}      
         run: |
-          echo "Publish VAPP image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION' to 'docker://swdceuwedevssopsregistry.azurecr.io/$VAPP_NAME:$VAPP_VERSION'"
+          echo "Copy vApp image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION' to 'docker://swdceuwedevssopsregistry.azurecr.io/$VAPP_NAME:$VAPP_VERSION'"
           skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" "docker://swdceuwedevssopsregistry.azurecr.io/$VAPP_NAME:$VAPP_VERSION"
          
 
