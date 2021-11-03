@@ -194,12 +194,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2       
 
-      - name: Login to OPS Azure Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}
-          username: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER }}
-          password: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD }}
+      - name: Login to helm registry
+        env:
+          REGISTRY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}
+          USERNAME: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER }}
+          PASSWORD: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD }}
+        run: |
+          echo $PASSWORD | helm registry login swdceuwedevgsopscr.azurecr.io --username $USERNAME --password-stdin
 
       - name: Upload helm chart
         env:
