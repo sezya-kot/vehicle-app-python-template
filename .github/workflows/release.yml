@@ -201,4 +201,5 @@ jobs:
           TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
         run: |
           echo "Upload helm chart"
+          export HELM_EXPERIMENTAL_OCI=1 
           helm push helm-0.1.0.tgz oci://${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}/helm
