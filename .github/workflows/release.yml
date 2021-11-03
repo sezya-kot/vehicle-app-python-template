@@ -24,9 +24,64 @@ on:
     types: [published, edited]
 
 jobs:
+  initialize-matrix:
+      runs-on: ubuntu-latest
+      name: Setting up build matrix
+      outputs:
+        deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
+ 
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2   
+
+      - name: Get matrix data
+        id: export-deployment-matrix
+        shell: pwsh
+        run: |
+          Import-Module ./.sdv/Sdv.psm1 -Force
+          $MatrixJson = Find-SdvVehicleApp | Get-SdvComponent | ConvertTo-Json -Compress
+          Write-Output "::set-output name=deployment-matrix::$MatrixJson"
+
+  copy-images:
+      name: "Building image (${{ matrix.component.Name }})"
+      runs-on: ubuntu-latest
+      needs: initialize-matrix
+      strategy: 
+        matrix: 
+          component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
+
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2      
+
+      - name: Clone actions repository 
+        uses: actions/checkout@v2
+        with:
+          repository: SoftwareDefinedVehicle/swdc-actions
+          ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
+          path: "./.github/swdc-actions"
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: github-repository-name-case-adjusted
+        name: Prepare repository name in lower case for docker upload. This supports repository names in mixed case
+        uses: ASzc/change-string-case-action@v1
+        with:
+          string: ${{ github.repository }}
+
+      - name: "${{ matrix.component.Name }} -- Inspect tar image with skopeo"
+        run: |
+          echo "upload ${{ matrix.component.Name }}"
+
   release-documentation:
     name: Generate release documentation
     runs-on: ubuntu-latest
+    needs: copy-images
     env:
       TEST_RESULT_FOLDER_NAME: test-results
     steps:
