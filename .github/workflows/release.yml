@@ -41,22 +41,6 @@ jobs:
           Import-Module ./.sdv/Sdv.psm1 -Force
           $MatrixJson = Find-SdvVehicleApp | Get-SdvComponent | ConvertTo-Json -Compress
           Write-Output "::set-output name=deployment-matrix::$MatrixJson"
-  parse-secret:
-    runs-on: ubuntu-latest
-    name: Setting up secret parser
-    outputs:
-      ota-system-credentials: ${{ steps.export-parsed-secret.outputs.ota-system-credentials }}
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2   
-
-      - name: Get parsed data
-        id: export-parsed-secret
-        shell: pwsh
-        run: |
-          secretJSON=$( callEndpoint | jq '.' )
-          Write-Output "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
   copy-images:
     name: "Copy image (${{ matrix.component.Name }})"
     runs-on: ubuntu-latest
