@@ -104,7 +104,7 @@ jobs:
         run: |
           token=$( callEndpoint | jq '.' )
           echo "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
-      - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}.REGISTRY_USER
+      - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}["REGISTRY_USER"]
 # till here ^^
 
       - name: Clone actions repository 
@@ -201,5 +201,4 @@ jobs:
           TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
         run: |
           echo "Upload helm chart"
-          export HELM_EXPERIMENTAL_OCI=1
           helm push helm-0.1.0.tgz oci://${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}/helm
