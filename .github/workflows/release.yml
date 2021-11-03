@@ -219,4 +219,4 @@ jobs:
           REGISTRY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
         run: |
           export HELM_EXPERIMENTAL_OCI=1
-          helm push $VAPP_NAME-$VAPP_VERSION.tgz oci://swdceuwedevgsopscr.azurecr.io/helm
+          helm push SeatAdjusterApp-0.1.0.tgz oci://swdceuwedevgsopscr.azurecr.io/helm
