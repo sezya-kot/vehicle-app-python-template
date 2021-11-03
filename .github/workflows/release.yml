@@ -54,13 +54,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2      
 
-      # - name: Clone actions repository 
-      #   uses: actions/checkout@v2
-      #   with:
-      #     repository: SoftwareDefinedVehicle/swdc-actions
-      #     ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
-      #     path: "./.github/swdc-actions"
-
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
@@ -71,9 +64,9 @@ jobs:
       - name: Login to OPS Azure Container Registry
         uses: docker/login-action@v1
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.VCSS_ACR_USER }}
-          password: ${{ secrets.VCSS_ACR_PASSWORD }}
+          registry: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}
+          username: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER }}
+          password: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD }}
 
       - id: github-repository-name-case-adjusted
         name: Prepare repository name in lower case for docker upload. This supports repository names in mixed case
@@ -85,10 +78,11 @@ jobs:
         env:
           VAPP_NAME: ${{ matrix.component.Name }}
           VAPP_VERSION: ${{ github.sha }}
-          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}      
+          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}  
+          TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}    
         run: |
-          echo "Copy vApp image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION' to 'docker://swdceuwedevssopsregistry.azurecr.io/$VAPP_NAME:$VAPP_VERSION'"
-          skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" "docker://swdceuwedevssopsregistry.azurecr.io/$VAPP_NAME:$VAPP_VERSION"
+          echo "Copy vApp image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION' to 'docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION'"
+          skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" "docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION"
          
 
 
@@ -104,7 +98,7 @@ jobs:
       - id: get-ota-credentials
         run: |
           token=$( callEndpoint | jq '.' )
-          echo "::set-output name=ota_credentials::${{ secret.OTA_SYSTEM_CREDENTIALS }}"
+          echo "::set-output name=ota_credentials::${{ secrets.OTA_SYSTEM_CREDENTIALS }}"
 
       - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
 # till here ^^
@@ -119,6 +113,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14.x'
+
       - uses: haya14busa/action-cond@v1
         id: condval
         with:
@@ -127,6 +122,7 @@ jobs:
           if_false: ${{ github.sha }}
       # - name: Use conditional value
       #   run: echo "${{ steps.condval.outputs.value }}"
+
       - name: Wait for CI workflow
         uses: fountainhead/action-wait-for-check@v1.0.0
         id: wait-for-CI
@@ -143,6 +139,7 @@ jobs:
           npm install
           tsc ./src/action.ts
           $(npm bin)/ncc build ./src/action.js -o ../../dist/documentation/render
+
       - name: Download artifact
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -168,6 +165,7 @@ jobs:
       - name: zip
         run: |
           zip -r .vehicleApp/Documentation/release-documentation-md.zip .vehicleApp/Documentation/Outbox
+          
       - name: Upload assets
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
