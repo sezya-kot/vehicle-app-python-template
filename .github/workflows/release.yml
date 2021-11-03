@@ -194,6 +194,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2       
 
+      - name: Package Helm Chart
+        env:
+          VAPP_VERSION: "0.1.0"
+        run: |
+          export HELM_EXPERIMENTAL_OCI=1
+          helm package deploy/helm --version $VAPP_VERSION --app-version $VAPP_VERSION
+
       - name: Login to helm registry
         env:
           REGISTRY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}
@@ -201,15 +208,13 @@ jobs:
           PASSWORD: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD }}
         run: |
           export HELM_EXPERIMENTAL_OCI=1
-          echo $PASSWORD | helm registry login swdceuwedevgsopscr.azurecr.io --username $USERNAME --password-stdin
+          echo $PASSWORD | helm registry login $REGISTRY --username $USERNAME --password-stdin
 
       - name: Upload helm chart
         env:
-          VAPP_NAME: ${{ matrix.component.Name }}
-          VAPP_VERSION: ${{ github.sha }}
-          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}  
-          TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
+          VAPP_NAME: "SeatAdjusterApp"
+          VAPP_VERSION: "0.1.0"
+          REGISTRY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
         run: |
-          echo "Upload helm chart"
           export HELM_EXPERIMENTAL_OCI=1
-          helm push helm-0.1.0.tgz oci://swdceuwedevgsopscr.azurecr.io/helm
+          helm push $VAPP_NAME-$VAPP_VERSION.tgz oci://$REGISTRY/helm
