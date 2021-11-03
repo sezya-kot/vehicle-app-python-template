@@ -96,7 +96,6 @@ jobs:
   release-documentation:
     name: Generate release documentation
     runs-on: ubuntu-latest
-    needs: copy-images
     env:
       TEST_RESULT_FOLDER_NAME: test-results
     steps:
@@ -120,7 +119,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14.x'
-          
+
       - name: Package render action
         run: |
           cd ./.github/swdc-actions/documentation/renderer
