@@ -24,9 +24,71 @@ on:
     types: [published, edited]
 
 jobs:
+  initialize-matrix:
+      runs-on: ubuntu-latest
+      name: Setting up build matrix
+      outputs:
+        deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
+ 
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2   
+
+      - name: Get matrix data
+        id: export-deployment-matrix
+        shell: pwsh
+        run: |
+          Import-Module ./.sdv/Sdv.psm1 -Force
+          $MatrixJson = Find-SdvVehicleApp | Get-SdvComponent | ConvertTo-Json -Compress
+          Write-Output "::set-output name=deployment-matrix::$MatrixJson"
+
+  copy-images:
+      name: "Building image (${{ matrix.component.Name }})"
+      runs-on: ubuntu-latest
+      needs: initialize-matrix
+      strategy: 
+        matrix: 
+          component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
+
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2      
+
+      - name: Clone actions repository 
+        uses: actions/checkout@v2
+        with:
+          repository: SoftwareDefinedVehicle/swdc-actions
+          ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
+          path: "./.github/swdc-actions"
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: github-repository-name-case-adjusted
+        name: Prepare repository name in lower case for docker upload. This supports repository names in mixed case
+        uses: ASzc/change-string-case-action@v1
+        with:
+          string: ${{ github.repository }}
+
+      - name: "${{ matrix.component.Name }} -- Inspect tar image with skopeo"
+        env:
+          VAPP_NAME: ${{ matrix.component.Name }}
+          VAPP_VERSION: ${{ github.sha }}
+          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}      
+        run: |
+          echo "Publish VAPP image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION' to 'docker://swdceuwedevssopsregistry.azurecr.io/$VAPP_NAME:$VAPP_VERSION'"
+          skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" "docker://swdceuwedevssopsregistry.azurecr.io/$VAPP_NAME:$VAPP_VERSION"
+         
+
+
   release-documentation:
     name: Generate release documentation
     runs-on: ubuntu-latest
+    needs: copy-images
     env:
       TEST_RESULT_FOLDER_NAME: test-results
     steps:
@@ -123,12 +185,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - id: get-ota-credentials
-        run: |
-          token=$( callEndpoint | jq '.' )
-          echo "::set-output name=ota_credentials::${{OTA_SYSTEM_CREDENTIALS}}"
+      # - id: get-ota-credentials
+      #   run: |
+      #     token=$( callEndpoint | jq '.' )
+      #     echo "::set-output name=ota_credentials::${{OTA_SYSTEM_CREDENTIALS}}"
 
-      - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
+      # - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
 
       - id: get_version
         uses: battila7/get-version-action@v2
