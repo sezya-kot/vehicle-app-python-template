@@ -40,8 +40,7 @@ jobs:
         run: |
           Import-Module ./.sdv/Sdv.psm1 -Force
           $MatrixJson = Find-SdvVehicleApp | Get-SdvComponent | ConvertTo-Json -Compress
-          echo "::set-output name=deployment-matrix::$MatrixJson"
-      - run: echo ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
+          Write-Output "::set-output name=deployment-matrix::$MatrixJson"
   copy-images:
     name: "Copy image (${{ matrix.component.Name }})"
     runs-on: ubuntu-latest
