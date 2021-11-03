@@ -75,8 +75,15 @@ jobs:
           string: ${{ github.repository }}
 
       - name: "${{ matrix.component.Name }} -- Inspect tar image with skopeo"
+        env:
+          VAPP_NAME: ${{ matrix.component.Name }}
+          VAPP_VERSION: ${{ github.sha }}
+          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}      
         run: |
-          echo "upload ${{ matrix.component.Name }}"
+          echo "Publish VAPP image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION' to 'docker://swdceuwedevssopsregistry.azurecr.io/$VAPP_NAME:$VAPP_VERSION'"
+          skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" "docker://swdceuwedevssopsregistry.azurecr.io/$VAPP_NAME:$VAPP_VERSION"
+         
+
 
   release-documentation:
     name: Generate release documentation
