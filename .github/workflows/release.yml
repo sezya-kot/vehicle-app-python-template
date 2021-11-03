@@ -182,9 +182,6 @@ jobs:
           tagAsLatest: false
           sourceRegistry: "ghcr.io/${{github.repository}}"
           targetRegistry:  ${{ env.REGISTRY }}
-          otaUrl: ${{ env.VCSS_URL_ENDPOINT }}
-          clientId: ${{ env.CLIENT_ID }}
-          clientSecret: ${{ env.CLIENT_SECRET }}
 
   deploy-prod:
     runs-on: ubuntu-latest
