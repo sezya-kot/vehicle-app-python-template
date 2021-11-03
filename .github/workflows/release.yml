@@ -102,7 +102,6 @@ jobs:
 # below step will the deleted this is for testing purpose only 
       - id: get-ota-credentials
         run: |
-          token=$( callEndpoint | jq '.' )
           echo "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
       - run: echo ${{ fromJson(steps.get-ota-credentials.outputs.ota_credentials) }}
         # outputs:
