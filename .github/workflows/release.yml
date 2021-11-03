@@ -188,8 +188,6 @@ jobs:
     needs: [release-documentation, copy-images]
 
     steps:
-
-    
       - name: Checkout repository
         uses: actions/checkout@v2       
 
@@ -206,6 +204,6 @@ jobs:
           VAPP_VERSION: ${{ github.sha }}
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}  
           TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
-          run: |
-            echo "Upload helm chart"
-            helm push helm-0.1.0.tgz oci://${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}/helm
+        run: |
+          echo "Upload helm chart"
+          helm push helm-0.1.0.tgz oci://${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}/helm
