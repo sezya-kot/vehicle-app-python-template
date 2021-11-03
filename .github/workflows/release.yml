@@ -117,6 +117,10 @@ jobs:
           ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
           path: "./.github/swdc-actions"      
 
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+          
       - name: Package render action
         run: |
           cd ./.github/swdc-actions/documentation/renderer
@@ -124,10 +128,6 @@ jobs:
           npm install
           tsc ./src/action.ts
           $(npm bin)/ncc build ./src/action.js -o ../../dist/documentation/render
-
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '14.x'
 
       - uses: haya14busa/action-cond@v1
         id: condval
@@ -169,7 +169,7 @@ jobs:
           name: generated-documentation
           path: |
             .vehicleApp/Documentation/Outbox/
-            
+
       - name: zip
         run: |
           zip -r .vehicleApp/Documentation/release-documentation-md.zip .vehicleApp/Documentation/Outbox
