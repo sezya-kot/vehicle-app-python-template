@@ -40,7 +40,7 @@ jobs:
         run: |
           Import-Module ./.sdv/Sdv.psm1 -Force
           $MatrixJson = Find-SdvVehicleApp | Get-SdvComponent | ConvertTo-Json -Compress
-          Write-Output "::set-output name=deployment-matrix::$MatrixJson"
+          echo "::set-output name=deployment-matrix::$MatrixJson"
   copy-images:
     name: "Copy image (${{ matrix.component.Name }})"
     runs-on: ubuntu-latest
@@ -103,8 +103,8 @@ jobs:
       - id: get-ota-credentials
         run: |
           token=$( callEndpoint | jq '.' )
-          echo "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
-      - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
+          Write-Output "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
+      # - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
 # till here ^^
 
       - name: Clone actions repository 
