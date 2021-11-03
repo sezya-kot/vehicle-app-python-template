@@ -104,8 +104,8 @@ jobs:
 # below step will the deleted this is for testing purpose only 
       - id: get-ota-credentials
         run: |
-          Write-Output "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
-      - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials}}
+          echo "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
+      - run: echo ${{ fromJson(ota_credentials)}}
         # outputs:
         #   ota-creds: ${{ fromJson(steps.get-ota-credentials.outputs.ota_credentials) }}
 
