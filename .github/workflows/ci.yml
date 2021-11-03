@@ -139,6 +139,7 @@ jobs:
   build-images:
       name: "Building image (${{ matrix.component.Name }})"
       runs-on: ubuntu-latest
+      #needs: [initialize-matrix, build-base-images]
       needs: initialize-matrix
       strategy: 
         matrix: 
@@ -177,7 +178,7 @@ jobs:
         with:
           string: ${{ github.repository }}
 
-      - name: "Build multi-arch image (${{ matrix.component.Name }})"
+      - name: "${{ matrix.component.Name }} -- Build multi-arch image"
         id: image_build
         uses: docker/build-push-action@v2
         with:
@@ -187,17 +188,17 @@ jobs:
             type=oci,dest=./seatadjuster-${{ matrix.component.Name }}.tar
           context: ${{ matrix.component.DockerFolder }}
           file: ${{ matrix.component.Folder }}/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/aarch64
           labels: |
             org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
 
-      - name: "Inspect tar image with skopeo (${{ matrix.component.Name }})"
+      - name: "${{ matrix.component.Name }} -- Inspect tar image with skopeo"
         run: |
           skopeo inspect --raw oci-archive:seatadjuster-${{ matrix.component.Name }}.tar | jq
           skopeo inspect oci-archive:seatadjuster-${{ matrix.component.Name }}.tar
           skopeo copy oci-archive:seatadjuster-${{ matrix.component.Name }}.tar docker-archive:seatadjuster-${{ matrix.component.Name }}-arch.tar
 
-      - name: "Scan docker image for vulnerabilities (${{ matrix.component.Name }})"
+      - name: "${{ matrix.component.Name }} -- Scan docker image for vulnerabilities"
         uses: aquasecurity/trivy-action@0.0.18
         with:
           input: seatadjuster-${{ matrix.component.Name }}-arch.tar
@@ -208,11 +209,11 @@ jobs:
           template: '@.sdv/junit.tpl'
           output: 'junit.xml'      
 
-      - name: "Show scan results (${{ matrix.component.Name }})"
+      - name: "${{ matrix.component.Name }} -- Show scan results"
         if: ${{ always() }}
         run: cat ./junit.xml
 
-      - name: "Package vulnerability scan files (${{ matrix.component.Name }})"
+      - name: "${{ matrix.component.Name }} -- Package vulnerability scan files"
         uses: ./.github/swdc-actions/documentation/package
         with:
           name: "VulnerabilityScan-${{ matrix.component.Name }}"
@@ -221,7 +222,7 @@ jobs:
           sourcePath: ./junit.xml
           packagePath: .sdv/Documentation/renderer
 
-      - name: "Upload trivy report as artifacts (${{ matrix.component.Name }})"
+      - name: "${{ matrix.component.Name }} -- Upload trivy report as artifacts"
         if: ${{ always() && steps.image_build.outcome == 'success' }}
         uses: actions/upload-artifact@v2
         with:
@@ -229,7 +230,7 @@ jobs:
           path: |
             .sdv/Documentation/renderer/*
 
-      - name: "Publish Trivy Scan Results (${{ matrix.component.Name }})"
+      - name: "${{ matrix.component.Name }} -- Publish Trivy Scan Results"
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: ${{ always() && steps.image_build.outcome == 'success' }}
         with:
@@ -237,10 +238,10 @@ jobs:
           comment_title: Trivy Scan Results (${{ matrix.component.Name }})
           files: ./junit.xml          
 
-      - name: "Push image to ghcr (${{ matrix.component.Name }})"
+      - name: "${{ matrix.component.Name }} -- Push image to ghcr"
         if: ${{ steps.image_build.outcome == 'success' }}
         env:
-          VAPP_NAME: ${{ matrix.component.Name }}_amd64
+          VAPP_NAME: ${{ matrix.component.Name }}
           VAPP_VERSION: ${{ github.sha }}
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
         shell: bash
@@ -293,7 +294,7 @@ jobs:
 
       - name: Test SeatAdjuster vehicleApp 
         shell: pwsh
-        run: ./.sdv/Test-SdvVehicleApp.ps1     
+        run: ./IntegrationTests/Test-SdvVehicleApp.ps1     
 
       - name: Publish Integration Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1

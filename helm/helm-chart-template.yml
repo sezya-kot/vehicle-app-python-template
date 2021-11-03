@@ -1,0 +1,29 @@
+SEAT ADJUSTER APP
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: app1
+  labels:
+    app: app1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app1
+  template:
+    metadata:
+      labels:
+        app: app1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "app1"
+        dapr.io/app-port: "80"
+        dapr.io/log-level: "debug"
+    spec:
+      containers:
+      - name: app1
+        image: sdvacr.azurecr.io/app1:<version>
+        imagePullPolicy: Always
+        resources:
+        ports:

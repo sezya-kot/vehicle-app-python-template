@@ -32,4 +32,4 @@ sudo apt-get install -y powershell
 
 rm -f .sdv/tmp/packages-microsoft-prod.deb
 
-pwsh "Set-PSRepository PSGallery -InstallationPolicy Trusted; Install-Module Pester"
+pwsh -Command "Set-PSRepository PSGallery -InstallationPolicy Trusted; Install-Module Pester"
