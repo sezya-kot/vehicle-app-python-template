@@ -38,6 +38,13 @@ echo "#######################################################"
 /tmp/sdv/container-set.sh 2>&1 | tee -a /usr/local/share/container-set.log
 
 echo "#######################################################"
+echo "### Executingkubectl-helm-debian.sh            ###"
+echo "#######################################################" 
+yes | /tmp/library-scripts/kubectl-helm-debian.sh 2>&1 | tee -a /usr/local/share/kubectl-helm-debian.log
+mkdir -p /home/${USERNAME}/.minikube \
+chown ${USERNAME} /home/${USERNAME}/.minikube 
+
+echo "#######################################################"
 echo "### Executing add-powershell.sh                     ###"
 echo "#######################################################"
 /tmp/sdv/add-powershell.sh 2>&1 | tee -a /usr/local/share/add-powershell.log
@@ -56,8 +63,3 @@ echo "#######################################################"
 echo "### Executing add-python.sh                         ###"
 echo "#######################################################"
 /tmp/sdv/add-python.sh 2>&1 | tee -a /usr/local/share/add-python.log
-
-echo "#######################################################"
-echo "### Executing add-helm.sh                           ###"
-echo "#######################################################"
-/tmp/sdv/add-helm.sh 2>&1 | tee -a /usr/local/share/add-helm.log
