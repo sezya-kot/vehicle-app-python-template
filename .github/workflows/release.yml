@@ -200,6 +200,7 @@ jobs:
           USERNAME: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER }}
           PASSWORD: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD }}
         run: |
+          export HELM_EXPERIMENTAL_OCI=1
           echo $PASSWORD | helm registry login swdceuwedevgsopscr.azurecr.io --username $USERNAME --password-stdin
 
       - name: Upload helm chart
