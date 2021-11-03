@@ -104,13 +104,13 @@ jobs:
         run: |
           token=$( callEndpoint | jq '.' )
           Write-Output "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
-      # - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
-        outputs:
-          ota-creds: ${{ fromJson(steps.get-ota-credentials.outputs.ota_credentials) }}
+      - run: echo ${{ fromJson(steps.get-ota-credentials.outputs.ota_credentials) }}
+        # outputs:
+        #   ota-creds: ${{ fromJson(steps.get-ota-credentials.outputs.ota_credentials) }}
 
-      - uses: actions/checkout@v2
-        id: test-pasring
-      - run: echo ${{ ota-creds.REGISTRY_USER }}
+      # - uses: actions/checkout@v2
+      #   id: test-pasring
+      # - run: echo ${{ ota-creds.REGISTRY_USER }}
 # till here ^^
 
       - name: Clone actions repository 
