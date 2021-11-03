@@ -97,14 +97,39 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TEST_RESULT_FOLDER_NAME: test-results
+    jobs:
+      parse-secret:
+        runs-on: ubuntu-latest
+        name: Setting up secret parser
+        outputs:
+          ota-system-credentials: ${{ steps.export-parsed-secret.outputs.ota-system-credentials }}
+
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2   
+
+          - name: Get parsed data
+            id: export-parsed-secret
+            shell: pwsh
+            run: |
+              secretJSON=$( callEndpoint | jq '.' )
+              Write-Output "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
+      copy-images:
+        name: "Copy image (${{ ota-system.component.CONTAINER_REGISTRY }})"
+        runs-on: ubuntu-latest
+        needs: parse-secret
+        strategy: 
+          ota-system: 
+            component: ${{ fromJson(needs.parse-secret.outputs.ota-system-credentials) }}
     steps:
       - uses: actions/checkout@v2
 # below step will the deleted this is for testing purpose only 
       - id: get-ota-credentials
-        run: |
-          token=$( callEndpoint | jq '.' )
-          Write-Output "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
+        # run: |
+        #   token=$( callEndpoint | jq '.' )
+        #   Write-Output "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
       # - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
+      - run: echo ${{ ota-system.component.REGISTRY_USER }}
 # till here ^^
 
       - name: Clone actions repository 
