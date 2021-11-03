@@ -103,7 +103,7 @@ jobs:
       - id: get-ota-credentials
         run: |
           echo "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
-      - run: echo ${{ fromJson(steps.get-ota-credentials.outputs.ota_credentials) }}
+      - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials}}
         # outputs:
         #   ota-creds: ${{ fromJson(steps.get-ota-credentials.outputs.ota_credentials) }}
 
