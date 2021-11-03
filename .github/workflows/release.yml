@@ -25,12 +25,12 @@ on:
 
 jobs:
   initialize-matrix:
-      runs-on: ubuntu-latest
-      name: Setting up build matrix
-      outputs:
-        deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
- 
-      steps:
+    runs-on: ubuntu-latest
+    name: Setting up build matrix
+    outputs:
+      deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
+
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v2   
 
@@ -43,14 +43,14 @@ jobs:
           Write-Output "::set-output name=deployment-matrix::$MatrixJson"
 
   copy-images:
-      name: "Copy image (${{ matrix.component.Name }})"
-      runs-on: ubuntu-latest
-      needs: initialize-matrix
-      strategy: 
-        matrix: 
-          component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
+    name: "Copy image (${{ matrix.component.Name }})"
+    runs-on: ubuntu-latest
+    needs: initialize-matrix
+    strategy: 
+      matrix: 
+        component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
 
-      steps:
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v2      
 
@@ -182,6 +182,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  upload-helm:
+    runs-on: ubuntu-latest
+    name: Upload helm chart
+    needs: [release-documentation, copy-images]
 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2       
 
+      - name: Upload helm chart
+        run: |
+          echo "Upload helm chart"
           
