@@ -258,24 +258,5 @@ jobs:
           sourceRegistry: "ghcr.io/${{github.repository}}"
           targetRegistry:  ${{ env.REGISTRY }}
 
-  deploy-prod:
-    runs-on: ubuntu-latest
-    name: Deploy Prod
-    needs: [deploy-stage]
 
-    defaults:
-      run:
-        shell: bash
-
-    environment:
-      name: Production
-      url: https://www.bosch-mobility-solutions.com/en/about-us/current-news/software-defined-vehicles/
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Deploy Production
-        run: |
-          echo "Deploy to production"
           
