@@ -104,7 +104,7 @@ jobs:
       - id: get-ota-credentials
         run: |
           token=$( callEndpoint | jq '.' )
-          echo "::set-output name=ota_credentials::${{OTA_SYSTEM_CREDENTIALS}}"
+          echo "::set-output name=ota_credentials::${{ secret.OTA_SYSTEM_CREDENTIALS }}"
 
       - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
 # till here ^^
