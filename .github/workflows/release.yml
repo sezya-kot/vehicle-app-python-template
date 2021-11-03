@@ -25,12 +25,12 @@ on:
 
 jobs:
   initialize-matrix:
-      runs-on: ubuntu-latest
-      name: Setting up build matrix
-      outputs:
-        deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
- 
-      steps:
+    runs-on: ubuntu-latest
+    name: Setting up build matrix
+    outputs:
+      deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
+
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v2   
 
@@ -41,25 +41,17 @@ jobs:
           Import-Module ./.sdv/Sdv.psm1 -Force
           $MatrixJson = Find-SdvVehicleApp | Get-SdvComponent | ConvertTo-Json -Compress
           Write-Output "::set-output name=deployment-matrix::$MatrixJson"
-
   copy-images:
-      name: "Building image (${{ matrix.component.Name }})"
-      runs-on: ubuntu-latest
-      needs: initialize-matrix
-      strategy: 
-        matrix: 
-          component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
+    name: "Copy image (${{ matrix.component.Name }})"
+    runs-on: ubuntu-latest
+    needs: initialize-matrix
+    strategy: 
+      matrix: 
+        component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
 
-      steps:
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v2      
-
-      - name: Clone actions repository 
-        uses: actions/checkout@v2
-        with:
-          repository: SoftwareDefinedVehicle/swdc-actions
-          ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
-          path: "./.github/swdc-actions"
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
@@ -68,31 +60,60 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Login to OPS Azure Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}
+          username: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER }}
+          password: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD }}
+
       - id: github-repository-name-case-adjusted
         name: Prepare repository name in lower case for docker upload. This supports repository names in mixed case
         uses: ASzc/change-string-case-action@v1
         with:
           string: ${{ github.repository }}
 
-      - name: "${{ matrix.component.Name }} -- Inspect tar image with skopeo"
+      - name: Wait for CI workflow
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        id: wait-for-CI
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Integration Tests"
+          ref:  ${{ steps.condval.outputs.value }}
+          timeoutSeconds: 600
+
+      - name: "${{ matrix.component.Name }} -- copy image from ghcr to acr"
         env:
           VAPP_NAME: ${{ matrix.component.Name }}
           VAPP_VERSION: ${{ github.sha }}
-          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}      
+          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}  
+          TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}    
         run: |
-          echo "Publish VAPP image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION' to 'docker://swdceuwedevssopsregistry.azurecr.io/$VAPP_NAME:$VAPP_VERSION'"
-          skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" "docker://swdceuwedevssopsregistry.azurecr.io/$VAPP_NAME:$VAPP_VERSION"
-         
-
-
+          echo "Copy vApp image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION' to 'docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION'"
+          skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" "docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION"
+  
   release-documentation:
     name: Generate release documentation
     runs-on: ubuntu-latest
-    needs: copy-images
+    outputs:
+      ota_credentials: ${{ steps.get-ota-credentials.outputs.ota_credentials}}
     env:
       TEST_RESULT_FOLDER_NAME: test-results
     steps:
       - uses: actions/checkout@v2
+# below step will the deleted this is for testing purpose only 
+      - id: get-ota-credentials
+        run: |
+          echo "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
+      - run: echo ${{ needs.release-documentation.outputs.ota_credentials}}
+        # outputs:
+        #   ota-creds: ${{ fromJson(steps.get-ota-credentials.outputs.ota_credentials) }}
+
+      # - uses: actions/checkout@v2
+      #   id: test-pasring
+      # needs.release-documentation.outputs.deployment-matrix
+      # - run: echo ${{ needs.release-documentation.ota_credentials }}
+# till here ^^
 
       - name: Clone actions repository 
         uses: actions/checkout@v2
@@ -104,6 +125,14 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14.x'
+
+      - name: Package render action
+        run: |
+          cd ./.github/swdc-actions/documentation/renderer
+          npm install --save-dev @vercel/ncc
+          npm install
+          tsc ./src/action.ts
+          $(npm bin)/ncc build ./src/action.js -o ../../dist/documentation/render
       - uses: haya14busa/action-cond@v1
         id: condval
         with:
@@ -112,6 +141,7 @@ jobs:
           if_false: ${{ github.sha }}
       # - name: Use conditional value
       #   run: echo "${{ steps.condval.outputs.value }}"
+
       - name: Wait for CI workflow
         uses: fountainhead/action-wait-for-check@v1.0.0
         id: wait-for-CI
@@ -121,13 +151,6 @@ jobs:
           ref:  ${{ steps.condval.outputs.value }}
           timeoutSeconds: 600
 
-      - name: Package render action
-        run: |
-          cd ./.github/swdc-actions/documentation/renderer
-          npm install --save-dev @vercel/ncc
-          npm install
-          tsc ./src/action.ts
-          $(npm bin)/ncc build ./src/action.js -o ../../dist/documentation/render
       - name: Download artifact
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -162,107 +185,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy-stage:
+  upload-helm:
     runs-on: ubuntu-latest
-    name: Deploy stage
-    needs: [release-documentation]
-
-    defaults:
-      run:
-        shell: bash
-
-    environment:
-      name: Stage
-      url: https://www.bosch-mobility-solutions.com/en/about-us/current-news/software-defined-vehicles/
-
-    env:
-      REGISTRY: ${{secrets.VCSS_ACR_ENDPOINT}}
-      CLIENT_ID: ${{secrets.VCSS_CLIENT_ID}}
-      CLIENT_SECRET: ${{secrets.VCSS_CLIENT_SECRET}}
-      VCSS_URL_ENDPOINT: "${{ secrets.VCSS_URL_ENDPOINT }}"
+    name: Upload helm chart
+    needs: [release-documentation, copy-images]
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      # - id: get-ota-credentials
-      #   run: |
-      #     token=$( callEndpoint | jq '.' )
-      #     echo "::set-output name=ota_credentials::${{OTA_SYSTEM_CREDENTIALS}}"
-
-      # - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
-
-      - id: get_version
-        uses: battila7/get-version-action@v2
-
-      - run: echo "Using VehicleApp version ${{ steps.get_version.outputs.version-without-v }} from tag"
-
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '14.x'
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout repository
+        uses: actions/checkout@v2       
 
       - name: Login to OPS Azure Container Registry
         uses: docker/login-action@v1
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.VCSS_ACR_USER }}
-          password: ${{ secrets.VCSS_ACR_PASSWORD }}
+          registry: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}
+          username: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER }}
+          password: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD }}
 
-      - name: Package render action
+      - name: Upload helm chart
+        env:
+          VAPP_NAME: ${{ matrix.component.Name }}
+          VAPP_VERSION: ${{ github.sha }}
+          GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}  
+          TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
         run: |
-          cd ./.github/swdc-actions/documentation/renderer
-          npm install --save-dev @vercel/ncc
-          npm install
-          tsc ./src/action.ts
-          $(npm bin)/ncc build ./src/action.js -o ../../dist/documentation/render
-
-      - name: Read and export vapp config
-        id: vapp-config
-        run: |
-          . ./vapp-config.env
-          echo "::set-output name=VAPP_NAME::${VAPP_NAME}"
-
-      - id: vapp-name-case-adjusted
-        name: Prepare vapp name in lower case for docker upload. This supports repositories with mixed case names
-        uses: ASzc/change-string-case-action@v1
-        with:
-          string: ${{ steps.vapp-config.outputs.VAPP_NAME }}
-
-      - name: Publish VAPP to OTA system
-        uses: ./.github/swdc-actions/vapp/publish
-        with:
-          vappName: ${{ steps.vapp-name-case-adjusted.outputs.lowercase }}
-          vappVersion: "${{ steps.get_version.outputs.version-without-v }}"
-          commit: ${{ github.sha }}
-          tagAsLatest: false
-          sourceRegistry: "ghcr.io/${{github.repository}}"
-          targetRegistry:  ${{ env.REGISTRY }}
-
-  deploy-prod:
-    runs-on: ubuntu-latest
-    name: Deploy Prod
-    needs: [deploy-stage]
-
-    defaults:
-      run:
-        shell: bash
-
-    environment:
-      name: Production
-      url: https://www.bosch-mobility-solutions.com/en/about-us/current-news/software-defined-vehicles/
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Deploy Production
-        run: |
-          echo "Deploy to production"
-          
+          echo "Upload helm chart"
+          export HELM_EXPERIMENTAL_OCI=1
+          helm push helm-0.1.0.tgz oci://swdceuwedevgsopscr.azurecr.io/helm
