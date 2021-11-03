@@ -104,7 +104,7 @@ jobs:
         run: |
           token=$( callEndpoint | jq '.' )
           echo "::set-output name=ota_credentials::${{secrets.OTA_SYSTEM_CREDENTIALS}}"
-      - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}
+      - run: echo ${{ steps.get-ota-credentials.outputs.ota_credentials }}.REGISTRY_USER
 # till here ^^
 
       - name: Clone actions repository 
