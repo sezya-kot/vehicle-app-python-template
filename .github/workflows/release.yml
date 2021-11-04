@@ -184,13 +184,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2       
 
+      - id: get_version
+        uses: battila7/get-version-action@v2
+        
       - name: Package Helm Chart
         env:
           VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
           COMMIT: ${{ github.sha }}
         run: |
           export HELM_EXPERIMENTAL_OCI=1
-          helm package deploy/helm --version $COMMIT --app-version $VAPP_VERSION
+          helm package deploy/helm --version $VAPP_VERSION --app-version $COMMIT
 
       - name: Login to helm registry
         env:
