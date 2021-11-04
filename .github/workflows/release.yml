@@ -73,15 +73,6 @@ jobs:
         with:
           string: ${{ github.repository }}
 
-      - name: Wait for CI workflow
-        uses: fountainhead/action-wait-for-check@v1.0.0
-        id: wait-for-CI
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: "Integration Tests"
-          ref:  ${{ steps.condval.outputs.value }}
-          timeoutSeconds: 600
-
       - name: "${{ matrix.component.Name }} -- copy image from ghcr to acr"
         env:
           VAPP_NAME: ${{ matrix.component.Name }}
@@ -219,4 +210,4 @@ jobs:
           REGISTRY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
         run: |
           export HELM_EXPERIMENTAL_OCI=1
-          helm push SeatAdjusterApp-0.1.0.tgz oci://swdceuwedevgsopscr.azurecr.io/helm
+          helm push $VAPP_NAME-$VAPP_VERSION.tgz oci://$REGISTRY/helm
