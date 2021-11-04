@@ -190,7 +190,7 @@ jobs:
           COMMIT: ${{ github.sha }}
         run: |
           export HELM_EXPERIMENTAL_OCI=1
-          helm package deploy/helm --version $VAPP_VERSION --app-version $COMMIT
+          helm package deploy/helm --version $COMMIT --app-version $VAPP_VERSION
 
       - name: Login to helm registry
         env:
