@@ -1,16 +1,16 @@
 replicaCount: 1
 
 imageSeatAdjusterApp:
-  repository: swdceuwedevgsopscr.azurecr.io/client:f004c3d22acc0dc4544e2b8596ebb37b9c8d53ca
+  repository: swdceuwedevgsopscr.azurecr.io/client
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "f004c3d22acc0dc4544e2b8596ebb37b9c8d53ca"
 
 imageVehicleApi:
-  repository: swdceuwedevgsopscr.azurecr.io/vehicleapi:f004c3d22acc0dc4544e2b8596ebb37b9c8d53ca
+  repository: swdceuwedevgsopscr.azurecr.io/vehicleapi
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "1.0.0"
+  tag: "f004c3d22acc0dc4544e2b8596ebb37b9c8d53ca"
 
 imagePullSecrets: []
 nameOverride: ""

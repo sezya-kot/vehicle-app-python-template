@@ -204,7 +204,7 @@ jobs:
 
       - name: Upload helm chart
         env:
-          VAPP_NAME: "SeatAdjusterApp"
+          VAPP_NAME: "seat-adjuster-app"
           # TODO: set version to tag version
           VAPP_VERSION: "0.1.0"
           REGISTRY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
