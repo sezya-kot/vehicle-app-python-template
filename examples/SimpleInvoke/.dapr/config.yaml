@@ -12,19 +12,11 @@
 # ********************************************************************************/
 
 apiVersion: dapr.io/v1alpha1
-kind: Component
+kind: Configuration
 metadata:
-  name: mqtt-pubsub
-  namespace: default
+  name: daprConfig
 spec:
-  type: pubsub.mqtt
-  version: v1
-  metadata:
-  - name: url
-    value: "mqtt://127.0.0.1:1883"
-  - name: qos
-    value: 1
-  - name: retain
-    value: "false"
-  - name: cleanSession
-    value: "false"
+  tracing:
+    samplingRate: "1"
+    zipkin:
+      endpointAddress: http://localhost:9411/api/v2/spans

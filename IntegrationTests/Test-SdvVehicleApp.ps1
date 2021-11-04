@@ -11,19 +11,12 @@
 #* SPDX-License-Identifier: EPL-2.0
 #********************************************************************************/
 
-param(
-    [Parameter(Mandatory=$true, Position=0)]
-    [string]$Name,
-    [switch]$InPipeline,
-    [switch]$UseDockerCompose
-)
+$Configuration = New-PesterConfiguration
+$Configuration.Run.Path = "./IntegrationTests/"
+$Configuration.Run.TestExtension = ".tst.ps1"
+$Configuration.TestResult.Enabled = $true
+$Configuration.TestResult.OutputFormat = "JUnitXml"
+$Configuration.TestResult.OutputPath = ".sdv/tmp/IntegrationTest/junit.xml"
+$Configuration.Output.Verbosity = "Detailed"
 
-Import-Module $PSScriptRoot/Sdv.psm1 -Force
-
-$Configuration = Find-SdvVehicleApp -Name $Name
-
-$Configuration | Get-SdvComponent | Start-SdvComponent
-
-Start-Sleep 10
-
-$Configuration | Get-SdvComponent | Stop-SdvComponent 
+Invoke-Pester -Configuration $Configuration

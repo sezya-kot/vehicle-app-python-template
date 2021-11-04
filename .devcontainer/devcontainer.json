@@ -16,7 +16,9 @@
 	"name": "Dapr for sdv",
 	"dockerFile": "Dockerfile${localEnv:DEVCONTAINER_PROXY}",
 	"runArgs": ["--init", "--privileged"],
-	"mounts": ["source=dind-${containerWorkspaceFolderBasename},target=/var/lib/docker,type=volume"],
+	"mounts": [
+		"source=minikube-${containerWorkspaceFolderBasename},target=/var/lib/docker,type=volume",
+		"source=minikube-config,target=/home/vscode/.minikube,type=volume"],
 	"overrideCommand": false,
 
 	// Set *default* container specific settings.json values on container create.
@@ -38,7 +40,9 @@
 		"ms-vscode.powershell",
 		"pspester.pester-test",
 		"ms-vsliveshare.vsliveshare-pack",
-		"rpdswtk.vsmqtt"
+		"rpdswtk.vsmqtt",
+		"dotjoshjohnson.xml",
+		"ms-kubernetes-tools.vscode-kubernetes-tools"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

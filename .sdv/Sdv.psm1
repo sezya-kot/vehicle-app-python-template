@@ -11,28 +11,77 @@
 #* SPDX-License-Identifier: EPL-2.0
 #********************************************************************************/
 
+
+Function Test-GithubActions
+{
+    return ($env:GITHUB_ACTIONS -eq "true")
+}
+
 Function Enter-LoggingGroup {
     param(
         [Parameter(Position = 0)]
         [string]$Name
     )
-    if ($InPipeline) {
+    if (Test-GithubActions) {
         Write-Output ("::group::{0}" -f $Name)
     }
 }
 
 Function Exit-LoggingGroup {
-    if ($InPipeline) {
+    if (Test-GithubActions) {
         Write-Output "::endgroup::"
     }
 }
 
 Function Write-SdvLogging {
     param(
+        [Parameter(Mandatory=$true, Position=0)]
         [string]$Message
     )
     Write-Output ($Message)
 }
+
+Function Write-SdvError {
+    param(
+        [Parameter(Mandatory=$true, Position=0)]
+        [string]$Message,
+
+        [Parameter(Mandatory=$false)]
+        [string]$File,
+
+        [Parameter(Mandatory=$false)]
+        [string]$Line,
+
+        [Parameter(Mandatory=$false)]
+        [string]$EndLine,
+
+        [Parameter(Mandatory=$false)]
+        [string]$Title
+    )
+    $Parameter = @()
+
+    if (-not [string]::IsNullOrEmpty($File)) {
+        $Parameter += ("file={0}" -f $File)
+    }
+
+    if (-not [string]::IsNullOrEmpty($Line)) {
+        $Parameter += ("line={0}" -f $Line)
+    }
+
+    if (-not [string]::IsNullOrEmpty($EndLine)) {
+        $Parameter += ("endLine={0}" -f $EndLine)
+    }
+
+    if (-not [string]::IsNullOrEmpty($Title)) {
+        $Parameter += ("title={0}" -f $Title)
+    }
+
+    $ParameterList = $Parameter -join ","
+
+    $ErrorMessage = ("::error {0}::{1}" -f $ParameterList, $Message)
+    Write-SdvLogging ($ErrorMessage)
+}
+
 
 Function Start-VehicleAppWithDockerCompose {
     Enter-LoggingGroup "build vehicleApp"
@@ -116,15 +165,14 @@ Function Start-SdvComponent {
         $ComponentScriptBlock = [scriptblock]::Create($CommandLine)
         $Job = Start-Job -Name $Name -ScriptBlock $ComponentScriptBlock   
         
-        Write-SdvLogging ("Started job {0} ({1})" -f $Job.Id, $Job.Command)
+        Write-SdvLogging ("Started backgound job {0} to run dapr app '{1}'. Command line was: {2}" -f $Job.Id, $Name, $Job.Command)
         
         Write-SdvLogging ("Waiting for $Name to start")
         do {
             $Applications = dapr list -o json | ConvertFrom-Json
-            $ApplicationCount = ($Applications | Measure-Object).Count
-            Write-SdvLogging ("Found '{0}' application(s): '{1}'" -f $ApplicationCount, ($Applications.appId -join "', '"))
             $JobState = ($Job | Get-Job).State
-            if ("Completed" -eq $JobState) {
+            Write-SdvLogging ("Background job state is '{0}'. Waiting for dapr app '{1}' to start. Currently running dapr apps(s): '{2}'" -f $JobState, $Name, ($Applications.appId -join "', '"))
+            if ($JobState -in  @("Completed", "Failed")) {
                 $ApplicationHasStopped = $true
             }
             $ApplicationIsRunning = $Applications.appId -contains $Name
@@ -171,9 +219,14 @@ Function Find-SdvVehicleApp {
         [string]$BaseFolder = ".",
 
         [Parameter(ParameterSetName = "FilterByName", Mandatory = $true)]
-        [string]$Name
-    )
-    $Configurations = Get-ChildItem -Path $BaseFolder -Include "vehicleApp.json" -Recurse | Import-SdvVehicleAppConfiguration
+        [string]$Name,
+
+        [Parameter(ParameterSetName = "WithBaseFolder", Mandatory = $false)]
+        [Parameter(ParameterSetName = "FilterByName", Mandatory = $false)]
+        [switch]$Recurse
+     )
+
+    $Configurations = Get-ChildItem -Path $BaseFolder -Filter "vehicleApp.json" -Recurse:$Recurse | Import-SdvVehicleAppConfiguration
     switch ($PsCmdlet.ParameterSetName) {
         "FilterByName" {
             $Configurations = $Configurations | Where-Object { $_.Name -eq $Name }
@@ -258,6 +311,10 @@ Function Import-SdvVehicleAppConfiguration {
                     Write-Verbose ("Warning. Component '{0}' has no start program configured and auto detect did not find a start program.")
                 }
             }
+            if ([string]::IsNullOrEmpty($Component.DockerFolder)) {
+                Write-Verbose ("Docker folder not provided in configuration. Setting docker folder to component folder'{0}'" -f $Component.Folder)
+                $Component | Add-Member -MemberType NoteProperty -Name "DockerFolder" -Value $Component.Folder
+            }
         }  
         
         return $Configuration
@@ -321,7 +378,7 @@ Function Start-SdvVehicleApp
     Find-SdvVehicleApp -Name $Name  | Get-SdvComponent | Start-SdvComponent
 }
 
-Function Start-SdvVehicleApp
+Function Stop-SdvVehicleApp
 {
     param(
         [Parameter(Mandatory=$true, Position=0)]

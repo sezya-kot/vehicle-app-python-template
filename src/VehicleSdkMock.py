@@ -11,20 +11,6 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-apiVersion: dapr.io/v1alpha1
-kind: Component
-metadata:
-  name: mqtt-pubsub
-  namespace: default
-spec:
-  type: pubsub.mqtt
-  version: v1
-  metadata:
-  - name: url
-    value: "mqtt://127.0.0.1:1883"
-  - name: qos
-    value: 1
-  - name: retain
-    value: "false"
-  - name: cleanSession
-    value: "false"
+class VehicleSdkMock:
+    def SetPosition(self, pos: int, port: int):
+        return pos

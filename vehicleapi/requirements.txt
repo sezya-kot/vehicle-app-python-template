@@ -11,20 +11,11 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-apiVersion: dapr.io/v1alpha1
-kind: Component
-metadata:
-  name: mqtt-pubsub
-  namespace: default
-spec:
-  type: pubsub.mqtt
-  version: v1
-  metadata:
-  - name: url
-    value: "mqtt://127.0.0.1:1883"
-  - name: qos
-    value: 1
-  - name: retain
-    value: "false"
-  - name: cleanSession
-    value: "false"
+grpcio>=1.26.0
+grpcio-tools>=1.26.0
+protobuf==3.17.3
+cloudevents >= 1.0.0
+opencensus == 0.8.0
+opencensus-ext-grpc == 0.7.2
+dapr-ext-grpc-dev >= 1.4.0rc1.dev
+dapr-dev >= 1.4.0rc1.dev

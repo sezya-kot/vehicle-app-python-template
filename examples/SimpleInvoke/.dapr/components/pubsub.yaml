@@ -14,17 +14,12 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: mqtt-pubsub
-  namespace: default
+  name: pubsub
 spec:
-  type: pubsub.mqtt
+  type: pubsub.redis
   version: v1
   metadata:
-  - name: url
-    value: "mqtt://127.0.0.1:1883"
-  - name: qos
-    value: 1
-  - name: retain
-    value: "false"
-  - name: cleanSession
-    value: "false"
+  - name: redisHost
+    value: redis:6379
+  - name: redisPassword
+    value: ""

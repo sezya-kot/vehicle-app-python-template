@@ -1,6 +1,10 @@
 # VehicleApp using Python
 
-This Python vehicleApp repository includes a sample vehicleApp based on the Software defined vehicle platform. 
+This Python vehicleApp repository includes a sample vehicleApp based on the Software defined vehicle platform. GitHub workflows are used to build the container image for the vehicleApp, run unit and integration tests, collect the test results and create a release documentation and
+publish the vehicleApp. A detailed description of the workflow you can find [here](https://github.com/SoftwareDefinedVehicle/swdc-iotea-talent-template-repositories/blob/main/docs/vehicle_app_releases.md).
+ 
+![refernce Architecture](https://raw.githubusercontent.com/SoftwareDefinedVehicle/swdc-iotea-talent-template-repositories/main/docs/assets/publish_container.png?token=AF6NLD6PCKQ4REIMQ2VXFGLBRNLCE)  
+
 
 Note: this is a template repository. Please create your own repository from this template repository by clicking the green button `Use this template`.
 
@@ -69,7 +73,11 @@ The `.docker\config.json` has to have following proxy settings:
 
 1. Debug the sample vehicleApp
 
+> If opening the devcontainer for the first time, a manual reload of the dapr extension is required. 
+
    * Press <kbd>F5</kbd> to start the vehicleVapp and see the log output on the `DEBUG CONSOLE`    
+
+   * To debug the vehicleAPI Mock and the vehicle app together, choose the "SeatAdjuster" compound configuration and run it. 
 
 1. Run unit test and adjust tests
    * Run the unit tests from the Visual Studio Code test runner by clicking on the Testrunner in the toolbar and press on the play button
@@ -108,3 +116,30 @@ The `.docker\config.json` has to have following proxy settings:
 
    To see that services have stopped running, run `dapr list`, noting that your services no longer appears!
 
+1. Recompile Protobuf 
+
+   To recompile the proto files, the following command can be used. 
+   ```bash
+   python3 -m grpc_tools.protoc --proto_path=./proto/ --python_out=./vehicleapi/    --grpc_python_out=./vehicleapi/ ./proto/vehicleapi.proto
+   ```
+
+## Release the vehicleApp to push it to the deployment system
+   * In order to deploy the vehicleApp you need to set the secrets on repository
+     * Open `Settings`, go to `Secrets`, click on `Manage your environments and add environment secrets`, then select the environment `Stage` and add the following secrets (button `Add Secret`):
+       * VCSS_CLIENT_ID
+       * VCSS_CLIENT_SECRET
+       * VCSS_ACR_USER
+       * VCSS_ACR_PASSWORD
+       * VCSS_ACR_ENDPOINT (set the value e.g. to "swdceuwedevgsopscr.azurecr.io")
+       * VCSS_URL_ENDPOINT (set the value e.g. to https://api.dev.swdc.bosch-cs.com/vcs/api/v1/vapps)
+   * Open the Code page of your repository on gitHub.com and click on `Create a new release` in the Releases section on the right side
+   * Enter a version and click on `Publish release`
+     * Note: you can start the version with a `v` which will be removed though, e.g. "v1.0.0" will result in a "1.0.0" (see [version-without-v](https://github.com/battila7/get-version-action)).
+   * The release workflow will be triggered
+     * Open `Actions` on the repository and see the result
+
+## HowTo fetch newest IoTEA version
+
+The [IoTEA](https://github.com/GENIVI/iot-event-analytics) iis fetched from GitHub at DevContainer create time. This is both true for the VSCode plugin as well as the platform images. Accordingly, in order to fetch newest IoTEA version you have to rebuild the DevContainer:
+
+Press <kbd>F1</kbd> and run the command `Remote-Containers: Rebuild Container`
