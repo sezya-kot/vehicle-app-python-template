@@ -14,12 +14,6 @@
 name: Release workflow
 
 on:
-  workflow_dispatch:
-    inputs:
-      name:
-        description: 'commit hash to run workflow on'
-        required: false
-        default: ''
   release:
     types: [published, edited]
 
@@ -53,6 +47,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2      
 
+      - id: get_version
+        uses: battila7/get-version-action@v2
+
+      - run: echo "Using VehicleApp version ${{ steps.get_version.outputs.version-without-v }} from tag"
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
@@ -76,12 +74,13 @@ jobs:
       - name: "${{ matrix.component.Name }} -- copy image from ghcr to acr"
         env:
           VAPP_NAME: ${{ matrix.component.Name }}
-          VAPP_VERSION: ${{ github.sha }}
+          COMMIT: ${{ ${{ github.sha }} }}
+          VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}  
           TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}    
         run: |
-          echo "Copy vApp image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION' to 'docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION'"
-          skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" "docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION"
+          echo "Copy vApp image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$COMMIT' to 'docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION'"
+          skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$COMMIT" "docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION"
   
   release-documentation:
     name: Generate release documentation
@@ -187,11 +186,11 @@ jobs:
 
       - name: Package Helm Chart
         env:
-          # TODO: set version to tag version
-          VAPP_VERSION: "0.1.0"
+          VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
+          COMMIT: ${{ ${{ github.sha }} }}
         run: |
           export HELM_EXPERIMENTAL_OCI=1
-          helm package deploy/helm --version $VAPP_VERSION --app-version $VAPP_VERSION
+          helm package deploy/helm --version $VAPP_VERSION --app-version $COMMIT
 
       - name: Login to helm registry
         env:
@@ -205,8 +204,7 @@ jobs:
       - name: Upload helm chart
         env:
           VAPP_NAME: "seat-adjuster-app"
-          # TODO: set version to tag version
-          VAPP_VERSION: "0.1.0"
+          VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
           REGISTRY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
         run: |
           export HELM_EXPERIMENTAL_OCI=1
