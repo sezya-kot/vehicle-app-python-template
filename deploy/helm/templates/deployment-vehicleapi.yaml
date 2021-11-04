@@ -22,12 +22,6 @@ spec:
         {{- include "helm.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-        - name: SeatAdjusterApp
-          image: "{{ .Values.imageSeatAdjusterApp.repository }}:{{ .Values.imageSeatAdjusterApp.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.imageSeatAdjusterApp.pullPolicy }}
-          ports:
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
         - name: VehicleApi
           image: "{{ .Values.imageVehicleApi.repository }}:{{ .Values.imageVehicleApi.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.imageVehicleApi.pullPolicy }}
