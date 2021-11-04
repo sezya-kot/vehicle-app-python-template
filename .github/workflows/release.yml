@@ -74,7 +74,7 @@ jobs:
       - name: "${{ matrix.component.Name }} -- copy image from ghcr to acr"
         env:
           VAPP_NAME: ${{ matrix.component.Name }}
-          COMMIT: ${{ ${{ github.sha }} }}
+          COMMIT: ${{ github.sha }}
           VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}  
           TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}    
