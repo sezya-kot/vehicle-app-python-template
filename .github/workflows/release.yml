@@ -87,16 +87,18 @@ jobs:
         with:
           valueFile: 'deploy/helm/values.yaml'
           propertyPath: '${{ matrix.component.ImageRef}}.repository'
-          value: $TARGET_REPOSITORY/$VAPP_NAME
+          value: ${{ TARGET_REPOSITORY }}/${{ VAPP_NAME }}
           commitChange: false
+          updateFile: true
 
       - name: Update ${{ matrix.component.Name }} tag value in the related HelmChart values.yaml
         uses: fjogeleit/yaml-update-action@master
         with:
           valueFile: 'deploy/helm/values.yaml'
           propertyPath: '${{ matrix.component.ImageRef}}.tag'
-          value: $VAPP_VERSION
+          value: ${{ VAPP_VERSION }}
           commitChange: false
+          updateFile: true
   
   release-documentation:
     name: Generate release documentation
