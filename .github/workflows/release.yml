@@ -91,12 +91,13 @@ jobs:
           valueFile: 'deploy/helm/values.yaml'
           propertyPath: '${{ matrix.component.ImageRef}}.repository'
           value: $TARGET_REPOSITORY/$VAPP_NAME
-          repository: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
-          branch: deployment/$TARGET_REPOSITORY/$VAPP_NAME
-          targetBranch: main
-          createPR: false
-          message: 'Update Image Version to $VAPP_VERSION'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          commitChange: false
+          # repository: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
+          # branch: deployment/$TARGET_REPOSITORY/$VAPP_NAME
+          # targetBranch: main
+          # createPR: false
+          # message: 'Update Image Version to $VAPP_VERSION'
+          # token: ${{ secrets.GITHUB_TOKEN }}
           # workDir: infrastructure
 
 
