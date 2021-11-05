@@ -81,6 +81,35 @@ jobs:
         run: |
           echo "Copy vApp image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$COMMIT' to 'docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION'"
           skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$COMMIT" "docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION"
+
+      - name: Update Image Version in the related HelmChart values.yaml
+        uses: fjogeleit/yaml-update-action@master
+        with:
+          valueFile: 'deploy/helm/values.yaml'
+          propertyPath: $ {{ matrix.component.ImageRef}}.repository
+          value: $TARGET_REPOSITORY/$VAPP_NAME
+          # repository: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
+          # branch: deployment/${{ steps.image.outputs.version }}
+          # targetBranch: main
+          # createPR: false
+          # message: 'Update Image Version to ${{ VAPP_VERSION }}'
+          # token: ${{ secrets.GITHUB_TOKEN }}
+          # workDir: infrastructure
+
+
+      - name: Update Image Version in the related HelmChart values.yaml
+        uses: fjogeleit/yaml-update-action@master
+        with:
+          valueFile: 'deploy/helm/values.yaml'
+          propertyPath: $ {{ matrix.component.ImageRef}}.tag
+          value: $VAPP_VERSION
+          # repository: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
+          # branch: deployment/${{ steps.image.outputs.version }}
+          # targetBranch: main
+          # createPR: false
+          # message: 'Update Image Version to ${{ VAPP_VERSION }}'
+          # token: ${{ secrets.GITHUB_TOKEN }}
+          # workDir: infrastructure
   
   release-documentation:
     name: Generate release documentation
