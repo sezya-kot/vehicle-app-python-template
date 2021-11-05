@@ -95,7 +95,7 @@ jobs:
           branch: main
           targetBranch: main
           createPR: false
-          message: 'Update Image Version to ${{ VAPP_VERSION }}'
+          message: 'Update Image Version to $VAPP_VERSION'
           token: ${{ secrets.GITHUB_TOKEN }}
           # workDir: infrastructure
 
