@@ -86,7 +86,7 @@ jobs:
         uses: fjogeleit/yaml-update-action@master
         with:
           valueFile: 'deploy/helm/values.yaml'
-          propertyPath: $ {{ matrix.component.ImageRef}}.repository
+          propertyPath: ${{ matrix.component.ImageRef}}.repository
           value: $TARGET_REPOSITORY/$VAPP_NAME
           # repository: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
           # branch: deployment/${{ steps.image.outputs.version }}
@@ -101,7 +101,7 @@ jobs:
         uses: fjogeleit/yaml-update-action@master
         with:
           valueFile: 'deploy/helm/values.yaml'
-          propertyPath: $ {{ matrix.component.ImageRef}}.tag
+          propertyPath: ${{ matrix.component.ImageRef}}.tag
           value: $VAPP_VERSION
           # repository: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
           # branch: deployment/${{ steps.image.outputs.version }}
