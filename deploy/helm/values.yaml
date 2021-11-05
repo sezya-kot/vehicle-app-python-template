@@ -5,12 +5,16 @@ imageSeatAdjusterApp:
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "f004c3d22acc0dc4544e2b8596ebb37b9c8d53ca"
+  daprAppid: app-skeleton
+  daprPort: 50008
 
 imageVehicleApi:
   repository: swdceuwedevgsopscr.azurecr.io/vehicleapi
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "f004c3d22acc0dc4544e2b8596ebb37b9c8d53ca"
+  daprAppid: vehicleapi
+  daprPort: 50051
 
 imagePullSecrets: []
 nameOverride: ""
