@@ -210,6 +210,7 @@ jobs:
           VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
           COMMIT: ${{ github.sha }}
         run: |
+          cp -a ./.dapr/config.yaml ./deploy/helm/
           export HELM_EXPERIMENTAL_OCI=1
           helm package deploy/helm --version $VAPP_VERSION --app-version $COMMIT
 
@@ -219,7 +220,6 @@ jobs:
           USERNAME: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER }}
           PASSWORD: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD }}
         run: |
-          cp -a ./.dapr/config.yaml ./deploy/helm/
           export HELM_EXPERIMENTAL_OCI=1
           echo $PASSWORD | helm registry login $REGISTRY --username $USERNAME --password-stdin
 
