@@ -1,18 +1,18 @@
 replicaCount: 1
 
 imageSeatAdjusterApp:
-  repository: swdceuwedevgsopscr.azurecr.io/client
+  repository: "ReplaceTheValue"
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "f004c3d22acc0dc4544e2b8596ebb37b9c8d53ca"
+  tag: "#ReplaceTheValue#"
   daprAppid: app-skeleton
   daprPort: 50008
 
 imageVehicleApi:
-  repository: swdceuwedevgsopscr.azurecr.io/vehicleapi
+  repository: "ReplaceTheValue"
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "f004c3d22acc0dc4544e2b8596ebb37b9c8d53ca"
+  tag: "#ReplaceTheValue#"
   daprAppid: vehicleapi
   daprPort: 50051
 

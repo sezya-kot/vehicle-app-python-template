@@ -82,7 +82,11 @@ jobs:
           echo "Copy vApp image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$COMMIT' to 'docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION'"
           skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$COMMIT" "docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION"
 
+  
       - name: Update ${{ matrix.component.Name }} repository value in the related HelmChart values.yaml
+        env:
+          VAPP_NAME: ${{ matrix.component.Name }}          
+          TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }} 
         uses: fjogeleit/yaml-update-action@master
         with:
           valueFile: 'deploy/helm/values.yaml'
@@ -92,6 +96,8 @@ jobs:
           updateFile: true
 
       - name: Update ${{ matrix.component.Name }} tag value in the related HelmChart values.yaml
+        env:
+          VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
         uses: fjogeleit/yaml-update-action@master
         with:
           valueFile: 'deploy/helm/values.yaml'
