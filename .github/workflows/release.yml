@@ -91,7 +91,7 @@ jobs:
         with:
           valueFile: 'deploy/helm/values.yaml'
           propertyPath: '${{ matrix.component.ImageRef}}.repository'
-          value: $TARGET_REPOSITORY/$VAPP_NAME
+          value: '${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}/${{ matrix.component.Name }}'
           commitChange: false
           updateFile: true
 
@@ -102,7 +102,7 @@ jobs:
         with:
           valueFile: 'deploy/helm/values.yaml'
           propertyPath: '${{ matrix.component.ImageRef}}.tag'
-          value: $VAPP_VERSION
+          value: '${{ steps.get_version.outputs.version-without-v }}'
           commitChange: false
           updateFile: true
   
