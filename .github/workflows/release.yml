@@ -105,6 +105,9 @@ jobs:
           value: ${{ steps.get_version.outputs.version-without-v }}
           commitChange: false
           updateFile: true
+      
+      - name: Display values
+        run: cat ./deploy/helm/values.yaml
   
   release-documentation:
     name: Generate release documentation
