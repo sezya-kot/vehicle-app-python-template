@@ -83,31 +83,7 @@ jobs:
           skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$COMMIT" "docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION"
 
   
-      - name: Update ${{ matrix.component.Name }} repository value in the related HelmChart values.yaml
-        env:
-          VAPP_NAME: ${{ matrix.component.Name }}          
-          TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }} 
-        uses: fjogeleit/yaml-update-action@master
-        with:
-          valueFile: 'deploy/helm/values.yaml'
-          propertyPath: '${{ matrix.component.ImageRef}}.repository'
-          value: 'Hardcoded value'
-          commitChange: false
-          updateFile: true
-
-      - name: Update ${{ matrix.component.Name }} tag value in the related HelmChart values.yaml
-        env:
-          VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
-        uses: fjogeleit/yaml-update-action@master
-        with:
-          valueFile: 'deploy/helm/values.yaml'
-          propertyPath: '${{ matrix.component.ImageRef}}.tag'
-          value: ${{ steps.get_version.outputs.version-without-v }}
-          commitChange: false
-          updateFile: true
-      
-      - name: Display values
-        run: cat ./deploy/helm/values.yaml
+    
   
   release-documentation:
     name: Generate release documentation
@@ -213,7 +189,25 @@ jobs:
 
       - id: get_version
         uses: battila7/get-version-action@v2
-        
+      
+      - name: Update vehicleapi tag value in the related HelmChart values.yaml
+        uses: fjogeleit/yaml-update-action@master
+        with:
+          valueFile: 'deploy/helm/values.yaml'
+          propertyPath: 'imageSeatAdjusterApp.tag'
+          value: ${{ steps.get_version.outputs.version-without-v }}
+          commitChange: false
+          updateFile: true
+
+      - name: Update client tag value in the related HelmChart values.yaml
+        uses: fjogeleit/yaml-update-action@master
+        with:
+          valueFile: 'deploy/helm/values.yaml'
+          propertyPath: 'imageVehicleApi.tag'
+          value: ${{ steps.get_version.outputs.version-without-v }}
+          commitChange: false
+          updateFile: true
+          
       - name: Package Helm Chart
         env:
           VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
