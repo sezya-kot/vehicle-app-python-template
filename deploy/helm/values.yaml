@@ -4,7 +4,7 @@ imageSeatAdjusterApp:
   repository: swdceuwedevgsopscr.azurecr.io/client
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "#ReplaceTheValue#"
+  tag: "#SuccessfulExecutionOfReleaseWorkflowUpdatesThisValueToReleaseVersionWithoutV#"
   daprAppid: app-skeleton
   daprPort: 50008
 
@@ -12,7 +12,7 @@ imageVehicleApi:
   repository: swdceuwedevgsopscr.azurecr.io/vehicleapi
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "#ReplaceTheValue#"
+  tag: "#SuccessfulExecutionOfReleaseWorkflowUpdatesThisValueToReleaseVersionWithoutV#"
   daprAppid: vehicleapi
   daprPort: 50051
 
