@@ -15,9 +15,10 @@ spec:
     metadata:
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "app1"
-        dapr.io/app-port: "80"
+        dapr.io/app-id: {{.Values.imageVehicleApi.daprAppid}}
+        dapr.io/app-port: {{.Values.imageVehicleApi.daprPort}}
         dapr.io/log-level: "debug"
+        dapr.io/config: "config.yaml"
       labels:
         {{- include "helm.selectorLabels" . | nindent 8 }}
     spec:
