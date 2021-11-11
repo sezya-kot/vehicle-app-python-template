@@ -13,14 +13,13 @@
 
 from VehicleSdkMock import VehicleSdkMock
 from seat_adjuster import SeatAdjuster
+import swdc_comfort_seats_pb2
 
-
-def test_some():
+def test_seatadjuster():
     mock = VehicleSdkMock()
     sut = SeatAdjuster(mock)
-
+   
     response = sut.setSeatPosition(5)
 
     assert response == 5
     pass
-

@@ -11,6 +11,15 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
+import swdc_comfort_seats_pb2
+import swdc_comfort_seats_pb2_grpc
+
 class VehicleSdkMock:
-    def SetPosition(self, pos: int, port: int):
-        return pos
+    def Move(self, seat: swdc_comfort_seats_pb2.Seat, port: int):
+        return seat.position.base
+
+    def MoveComponent(self, seat: swdc_comfort_seats_pb2.Seat, component: swdc_comfort_seats_pb2.SeatComponent, position: int, port: int):
+        return position
+
+    def CurrentPosition(row: int, index: int):
+        return 1

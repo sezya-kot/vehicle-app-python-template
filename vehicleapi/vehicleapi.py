@@ -19,20 +19,20 @@ import json
 
 
 import grpc
-import vehicleapi_pb2
-import vehicleapi_pb2_grpc
+import swdc_comfort_seats_pb2
+import swdc_comfort_seats_pb2_grpc
 
 from dapr.clients import DaprClient
 
 
-class VehicleApi(vehicleapi_pb2_grpc.SeatControllerServicer):
+class VehicleApi(swdc_comfort_seats_pb2_grpc.SeatsServicer):
 
-    def SetPosition(self, request, context):
-        print("New position is ", request.position, flush=True)
+    def Move(self, request, context):
+        print("New position is ", request.seat.position, flush=True)
 
         req_data = {
-            'id': request.position,
-            'SeatPosition': request.position
+            'id': request.seat.position.base,
+            'SeatPosition': request.seat.position.base
         }
 
         with DaprClient() as d:
@@ -44,13 +44,38 @@ class VehicleApi(vehicleapi_pb2_grpc.SeatControllerServicer):
                 data_content_type='application/json',
             )
 
-        return vehicleapi_pb2.SetPositionResponse()
+        return swdc_comfort_seats_pb2.MoveReply()
 
+    def MoveComponent(self, request, context):
+        print("New component position is ", request.position, flush=True)
+
+        req_data = {
+            'id': request.seat,
+            'seat': request.seat,
+            'component': request.component,
+            'position': request.position
+        }
+
+        with DaprClient() as d:
+            # Create a typed message with content type and body
+            resp = d.publish_event(
+                pubsub_name='mqtt-pubsub',
+                topic_name='SEATCOMPONENTPOSITION',
+                data=json.dumps(req_data),
+                data_content_type='application/json',
+            )
+
+        return swdc_comfort_seats_pb2.MoveComponentReply()
+
+    def CurrentPosition(self, request, context):
+        print("Received CurrentPosition request for seat in row ", request.row, ", index ", request.index, flush=True)
+
+        return swdc_comfort_seats_pb2.CurrentPositionReply()
 
 def serve():
     port = '127.0.0.1:50051'
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    vehicleapi_pb2_grpc.add_SeatControllerServicer_to_server(VehicleApi(), server)
+    swdc_comfort_seats_pb2_grpc.add_SeatsServicer_to_server(VehicleApi(), server)
     server.add_insecure_port(port)
     server.start()
     print("Listening on port ", port, flush=True)

@@ -15,15 +15,33 @@ import sys
 import os
 import grpc
 
-sys.path.insert(1, os.path.join(os.path.dirname(__file__), '..', 'vehicleapi'))
-from vehicleapi import vehicleapi_pb2
-from vehicleapi import vehicleapi_pb2_grpc
+import swdc_comfort_seats_pb2
+import swdc_comfort_seats_pb2_grpc
 
 class VehicleSdk:
-    def SetPosition(pos: int, port: int):
+    def Move(seat: swdc_comfort_seats_pb2.Seat, port: int):
         with grpc.insecure_channel(f'localhost:{port}') as channel:
-            stub = vehicleapi_pb2_grpc.SeatControllerStub(channel)
-            response = stub.SetPosition.with_call(vehicleapi_pb2.SetPositionRequest(position=pos),
-                                                    metadata=(('dapr-app-id', 'vehicleapi'),))
+            stub = swdc_comfort_seats_pb2_grpc.SeatsStub(channel)
+            response = stub.Move.with_call(swdc_comfort_seats_pb2.MoveRequest(seat = seat), 
+            metadata=(('dapr-app-id', 'vehicleapi'),))
+
+        channel.close()
+        return response
+
+    def MoveComponent(seat: swdc_comfort_seats_pb2.Seat, component: swdc_comfort_seats_pb2.SeatComponent, position: int, port: int):
+        with grpc.insecure_channel(f'localhost:{port}') as channel:
+            stub = swdc_comfort_seats_pb2_grpc.SeatsStub(channel)
+            response = stub.MoveComponent.with_call(swdc_comfort_seats_pb2.MoveComponentRequest(seat = seat, component = component, position = position), 
+            metadata=(('dapr-app-id', 'vehicleapi'),))
+
+        channel.close()
+        return response
+
+    def CurrentPosition(row: int, index: int):
+        with grpc.insecure_channel(f'localhost:{port}') as channel:
+            stub = swdc_comfort_seats_pb2_grpc.SeatsStub(channel)
+            response = stub.CurrentPosition.with_call(swdc_comfort_seats_pb2.CurrentPositionRequest(row = row, index = index), 
+            metadata=(('dapr-app-id', 'vehicleapi'),))
+
         channel.close()
         return response

@@ -16,6 +16,7 @@ from threading import Thread
 from time import sleep
 from typing import NewType
 from VehicleSdk import VehicleSdk
+import swdc_comfort_seats_pb2
 
 
 class SeatAdjuster:
@@ -39,7 +40,13 @@ class SeatAdjuster:
         port = os.getenv('DAPR_GRPC_PORT')
         try:
             print("Request setting seat position to ", pos, flush=True)
-            response = self.Sdk.SetPosition(pos, port)
+
+            position = swdc_comfort_seats_pb2.Position(base = pos, cushion = 1, lumbar = 1, side_bolster = 1, head_restraint = 1)
+            location = swdc_comfort_seats_pb2.SeatLocation(row = 1, index = 1)
+            seat = swdc_comfort_seats_pb2.Seat(location = location, position = position)
+
+            response = self.Sdk.Move(seat, port)
+            
             print(f'New seat position returned from vehicle api is "{pos}"', flush=True)
             return response
         except (Exception) as e:

@@ -28,7 +28,7 @@ Describe "Main Loop" {
 
     Context "vehicleapi" {
         It 'should have processed the new seat position' {
-            $AppOutput | should -contain '== APP == New position is  1'
+            $AppOutput | should -contain '== APP == New position is  base: 1'
         }
     }
 }
