@@ -56,6 +56,8 @@ def onSetPositionRequestReceived(data: any, topic: str) -> None:
     location = swdc_comfort_seats_pb2.SeatLocation(row=1, index=1)
     component = swdc_comfort_seats_pb2.BASE
 
+    # Check if speed = 0, if yes, call MoveComponent, otherwise return MQTT Response Error
+    
     # try catch
     sdk.MoveComponent(location, component, data["position"], port)
 
