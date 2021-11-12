@@ -28,16 +28,16 @@ class VehicleSdk:
         channel.close()
         return response
 
-    def MoveComponent(seat: swdc_comfort_seats_pb2.Seat, component: swdc_comfort_seats_pb2.SeatComponent, position: int, port: int):
+    def MoveComponent(self, seatLocation: swdc_comfort_seats_pb2.SeatLocation, component: swdc_comfort_seats_pb2.SeatComponent, position: int, port: int):
         with grpc.insecure_channel(f'localhost:{port}') as channel:
             stub = swdc_comfort_seats_pb2_grpc.SeatsStub(channel)
-            response = stub.MoveComponent.with_call(swdc_comfort_seats_pb2.MoveComponentRequest(seat = seat, component = component, position = position), 
+            response = stub.MoveComponent.with_call(swdc_comfort_seats_pb2.MoveComponentRequest(seat = seatLocation, component = component, position = position), 
             metadata=(('dapr-app-id', 'vehicleapi'),))
 
         channel.close()
         return response
 
-    def CurrentPosition(row: int, index: int):
+    def CurrentPosition(row: int, index: int, port: int):
         with grpc.insecure_channel(f'localhost:{port}') as channel:
             stub = swdc_comfort_seats_pb2_grpc.SeatsStub(channel)
             response = stub.CurrentPosition.with_call(swdc_comfort_seats_pb2.CurrentPositionRequest(row = row, index = index), 
