@@ -11,18 +11,19 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
+import json
+import logging
 import os
-import flask
-from flask import request, jsonify
-# from __future__ import print_function
+from typing import Any
 
+# from __future__ import print_function
 from cloudevents.sdk.event import v1
 from dapr.ext.grpc import App
-import logging
-import json
-from VehicleSdk import VehicleClient
-import swdc_comfort_seats_pb2
+from flask import jsonify, request
+from grpc import local_channel_credentials
 
+import swdc_comfort_seats_pb2
+from VehicleSdk import VehicleClient
 
 app = App()
 
@@ -40,30 +41,52 @@ def onSetPositionRequestBfbAppReceived(event: v1.Event) -> None:
 
 
 def onSetPositionRequestReceived(data: any, topic: str) -> None:
-
     print(f'Set Position Request received: Position={data["position"]}, RequestId="{data["requestId"]} Topic={topic}', flush=True)  # noqa: E501
     vehicleClient = VehicleClient()
- 
-    # TODO: Check if speed = 0, if yes, call MoveComponent, otherwise return MQTT Response Error
+    vehicleMovingSpeed = getVehicleMovingSpeed()
 
-    # try catch
-    location = swdc_comfort_seats_pb2.SeatLocation(row=1, index=1)
-    component = swdc_comfort_seats_pb2.BASE
-    vehicleClient.Seats.MoveComponent(location, component, data["position"])
+    if vehicleMovingSpeed == 0:
+        try:
+            location = swdc_comfort_seats_pb2.SeatLocation(row=1, index=1)
+            component = swdc_comfort_seats_pb2.BASE
+            vehicleClient.Seats.MoveComponent(location, component, data["position"])
 
-    resp_data = {
-        'requestId': data["requestId"],
-        'result': {
-            'status': 0
+            resp_data = {
+                'requestId': data["requestId"],
+                'result': {
+                    'status': 0
+                }
+            }
+        except Exception as ex:
+            resp_data = {
+                'status': data["requestId"],
+                'message': getErrorMessageFrom(ex)
+            }
+    else:
+        resp_data = {
+            'requestId': data["requestId"],
+            'result': {
+                'status': 1
+            }
         }
-    }
-# catch
-##
+    publishDataToTopic(resp_data, topic, vehicleClient)
+
+def getErrorMessageFrom(ex: Exception):
+    errorMessage = str()
+    if hasattr(ex, 'message'):
+        errorMessage = ex.message
+    else:
+        errorMessage = ex[0]
+    return errorMessage
+
+def publishDataToTopic(resp_data: dict, topic: str, vehicleClient: VehicleClient):
     vehicleClient.PublishEvent(
         'seatadjuster/setPosition/response/' + topic,
         json.dumps(resp_data)
     )
 
+def getVehicleMovingSpeed():
+    return int(0)
 
 if __name__ == '__main__':
     logging.basicConfig()
