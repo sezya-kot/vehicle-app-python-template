@@ -31,19 +31,13 @@ import grpc
 app = App()
 
 
-@app.subscribe(pubsub_name='mqtt-pubsub', topic='SEATPOSITION')
-def onSeatPositionUpdate(event: v1.Event) -> None:
-    data = json.loads(event.Data())
-    print(f'Subscriber received: id={data["id"]}, SeatPosition="{data["SeatPosition"]}", content_type="{event.content_type}"', flush=True)  # noqa: E501
-
-
-@app.subscribe(pubsub_name='mqtt-pubsub-raw', topic='seatadjuster/setPosition/request/gui-app', metadata={'rawPayload': 'true'}, )
+@app.subscribe(pubsub_name='mqtt-pubsub', topic='seatadjuster/setPosition/request/gui-app', metadata={'rawPayload': 'true'}, )
 def onSetPositionRequestGuiAppReceived(event: v1.Event) -> None:
     data = json.loads(event.Data())
     onSetPositionRequestReceived(data, "gui-app")
 
 
-@app.subscribe(pubsub_name='mqtt-pubsub-raw', topic='seatadjuster/setPosition/request/bfb-app', metadata={'rawPayload': 'true'}, )
+@app.subscribe(pubsub_name='mqtt-pubsub', topic='seatadjuster/setPosition/request/bfb-app', metadata={'rawPayload': 'true'}, )
 def onSetPositionRequestBfbAppReceived(event: v1.Event) -> None:
     data = json.loads(event.Data())
     onSetPositionRequestReceived(data, "bfb-app")
@@ -79,7 +73,7 @@ def onSetPositionRequestReceived(data: any, topic: str) -> None:
    
 
     req = api_v1.PublishEventRequest(
-        pubsub_name='mqtt-pubsub-raw',
+        pubsub_name='mqtt-pubsub',
         topic='seatadjuster/setPosition/response/' + topic,
         data=bytes(json.dumps(resp_data), 'utf-8'),
         metadata={'rawPayload': 'true'},)
@@ -89,6 +83,4 @@ def onSetPositionRequestReceived(data: any, topic: str) -> None:
 
 if __name__ == '__main__':
     logging.basicConfig()
-    # seatAdjuster = SeatAdjuster(VehicleSdk)
-    # seatAdjuster.start()
     app.run(50008)
