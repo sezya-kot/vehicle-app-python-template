@@ -43,13 +43,13 @@ def onSetPositionRequestReceived(data: any, topic: str) -> None:
 
     print(f'Set Position Request received: Position={data["position"]}, RequestId="{data["requestId"]} Topic={topic}', flush=True)  # noqa: E501
     vehicleClient = VehicleClient()
-    location = swdc_comfort_seats_pb2.SeatLocation(row=1, index=1)
-    component = swdc_comfort_seats_pb2.BASE
-
-    # Check if speed = 0, if yes, call MoveComponent, otherwise return MQTT Response Error
+ 
+    # TODO: Check if speed = 0, if yes, call MoveComponent, otherwise return MQTT Response Error
 
     # try catch
-    vehicleClient.MoveComponent(location, component, data["position"])
+    location = swdc_comfort_seats_pb2.SeatLocation(row=1, index=1)
+    component = swdc_comfort_seats_pb2.BASE
+    vehicleClient.Seats.MoveComponent(location, component, data["position"])
 
     resp_data = {
         'requestId': data["requestId"],
