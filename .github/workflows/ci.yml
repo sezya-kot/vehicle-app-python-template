@@ -275,7 +275,7 @@ jobs:
         shell: pwsh
         run: |
           Write-Output "::group::dapr init"
-          dapr init
+          dapr init  --runtime-version 1.4.0
           Write-Output "::endgroup::"
           dapr --version
 
