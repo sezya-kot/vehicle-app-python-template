@@ -17,5 +17,5 @@ protobuf==3.19.1
 cloudevents >= 1.0.0
 opencensus == 0.8.0
 opencensus-ext-grpc == 0.7.2
-dapr-ext-grpc >= 1.4.0rc1.dev655
-dapr >= 1.4.0rc1.dev655
+dapr-ext-grpc >= 1.4.0
+dapr >= 1.4.0
