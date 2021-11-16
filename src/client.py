@@ -15,6 +15,7 @@ import json
 import logging
 import os
 from typing import Any
+from typing import Optional
 
 # from __future__ import print_function
 from cloudevents.sdk.event import v1
@@ -37,19 +38,18 @@ def onSetPositionRequestGuiAppReceived(event: v1.Event) -> None:
     onSetPositionRequestReceived(data, "seatadjuster/setPosition/response/gui-app")
 
 
-@app.subscribe(pubsub_name='mqtt-pubsub', topic='seatadjuster/setSeatPosition', metadata={'rawPayload': 'true'}, )
+@app.subscribe(pubsub_name='mqtt-pubsub', topic='seatadjuster/vss.setPosition', metadata={'rawPayload': 'true'}, )
 def onSetPositionRequestBfbAppReceived(event: v1.Event) -> None:
     bfb_data = json.loads(event.Data())
     print(f'Set Position Request received: data={bfb_data}', flush=True)  # noqa: E501
     bfbAdapter = BfbAdapter()
     data = bfbAdapter.process(bfb_data)
-    onSetPositionRequestReceived(data, "seatadjuster/setPosition/response")
+    onSetPositionRequestReceived(data)
 
-def onSetPositionRequestReceived(data: any, resp_topic: str) -> None:
-   
+def onSetPositionRequestReceived(data: any, resp_topic:  Optional[str] = None) -> None:
     vehicleClient = VehicleClient()
     setPositionRequestProcessor = SetPositionRequestProcessor()
-    setPositionRequestProcessor.process(data, resp_topic, vehicleClient)
+    setPositionRequestProcessor.process(data, vehicleClient, resp_topic)
 
 if __name__ == '__main__':
     logging.basicConfig()

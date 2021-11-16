@@ -15,6 +15,7 @@ import json
 import logging
 import os
 from typing import Any
+from typing import Optional
 
 from cloudevents.sdk.event import v1
 from dapr.ext.grpc import App
@@ -25,9 +26,9 @@ import swdc_comfort_seats_pb2
 from VehicleSdk import VehicleClient
 
 class SetPositionRequestProcessor:
-    def process(self, data: any, resp_topic: str, vehicleClient: VehicleClient):
+    def process(self, data: any, vehicleClient: VehicleClient,  resp_topic: Optional[str] = None):
         resp_data = self.getProcessedResponse(data, vehicleClient)
-        self.publishDataToTopic(resp_data, resp_topic, vehicleClient)
+        self.publishDataToTopic(resp_data, vehicleClient, resp_topic)
 
     def getProcessedResponse(self, data, vehicleClient):
         try:
@@ -53,15 +54,16 @@ class SetPositionRequestProcessor:
         return resp_data
 
     
-    def publishDataToTopic(self, resp_data: dict, resp_topic: str, vehicleClient: VehicleClient):
+    def publishDataToTopic(self, resp_data: dict, vehicleClient: VehicleClient, resp_topic: Optional[str] = None):
         status = 0
-        try:
-            vehicleClient.PublishEvent(
-                resp_topic,
-                json.dumps(resp_data)
-            )
-        except Exception as ex:
-            status = -1
+        if resp_topic:
+            try:
+                vehicleClient.PublishEvent(
+                    resp_topic,
+                    json.dumps(resp_data)
+                )
+            except Exception as ex:
+                status = -1
         
         return status
     
