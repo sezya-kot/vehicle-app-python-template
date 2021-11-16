@@ -188,7 +188,7 @@ jobs:
             type=oci,dest=./seatadjuster-${{ matrix.component.Name }}.tar
           context: ${{ matrix.component.DockerFolder }}
           file: ${{ matrix.component.Folder }}/Dockerfile
-          platforms: linux/amd64,linux/aarch64
+          platforms: linux/aarch64
           labels: |
             org.opencontainers.image.source=https://github.com/${{steps.github-repository-name-case-adjusted.outputs.lowercase}}
 
