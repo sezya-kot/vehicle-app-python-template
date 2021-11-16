@@ -291,26 +291,26 @@ jobs:
         shell: bash
         run: docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto:1.6.9          
 
-      - name: Test SeatAdjuster vehicleApp 
-        shell: pwsh
-        run: ./IntegrationTests/Test-SdvVehicleApp.ps1     
+      # - name: Test SeatAdjuster vehicleApp 
+      #  shell: pwsh
+      #  run: ./IntegrationTests/Test-SdvVehicleApp.ps1     
 
-      - name: Publish Integration Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        if: always()
-        with:
-          files: .sdv/tmp/IntegrationTest/junit.xml   
-          check_name: Integration Test Results     
-          fail_on: "test failures"
+     # - name: Publish Integration Test Results
+     #   uses: EnricoMi/publish-unit-test-result-action@v1
+     #   if: always()
+     #   with:
+     #     files: .sdv/tmp/IntegrationTest/junit.xml   
+     #     check_name: Integration Test Results     
+     #     fail_on: "test failures"
 
-      - name: Package integration test result files
-        uses: ./.github/swdc-actions/documentation/package
-        with:
-          name: "IntegrationTest"
-          type: "IntegrationTest"
-          schema: "JUnit"
-          sourcePath: .sdv/tmp/IntegrationTest
-          packagePath: .sdv/tmp/Documentation/renderer        
+     # - name: Package integration test result files
+     #   uses: ./.github/swdc-actions/documentation/package
+     #   with:
+     #     name: "IntegrationTest"
+     #     type: "IntegrationTest"
+     #     schema: "JUnit"
+     #     sourcePath: .sdv/tmp/IntegrationTest
+     #     packagePath: .sdv/tmp/Documentation/renderer        
           
       - name: Upload test results as artifacts
         uses: actions/upload-artifact@v2
