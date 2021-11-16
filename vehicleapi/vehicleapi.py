@@ -50,8 +50,8 @@ class VehicleApi(swdc_comfort_seats_pb2_grpc.SeatsServicer):
         print("New component position is ", request.position, flush=True)
 
         req_data = {
-            'id': request.seat,
-            'seat': request.seat,
+            'location-index': request.seat.index,
+            'location-row': request.seat.row,
             'component': request.component,
             'position': request.position
         }

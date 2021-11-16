@@ -17,31 +17,59 @@ import grpc
 
 import swdc_comfort_seats_pb2
 import swdc_comfort_seats_pb2_grpc
+from dapr.proto import api_service_v1, api_v1
 
-class VehicleSdk:
-    def Move(seat: swdc_comfort_seats_pb2.Seat, port: int):
-        with grpc.insecure_channel(f'localhost:{port}') as channel:
-            stub = swdc_comfort_seats_pb2_grpc.SeatsStub(channel)
-            response = stub.Move.with_call(swdc_comfort_seats_pb2.MoveRequest(seat = seat), 
-            metadata=(('dapr-app-id', 'vehicleapi'),))
+from typing import Optional
 
-        channel.close()
-        return response
+class VehicleClient:
+    def __init__(self, port: Optional[int] = None):
+        if not port:
+            port = os.getenv('DAPR_GRPC_PORT')
+        self._address = f'localhost:{port}'
+        self._channel = grpc.insecure_channel(self._address)   # type: ignore
+        self._metadata = (('dapr-app-id', 'vehicleapi'),)
+        self._daprStub =  api_service_v1.DaprStub(self._channel)
+        self.Seats = self._Seats(self._channel, self._metadata)
 
-    def MoveComponent(seat: swdc_comfort_seats_pb2.Seat, component: swdc_comfort_seats_pb2.SeatComponent, position: int, port: int):
-        with grpc.insecure_channel(f'localhost:{port}') as channel:
-            stub = swdc_comfort_seats_pb2_grpc.SeatsStub(channel)
-            response = stub.MoveComponent.with_call(swdc_comfort_seats_pb2.MoveComponentRequest(seat = seat, component = component, position = position), 
-            metadata=(('dapr-app-id', 'vehicleapi'),))
+    def close(self):
+        """Closes runtime gRPC channel."""
+        if self._channel:
+            self._channel.close()
 
-        channel.close()
-        return response
+    def __del__(self):
+        self.close()
 
-    def CurrentPosition(row: int, index: int):
-        with grpc.insecure_channel(f'localhost:{port}') as channel:
-            stub = swdc_comfort_seats_pb2_grpc.SeatsStub(channel)
-            response = stub.CurrentPosition.with_call(swdc_comfort_seats_pb2.CurrentPositionRequest(row = row, index = index), 
-            metadata=(('dapr-app-id', 'vehicleapi'),))
+    def __enter__(self) -> 'VehicleClient':
+        return self
 
-        channel.close()
-        return response
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
+        self.close()
+
+    def PublishEvent(self, topic: str, data: any):
+        req = api_v1.PublishEventRequest(
+            pubsub_name='mqtt-pubsub',
+            topic=topic,
+            data=bytes(data, 'utf-8'),
+            metadata={'rawPayload': 'true'},)
+        self._daprStub.PublishEvent(req)
+
+    class _Seats:
+        def __init__(self, channel, metadata):
+            self._stub = swdc_comfort_seats_pb2_grpc.SeatsStub(channel)   # type: ignore
+            self._metadata = metadata
+
+        def Move(self, seat: swdc_comfort_seats_pb2.Seat):
+            response = self._stub.Move.with_call(swdc_comfort_seats_pb2.MoveRequest(seat = seat), 
+                metadata=self._metadata)
+            return response
+
+        def MoveComponent(self, seatLocation: swdc_comfort_seats_pb2.SeatLocation, component: swdc_comfort_seats_pb2.SeatComponent, position: int):
+            response = self._stub.MoveComponent.with_call(swdc_comfort_seats_pb2.MoveComponentRequest(seat = seatLocation, component = component, position = position), 
+                metadata=self._metadata)
+            return response
+
+        def CurrentPosition(self, row: int, index: int):
+            response = self._stub.CurrentPosition.with_call(swdc_comfort_seats_pb2.CurrentPositionRequest(row = row, index = index), 
+                metadata=self._metadata)
+            return response
+

@@ -123,6 +123,38 @@ The `.docker\config.json` has to have following proxy settings:
    python3 -m grpc_tools.protoc --proto_path=./proto/ --python_out=./vehicleapi/    --grpc_python_out=./vehicleapi/ ./proto/vehicleapi.proto
    ```
 
+1. Request Seat-Adjustment inside the vehicle
+
+Send MQTT message to topic `seatadjuster/setPosition/request/guid-app`. 
+
+Example:
+```json
+{"position": 300, "requestId": "xyz"}
+```
+Response is written to topic `seatadjuster/setPosition/response/guid-app`.
+
+1. Request Seat-Adjustment from the cloud
+
+Send MQTT message to topic `seatAdjuster/${commandName}`.
+
+Example:
+```json
+{
+    "appId": "seatAdjuster",      // fixed value for BfB datapoint API
+    "pVer": "1.0",              // payload version of the command
+    "eVer": "2.0",
+    "cId": "<uuid>",            // correlation Id - Internally generated
+    "cmdName": "${commandName}",  
+    "ts": 0123456677,
+    "p": {
+      "path": "Vehicle.Cabin.Seat.Row1.Pos1.Position",
+      "value": "1000" 
+    }
+}
+```
+
+Response is written to topic `TBD`.
+
   
 ## Release the vehicleApp to push it to the container registry
    * In order to deploy the vehicleApp you need to set the secrets on repository

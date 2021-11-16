@@ -11,27 +11,46 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
+import json
+import logging
+import os
+from typing import Any
 
-from __future__ import print_function
-
+# from __future__ import print_function
 from cloudevents.sdk.event import v1
 from dapr.ext.grpc import App
-import logging
-from seat_adjuster import SeatAdjuster
-import json
-from VehicleSdk import VehicleSdk
+from flask import jsonify, request
+from grpc import local_channel_credentials
+
+import swdc_comfort_seats_pb2
+from set_position_request_processor import SetPositionRequestProcessor
+from VehicleSdk import VehicleClient
+from bfb_adapter import BfbAdapter
 
 app = App()
 
 
-@app.subscribe(pubsub_name='mqtt-pubsub', topic='SEATPOSITION')
-def onSeatPositionUpdate(event: v1.Event) -> None:
+@app.subscribe(pubsub_name='mqtt-pubsub', topic='seatadjuster/setPosition/request/gui-app', metadata={'rawPayload': 'true'}, )
+def onSetPositionRequestGuiAppReceived(event: v1.Event) -> None:
     data = json.loads(event.Data())
-    print(f'Subscriber received: id={data["id"]}, SeatPosition="{data["SeatPosition"]}", content_type="{event.content_type}"', flush=True)  # noqa: E501
+    print(f'Set Position Request received: data={data}', flush=True)  # noqa: E501
+    onSetPositionRequestReceived(data, "seatadjuster/setPosition/response/gui-app")
 
+
+@app.subscribe(pubsub_name='mqtt-pubsub', topic='seatadjuster/setSeatPosition', metadata={'rawPayload': 'true'}, )
+def onSetPositionRequestBfbAppReceived(event: v1.Event) -> None:
+    bfb_data = json.loads(event.Data())
+    print(f'Set Position Request received: data={bfb_data}', flush=True)  # noqa: E501
+    bfbAdapter = BfbAdapter()
+    data = bfbAdapter.process(bfb_data)
+    onSetPositionRequestReceived(data, "seatadjuster/setPosition/response")
+
+def onSetPositionRequestReceived(data: any, resp_topic: str) -> None:
+   
+    vehicleClient = VehicleClient()
+    setPositionRequestProcessor = SetPositionRequestProcessor()
+    setPositionRequestProcessor.process(data, resp_topic, vehicleClient)
 
 if __name__ == '__main__':
     logging.basicConfig()
-    seatAdjuster = SeatAdjuster(VehicleSdk)
-    seatAdjuster.start()
     app.run(50008)

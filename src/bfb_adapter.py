@@ -11,15 +11,27 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-from VehicleSdkMock import VehicleSdkMock
-from seat_adjuster import SeatAdjuster
-import swdc_comfort_seats_pb2
+import json
+import logging
+import os
+from typing import Any
 
-def test_seatadjuster():
-    mock = VehicleSdkMock()
-    sut = SeatAdjuster(mock)
-   
-    response = sut.setSeatPosition(5)
+# from __future__ import print_function
+from cloudevents.sdk.event import v1
+from dapr.ext.grpc import App
+from flask import jsonify, request
+from grpc import local_channel_credentials
 
-    assert response == 5
-    pass
+from VehicleSdk import VehicleClient
+
+class BfbAdapter:
+    def process(self, data: any):
+        resp_data = {
+            'requestId': data["cId"],
+            'position': data["p"]["value"]
+        }
+
+        return resp_data;
+        
+
+  
