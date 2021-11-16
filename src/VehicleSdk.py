@@ -27,9 +27,15 @@ class VehicleClient:
             port = os.getenv('DAPR_GRPC_PORT')
         self._address = f'localhost:{port}'
         self._channel = grpc.insecure_channel(self._address)   # type: ignore
+        
+        self._seats_address = os.getenv('SEATS_SERVICE_ADDRESS')
+        if not self._seats_address:
+            self._seats_address = self._address
+        self._seats_channel = grpc.insecure_channel(self._seats_address)   # type: ignore
+
         self._metadata = (('dapr-app-id', 'vehicleapi'),)
         self._daprStub =  api_service_v1.DaprStub(self._channel)
-        self.Seats = self._Seats(self._channel, self._metadata)
+        self.Seats = self._Seats(self._seats_channel, self._metadata)
 
     def close(self):
         """Closes runtime gRPC channel."""
