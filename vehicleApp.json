@@ -1,6 +1,7 @@
 {
     "Name": "SeatAdjuster",
     "Components": [
-        { "Name": "seat-adjuster-app", "Folder": "src", "StartProgram": "client.py", "Port": 50008, "IsPublisher": 1, "DockerFolder": "."}
+        { "Folder": "vehicleapi", "StartProgram": "vehicleapi.py", "Port": 50051, "IsPublisher": 1},
+        { "Name": "seat-adjuster-app-ces", "Folder": "src", "StartProgram": "client.py", "Port": 50008, "IsPublisher": 1, "DockerFolder": "."}
     ]
 }
