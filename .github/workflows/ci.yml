@@ -35,9 +35,9 @@ jobs:
       - name: Clone actions repository 
         uses: actions/checkout@v2
         with:
-          repository: SoftwareDefinedVehicle/swdc-actions
-          ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
-          path: "./.github/swdc-actions"
+          repository: SoftwareDefinedVehicle/release-documentation-action
+          ssh-key: ${{ secrets.RELEASE_DOC_ACTION_PRIVATE_KEY }}
+          path: "./.github/actions"
 
       - name: Install Dapr
         uses: dapr/setup-dapr@v1
@@ -86,7 +86,7 @@ jobs:
           lcov-file: .sdv/tmp/CodeCoverage/lcov.info
 
       - name: Package unit test files
-        uses: ./.github/swdc-actions/documentation/package
+        uses: ./.github/actions/package
         with:
           name: "UnitTest"
           type: "UnitTest"
@@ -95,7 +95,7 @@ jobs:
           packagePath: ./.sdv/tmp/Documentation/renderer
 
       - name: Package code coverage files
-        uses: ./.github/swdc-actions/documentation/package
+        uses: ./.github/actions/package
         with:
           name: "CodeCoverage"
           type: "CodeCoverage"
@@ -152,9 +152,9 @@ jobs:
       - name: Clone actions repository 
         uses: actions/checkout@v2
         with:
-          repository: SoftwareDefinedVehicle/swdc-actions
-          ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
-          path: "./.github/swdc-actions"
+          repository: SoftwareDefinedVehicle/release-documentation-action
+          ssh-key: ${{ secrets.RELEASE_DOC_ACTION_PRIVATE_KEY }}
+          path: "./.github/actions"
 
       - name: Check Docker version
         run: docker --version    
@@ -214,7 +214,7 @@ jobs:
         run: cat ./junit.xml
 
       - name: "${{ matrix.component.Name }} -- Package vulnerability scan files"
-        uses: ./.github/swdc-actions/documentation/package
+        uses: ./.github/actions/package
         with:
           name: "VulnerabilityScan-${{ matrix.component.Name }}"
           type: "VulnerabilityScan"
@@ -262,9 +262,9 @@ jobs:
       - name: Clone actions repository 
         uses: actions/checkout@v2
         with:
-          repository: SoftwareDefinedVehicle/swdc-actions
-          ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
-          path: "./.github/swdc-actions"
+          repository: SoftwareDefinedVehicle/release-documentation-action
+          ssh-key: ${{ secrets.RELEASE_DOC_ACTION_PRIVATE_KEY }}
+          path: "./.github/actions"
 
       - name: Install Dapr
         uses: dapr/setup-dapr@v1
@@ -304,7 +304,7 @@ jobs:
           fail_on: "test failures"
 
       - name: Package integration test result files
-        uses: ./.github/swdc-actions/documentation/package
+        uses: ./.github/actions/package
         with:
           name: "IntegrationTest"
           type: "IntegrationTest"
