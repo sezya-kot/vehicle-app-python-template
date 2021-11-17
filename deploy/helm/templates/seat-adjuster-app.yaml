@@ -17,7 +17,7 @@ spec:
       image: "{{ .Values.imageSeatAdjusterApp.repository }}:{{ .Values.imageSeatAdjusterApp.tag | default .Chart.AppVersion }}"
       imagePullPolicy: {{ .Values.imageSeatAdjusterApp.pullPolicy }}
       ports:
-      - containerPort: "{{.Values.imageSeatAdjusterApp.daprPort}}"
+      - containerPort: {{.Values.imageSeatAdjusterApp.daprPort}}
       env:
       - name: SEATS_SERVICE_ADDRESS
         value: "0.0.0.0:50051"
