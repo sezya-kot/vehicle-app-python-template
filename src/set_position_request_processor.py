@@ -34,8 +34,8 @@ class SetPositionRequestProcessor:
         try:
             location = swdc_comfort_seats_pb2.SeatLocation(row=1, index=1)
             component = swdc_comfort_seats_pb2.BASE
-            vehicleClient.Seats.MoveComponent(location, component, data["position"])
-
+            response = vehicleClient.Seats.MoveComponent(location, component, data["position"])
+            logging.info(f'Seat moved successfully to position: {data["position"]}')
             resp_data = {
                 'requestId': data["requestId"],
                 'result': {
@@ -43,6 +43,7 @@ class SetPositionRequestProcessor:
                 }
             }
         except Exception as ex:
+            logging.error('Error moving seat!!')
             logging.error(self.getErrorMessageFrom(ex))
             resp_data = {
                 'requestId': data["requestId"],

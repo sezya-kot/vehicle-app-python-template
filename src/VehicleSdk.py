@@ -26,16 +26,15 @@ class VehicleClient:
     def __init__(self, port: Optional[int] = None):
         if not port:
             port = os.getenv('DAPR_GRPC_PORT')
-            logging.info(f'found DAPR_GRPC_PORT {port}')
+            logging.debug(f'found DAPR_GRPC_PORT {port}')
         self._address = f'localhost:{port}'
-        # logging.info(f'using  address {self._address}')
         self._channel = grpc.insecure_channel(self._address)   # type: ignore
         
         self._seats_address = os.getenv('SEATS_SERVICE_ADDRESS')
         if not self._seats_address:
             self._seats_address = self._address
-            logging.info(f'Found no env variable for seats address')
-        logging.info(f'using seats address {self._seats_address}')
+            logging.debug(f'Found no env variable for seats address')
+        logging.debug(f'using seats address {self._seats_address}')
         self._seats_channel = grpc.insecure_channel(self._seats_address)   # type: ignore
 
         self._metadata = (('dapr-app-id', 'vehicleapi'),)

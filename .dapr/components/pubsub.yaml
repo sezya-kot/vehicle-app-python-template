@@ -21,7 +21,7 @@ spec:
   version: v1
   metadata:
   - name: url
-    value: "mqtt://host.k3d.internal:1883"
+    value: "mqtt://localhost:1883"
   - name: qos
     value: 1
   - name: retain

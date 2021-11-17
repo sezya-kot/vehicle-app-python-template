@@ -35,7 +35,8 @@
             "preLaunchTask": "daprd-debug-SeatAdjuster-client",
             "postDebugTask": "daprd-down-SeatAdjuster-client",
             "env": {
-                "DAPR_GRPC_PORT":"50001"
+                "DAPR_GRPC_PORT":"50001",
+                "SEATS_SERVICE_ADDRESS":"localhost:50051"
             }
         },
         {
