@@ -7,15 +7,6 @@ imageSeatAdjusterApp:
   daprAppid: app-skeleton
   daprPort: 50008
 
-imageVehicleApi:
-  name: vehicle-api
-  repository: swdceuwedevgsopscr.azurecr.io/vehicleapi
-  pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "#SuccessfulExecutionOfReleaseWorkflowUpdatesThisValueToReleaseVersionWithoutV#"
-  daprAppid: vehicleapi
-  daprPort: 50051
-
 nameOverride: ""
 fullnameOverride: ""
 

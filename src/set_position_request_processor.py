@@ -43,7 +43,8 @@ class SetPositionRequestProcessor:
                 }
             }
         except Exception as ex:
-             resp_data = {
+            logging.error(self.getErrorMessageFrom(ex))
+            resp_data = {
                 'requestId': data["requestId"],
                 'result': {
                     'status': 1,

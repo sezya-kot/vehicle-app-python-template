@@ -14,8 +14,10 @@
 import json
 import logging
 import os
+import sys
 from typing import Any
 from typing import Optional
+
 
 # from __future__ import print_function
 from cloudevents.sdk.event import v1
@@ -27,21 +29,21 @@ import swdc_comfort_seats_pb2
 from set_position_request_processor import SetPositionRequestProcessor
 from VehicleSdk import VehicleClient
 from bfb_adapter import BfbAdapter
+import time
 
 app = App()
-
 
 @app.subscribe(pubsub_name='mqtt-pubsub', topic='seatadjuster/setPosition/request/gui-app', metadata={'rawPayload': 'true'}, )
 def onSetPositionRequestGuiAppReceived(event: v1.Event) -> None:
     data = json.loads(event.Data())
-    print(f'Set Position Request received: data={data}', flush=True)  # noqa: E501
+    logger.info(f'Set Position Request received: data={data}')
     onSetPositionRequestReceived(data, "seatadjuster/setPosition/response/gui-app")
 
 
 @app.subscribe(pubsub_name='mqtt-pubsub', topic='seatadjuster/vss.setPosition', metadata={'rawPayload': 'true'}, )
 def onSetPositionRequestBfbAppReceived(event: v1.Event) -> None:
     bfb_data = json.loads(event.Data())
-    print(f'Set Position Request received: data={bfb_data}', flush=True)  # noqa: E501
+    logger.info(f'Set Position Request received: data={bfb_data}')  
     bfbAdapter = BfbAdapter()
     data = bfbAdapter.process(bfb_data)
     onSetPositionRequestReceived(data)
@@ -52,5 +54,7 @@ def onSetPositionRequestReceived(data: any, resp_topic:  Optional[str] = None) -
     setPositionRequestProcessor.process(data, vehicleClient, resp_topic)
 
 if __name__ == '__main__':
-    logging.basicConfig()
+    logging.basicConfig(format='%(levelname)s [%(asctime)s] - %(message)s', level=logging.DEBUG, stream=sys.stdout)
+    logger = logging.getLogger('SeatAdjusterApp')
+    logger.info('Seat Adjuster App started')  
     app.run(50008)

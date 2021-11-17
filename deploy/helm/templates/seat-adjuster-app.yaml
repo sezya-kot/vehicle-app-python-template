@@ -7,7 +7,8 @@ metadata:
     dapr.io/app-id: "{{.Values.imageSeatAdjusterApp.daprAppid}}"
     dapr.io/app-port: "{{.Values.imageSeatAdjusterApp.daprPort}}"
     dapr.io/log-level: "debug"
-    dapr.io/config: "config.yaml"
+    dapr.io/config: "config"
+    dapr.io/app-protocol: "grpc"
   labels:
     {{- include "helm.selectorLabels" . | nindent 8 }}
 spec:
@@ -15,3 +16,8 @@ spec:
     - name: {{.Values.imageSeatAdjusterApp.name}}
       image: "{{ .Values.imageSeatAdjusterApp.repository }}:{{ .Values.imageSeatAdjusterApp.tag | default .Chart.AppVersion }}"
       imagePullPolicy: {{ .Values.imageSeatAdjusterApp.pullPolicy }}
+      ports:
+      - containerPort: "{{.Values.imageSeatAdjusterApp.daprPort}}"
+      env:
+      - name: SEATS_SERVICE_ADDRESS
+        value: "0.0.0.0:50051"

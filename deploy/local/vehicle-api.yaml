@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vehicleapi
+  annotations:
+    dapr.io/enabled: "true"
+    dapr.io/app-id: "vehicleapi"
+    dapr.io/app-port: "50051"
+    dapr.io/log-level: "debug"
+    dapr.io/app-protocol: "grpc"
+    dapr.io/config: "config"
+spec:
+  containers:
+    - name: vehicleapi
+      image:  k3d-devregistry.localhost:12345/vehicleapi:local
+      imagePullPolicy: Always
+      ports:
+      - containerPort: 50051

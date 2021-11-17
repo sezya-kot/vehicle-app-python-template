@@ -125,7 +125,7 @@ The `.docker\config.json` has to have following proxy settings:
 
 1. Request Seat-Adjustment inside the vehicle
 
-Send MQTT message to topic `seatadjuster/setPosition/request/gui-app`. 
+Send MQTT message to topic `seatadjuster/setPosition/request/guid-app`. 
 
 Example:
 ```json
@@ -144,7 +144,7 @@ Example:
     "pVer": "1.0", 
     "eVer": "2.0",
     "cId": "8859891a-ec69-4343-83ed-66d411849c58",
-    "cmdName": "vss.setPosition",  
+    "cmdName": "setPosition",  
     "ts": 123456677,
     "p": {
       "path": "Vehicle.Cabin.Seat.Row1.Pos1.Position",
