@@ -198,15 +198,6 @@ jobs:
           value: ${{ steps.get_version.outputs.version-without-v }}
           commitChange: false
           updateFile: true
-
-      - name: Update client tag value in the related HelmChart values.yaml
-        uses: fjogeleit/yaml-update-action@master
-        with:
-          valueFile: 'deploy/helm/values.yaml'
-          propertyPath: 'imageVehicleApi.tag'
-          value: ${{ steps.get_version.outputs.version-without-v }}
-          commitChange: false
-          updateFile: true
           
       - name: Package Helm Chart
         env:
