@@ -204,7 +204,6 @@ jobs:
           VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
           COMMIT: ${{ github.sha }}
         run: |
-          cp -a ./.dapr/config.yaml ./deploy/helm/
           export HELM_EXPERIMENTAL_OCI=1
           helm package deploy/helm --version $VAPP_VERSION --app-version $COMMIT
 
@@ -219,7 +218,7 @@ jobs:
 
       - name: Upload helm chart
         env:
-          VAPP_NAME: "seat-adjuster-app"
+          VAPP_NAME: "seat-adjuster-app-ces"
           VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
           REGISTRY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
         run: |
