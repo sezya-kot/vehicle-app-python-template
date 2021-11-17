@@ -34,6 +34,7 @@ class SetPositionRequestProcessor:
         try:
             location = swdc_comfort_seats_pb2.SeatLocation(row=1, index=1)
             component = swdc_comfort_seats_pb2.BASE
+            logging.info('Calling Seat Service to move seat component ...')
             response = vehicleClient.Seats.MoveComponent(location, component, data["position"])
             logging.info(f'Seat moved successfully to position: {data["position"]}')
             resp_data = {
