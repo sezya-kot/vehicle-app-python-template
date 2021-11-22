@@ -11,23 +11,15 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-import json
-import logging
-import os
-from typing import Any
+from bfb_adapter import BfbAdapter
 
-# from __future__ import print_function
-from cloudevents.sdk.event import v1
-from dapr.ext.grpc import App
-from flask import jsonify, request
-from grpc import local_channel_credentials
+def test_process():
+    bfbAdapter = BfbAdapter()
+    requestData = getSampleRequestData()
+    response = bfbAdapter.process(requestData)
+    assert response["requestId"] == requestData["cId"]
+    assert response["position"] == requestData["p"]["value"]
 
-from VehicleSdk import VehicleClient
 
-class BfbAdapter:
-    def process(self, data: any):
-        resp_data = {
-            'requestId': data["cId"],
-            'position': data["p"]["value"]
-        }
-        return resp_data;
+def getSampleRequestData():
+    return {"cId":123, "p": {"value": "sample"}}

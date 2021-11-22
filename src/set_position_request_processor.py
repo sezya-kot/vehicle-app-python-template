@@ -25,6 +25,7 @@ import swdc_comfort_seats_pb2
 from VehicleSdk import VehicleClient
 
 class SetPositionRequestProcessor:
+    
     def process(self, data: any, resp_topic: str, vehicleClient: VehicleClient):
         resp_data = self.getProcessedResponse(data, vehicleClient)
         self.publishDataToTopic(resp_data, resp_topic, vehicleClient)
@@ -34,7 +35,6 @@ class SetPositionRequestProcessor:
             location = swdc_comfort_seats_pb2.SeatLocation(row=1, index=1)
             component = swdc_comfort_seats_pb2.BASE
             vehicleClient.Seats.MoveComponent(location, component, data["position"])
-
             resp_data = {
                 'requestId': data["requestId"],
                 'result': {
@@ -49,7 +49,6 @@ class SetPositionRequestProcessor:
                     'message': self.getErrorMessageFrom(ex)
                 }
             }
-        
         return resp_data
 
     
@@ -62,13 +61,8 @@ class SetPositionRequestProcessor:
             )
         except Exception as ex:
             status = -1
-        
         return status
     
+
     def getErrorMessageFrom(self, ex: Exception):
-        errorMessage = 'Exception details: '
-        if hasattr(ex, 'message'):
-            errorMessage = errorMessage + ex.message
-        else:
-            errorMessage = errorMessage + ex.args[0].debug_error_string
-        return errorMessage
+        return 'Exception details: ' + ex.args[0].debug_error_string

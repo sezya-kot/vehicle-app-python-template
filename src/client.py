@@ -46,7 +46,6 @@ def onSetPositionRequestBfbAppReceived(event: v1.Event) -> None:
     onSetPositionRequestReceived(data, "seatadjuster/setPosition/response")
 
 def onSetPositionRequestReceived(data: any, resp_topic: str) -> None:
-   
     vehicleClient = VehicleClient()
     setPositionRequestProcessor = SetPositionRequestProcessor()
     setPositionRequestProcessor.process(data, resp_topic, vehicleClient)
