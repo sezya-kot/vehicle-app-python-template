@@ -125,13 +125,14 @@ The `.docker\config.json` has to have following proxy settings:
 
 1. Request Seat-Adjustment inside the vehicle
 
-Send MQTT message to topic `seatadjuster/setPosition/request/guid-app`. 
+Send MQTT message to topic `seatadjuster/setPosition/request/gui-app`. 
 
 Example:
 ```json
 {"position": 300, "requestId": "xyz"}
 ```
-Response is written to topic `seatadjuster/setPosition/response/guid-app`.
+
+Response is written to topic `seatadjuster/setPosition/response/gui-app`.
 
 1. Request Seat-Adjustment from the cloud
 
@@ -167,3 +168,6 @@ Response is written to topic `TBD`.
      * Note: you can start the version with a `v` which will be removed though, e.g. "v1.0.0" will result in a "1.0.0" (see [version-without-v](https://github.com/battila7/get-version-action)).
    * The release workflow will be triggered
      * Open `Actions` on the repository and see the result
+
+## Run the application in a Kubernetes-Cluster within the DevContainer
+To run the setup within a Kubernetes Cluster within the DevContainer, scripts are provided to install prerequisites, configure the cluster and deploy the application. The steps are documented [here](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/main/.sdv/k3d/README-k3d.md).

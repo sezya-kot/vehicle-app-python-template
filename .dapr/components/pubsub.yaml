@@ -21,7 +21,7 @@ spec:
   version: v1
   metadata:
   - name: url
-    value: "mqtt://127.0.0.1:1883"
+    value: "mqtt://localhost:1883"
   - name: qos
     value: 1
   - name: retain

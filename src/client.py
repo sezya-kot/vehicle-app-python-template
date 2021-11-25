@@ -52,4 +52,5 @@ def onSetPositionRequestReceived(data: any, resp_topic: str) -> None:
 
 if __name__ == '__main__':
     logging.basicConfig()
+    print(f'Starting client...')
     app.run(50008)

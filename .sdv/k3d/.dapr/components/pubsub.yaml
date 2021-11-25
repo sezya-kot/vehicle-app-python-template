@@ -12,14 +12,19 @@
 # ********************************************************************************/
 
 apiVersion: dapr.io/v1alpha1
-kind: Configuration
+kind: Component
 metadata:
-  name: daprconfig
+  name: mqtt-pubsub
+  namespace: default
 spec:
-  tracing:
-    samplingRate: "1"
-    zipkin:
-      endpointAddress: http://localhost:9411/api/v2/spans
-  features:
-    - name: proxy.grpc
-      enabled: true
+  type: pubsub.mqtt
+  version: v1
+  metadata:
+  - name: url
+    value: "tcp://mqtt-broker.default.svc.cluster.local:1883"
+  - name: qos
+    value: 1
+  - name: retain
+    value: "false"
+  - name: cleanSession
+    value: "false"

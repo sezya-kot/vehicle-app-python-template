@@ -1,6 +1,6 @@
 imageSeatAdjusterApp:
   name: seat-adjuster-app
-  repository: swdceuwedevgsopscr.azurecr.io/client
+  repository: local/seat-adjuster-app
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "#SuccessfulExecutionOfReleaseWorkflowUpdatesThisValueToReleaseVersionWithoutV#"

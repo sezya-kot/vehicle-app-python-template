@@ -38,13 +38,6 @@ echo "#######################################################"
 /tmp/sdv/container-set.sh 2>&1 | tee -a /usr/local/share/container-set.log
 
 echo "#######################################################"
-echo "### Executingkubectl-helm-debian.sh            ###"
-echo "#######################################################" 
-yes | /tmp/library-scripts/kubectl-helm-debian.sh 2>&1 | tee -a /usr/local/share/kubectl-helm-debian.log
-mkdir -p /home/${USERNAME}/.minikube \
-chown ${USERNAME} /home/${USERNAME}/.minikube 
-
-echo "#######################################################"
 echo "### Executing add-powershell.sh                     ###"
 echo "#######################################################"
 /tmp/sdv/add-powershell.sh 2>&1 | tee -a /usr/local/share/add-powershell.log

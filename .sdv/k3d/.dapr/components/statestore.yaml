@@ -12,14 +12,18 @@
 # ********************************************************************************/
 
 apiVersion: dapr.io/v1alpha1
-kind: Configuration
+kind: Component
 metadata:
-  name: daprconfig
+  name: statestore
 spec:
-  tracing:
-    samplingRate: "1"
-    zipkin:
-      endpointAddress: http://localhost:9411/api/v2/spans
-  features:
-    - name: proxy.grpc
-      enabled: true
+  type: state.redis
+  version: v1
+  metadata:
+  - name: redisHost
+    value: redis-master.default.svc.cluster.local:6379
+  - name: redisPassword
+    secretKeyRef:
+      name: redis
+      key: redis-password
+  - name: actorStateStore
+    value: "true"

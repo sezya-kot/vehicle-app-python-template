@@ -17,8 +17,7 @@
 	"dockerFile": "Dockerfile${localEnv:DEVCONTAINER_PROXY}",
 	"runArgs": ["--init", "--privileged"],
 	"mounts": [
-		"source=minikube-${containerWorkspaceFolderBasename},target=/var/lib/docker,type=volume",
-		"source=minikube-config,target=/home/vscode/.minikube,type=volume"],
+		"source=dockerenv-${containerWorkspaceFolderBasename},target=/var/lib/docker,type=volume"],
 	"overrideCommand": false,
 
 	// Set *default* container specific settings.json values on container create.
