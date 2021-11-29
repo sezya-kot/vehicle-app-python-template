@@ -351,4 +351,11 @@ jobs:
         with:
           name: release-documentation
           path: |
-            ./hugo/public/         
+            ./hugo/public/ 
+
+      - name: Publish to GH Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{github.workspace}}/hugo/public
+          publish_branch: gh_pages         
