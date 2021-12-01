@@ -345,10 +345,3 @@ jobs:
           curl -L https://github.com/thegeeklab/hugo-geekdoc/releases/download/v${GEEKDOC_THEME_VERSION}/hugo-geekdoc.tar.gz | tar -xz -C themes/hugo-geekdoc/ --strip-components=1
           echo "Build release documentation for GitHub Pages"
           hugo -D
-
-      - name: Upload release documentation to artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-documentation
-          path: |
-            ./hugo/public/ 

@@ -173,14 +173,6 @@ jobs:
           echo "Build release documentation for local file system usage"
           echo "Build release documentation for GitHub Pages"
           hugo -D
-
-      - name: Upload release documentation to artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-documentation
-          path: |
-            ./hugo/public/
-
       - name: Publish to GH Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
