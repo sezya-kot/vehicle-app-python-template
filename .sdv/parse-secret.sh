@@ -3,7 +3,8 @@
 echo "Script executed from: ${PWD}"
 temp=$OTA_SYSTEM_CREDENTIALS
 
-CONTAINER_REGISTRY=$(echo $temp | jq '.CONTAINER_REGISTRY')
+# CONTAINER_REGISTRY=$(echo $temp | jq '.CONTAINER_REGISTRY')
+CONTAINER_REGISTRY="swdceuwedevgsopscr.azurecr.io"
 REGISTRY_USER=$(echo $temp | jq '.REGISTRY_USER')
 REGISTRY_PASSWORD=$(echo $temp | jq '.REGISTRY_PASSWORD')
 echo "::add-mask::$REGISTRY_PASSWORD"
