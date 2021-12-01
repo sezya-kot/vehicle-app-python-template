@@ -130,7 +130,9 @@ jobs:
         uses: ./.github/actions/render
         with:
           inboxPath: .vehicleApp/Documentation/Inbox/test-results
-          outboxPath: .vehicleApp/Documentation/Outbox
+          outboxPath: |
+            .vehicleApp/Documentation/Outbox
+            ${{github.workspace}}/hugo/content/Report
           templatePath: ./.github/actions/templates
       - name: Upload generated documentation as an artifacts
         uses: actions/upload-artifact@v2
@@ -149,12 +151,6 @@ jobs:
             .vehicleApp/Documentation/release-documentation-md.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Render documentation (to gh-pages)
-        uses: ./.github/actions/render
-        with:
-          inboxPath: .vehicleApp/Documentation/Inbox/test-results
-          outboxPath: ${{github.workspace}}/hugo/content/Report
-          templatePath: ./.github/actions/templates
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
