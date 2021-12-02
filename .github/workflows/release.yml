@@ -182,7 +182,6 @@ jobs:
       
       - name: Add reports to hugo static html site
         run: |
-          cp -r .vehicleApp/Documentation/Inbox/test-results/code-coverage hugo/content/reports
           grep -irl "Unit test results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/unit-test/unit_test_report.md
           ls -la ${{ steps.unit-test-to-html.outputs.report-file }}
           cp ${{ steps.unit-test-to-html.outputs.report-file }} ./hugo/content/reports/unit-test/unit-test.html
@@ -198,6 +197,8 @@ jobs:
           grep -irl "Integration test results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/integration-test/integration_test_report.md
           ls -la ${{ steps.integration-test-to-html.outputs.report-file }}
           cp ${{ steps.integration-test-to-html.outputs.report-file }} ./hugo/content/reports/integration-test/integration-test.html
+
+          grep -irl "Code coverage results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/code-coverage/code_coverage_report.md
 
           sed -i '1,13d' hugo/content/reports/*/*_report.md
 
