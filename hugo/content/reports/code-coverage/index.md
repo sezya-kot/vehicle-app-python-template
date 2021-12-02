@@ -2,9 +2,7 @@
 title: "Code Coverage Results"
 ---
 
-{{% include-pb-resource "code_coverage_report.md" %}}
-
 ## Rendered Html Reports
 
-[Link to report](code-coverage/code-coverage.html)
-{{% include-pb-resource "code-coverage.html" %}}
+[Link to report](code-coverage/index.html)
+{{% include-pb-resource "index.html" %}}

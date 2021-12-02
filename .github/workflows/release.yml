@@ -173,12 +173,6 @@ jobs:
         uses: AutoModality/action-xunit-viewer@v1
         with:
           results: .vehicleApp/Documentation/Inbox/test-results/IntegrationTest/junit.xml
-      
-      - name: Generate Code Coverage Html Report
-        id:  code-coverage-to-html
-        uses: AutoModality/action-xunit-viewer@v1
-        with:
-          results: .vehicleApp/Documentation/Inbox/test-results/CodeCoverage/cobertura-coverage.xml
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
@@ -200,13 +194,13 @@ jobs:
           ls -la ${{ steps.vehicleapi-scan-to-html.outputs.report-file }}
           cp ${{ steps.vehicleapi-scan-to-html.outputs.report-file }} ./hugo/content/reports/vulnerability-scan-vehicleapi/vulnerability-scan.html
 
-          grep -irl "Code coverage results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/code-coverage/code_coverage_report.md
-          ls -la ${{ steps.code-coverage-to-html.outputs.report-file }}
-          cp ${{ steps.code-coverage-to-html.outputs.report-file }} ./hugo/content/reports/code-coverage/code-coverage.html
+          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=html:./hugo/content/reports/code-coverage/ --cov-branch ./src --cov-config=setup.cfg
 
           grep -irl "Integration test results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/integration-test/integration_test_report.md
           ls -la ${{ steps.integration-test-to-html.outputs.report-file }}
           cp ${{ steps.integration-test-to-html.outputs.report-file }} ./hugo/content/reports/integration-test/integration-test.html
+
+          sed -i '1,13d' hugo/content/reports/*/*_report.md
 
       - name: Build
         working-directory: ${{github.workspace}}/hugo

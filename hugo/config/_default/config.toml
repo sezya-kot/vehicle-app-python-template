@@ -1,5 +1,5 @@
 languageCode = "en-us"
-title = "${SET_VAPP_NAME} - Release Documentation"
+title = "VehicleApp using Python - Release Documentation"
 
 baseURL = "http://example.org/"
 
