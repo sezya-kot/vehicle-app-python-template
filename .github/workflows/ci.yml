@@ -130,7 +130,7 @@ jobs:
           GEEKDOC_THEME_VERSION: 0.21.1
         # hugo --minify not fully supported by hugo-geekdoc theme
         run: |
-          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=html=./hugo/content/reports/code-coverage --cov-branch ./src --cov-config=setup.cfg
+          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=html:./hugo/content/reports/code-coverage --cov-branch ./src --cov-config=setup.cfg
           echo "Download theme hugo-geekdoc v${GEEKDOC_THEME_VERSION}"
           mkdir -p themes/hugo-geekdoc/
           curl -L https://github.com/thegeeklab/hugo-geekdoc/releases/download/v${GEEKDOC_THEME_VERSION}/hugo-geekdoc.tar.gz | tar -xz -C themes/hugo-geekdoc/ --strip-components=1
