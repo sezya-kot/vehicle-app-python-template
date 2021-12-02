@@ -2,7 +2,7 @@
 title: "Integration Test Results"
 ---
 
-{{% include-pb-resource "unit_test_report.md" %}}
+{{% include-pb-resource "integration_test_report.md" %}}
 
 ## Rendered Html Reports
 
