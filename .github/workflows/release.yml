@@ -149,17 +149,64 @@ jobs:
             .vehicleApp/Documentation/release-documentation-md.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Render documentation (to gh-pages)
-        uses: ./.github/actions/render
+
+      - name: Generate Unit Test Html Report
+        id: unit-test-to-html
+        uses: AutoModality/action-xunit-viewer@v1
         with:
-          inboxPath: .vehicleApp/Documentation/Inbox/test-results
-          outboxPath: ${{github.workspace}}/hugo/content/Report
-          templatePath: ./.github/actions/templates
+          results: .vehicleApp/Documentation/Inbox/test-results/UnitTest/junit.xml
+
+      - name: Generate Vulnerability Scan Html Report
+        id: client-scan-to-html
+        uses: AutoModality/action-xunit-viewer@v1
+        with:
+          results: .vehicleApp/Documentation/Inbox/test-results/VulnerabilityScan-client/junit.xml
+      
+      - name: Generate Vulnerability Scan Html Report
+        id: vehicleapi-scan-to-html
+        uses: AutoModality/action-xunit-viewer@v1
+        with:
+          results: .vehicleApp/Documentation/Inbox/test-results/VulnerabilityScan-vehicleapi/junit.xml
+
+      - name: Generate Integration Test Html Report
+        id: integration-test-to-html
+        uses: AutoModality/action-xunit-viewer@v1
+        with:
+          results: .vehicleApp/Documentation/Inbox/test-results/IntegrationTest/junit.xml
+      
+      - name: Generate Code Coverage Html Report
+        id:  code-coverage-to-html
+        uses: AutoModality/action-xunit-viewer@v1
+        with:
+          results: .vehicleApp/Documentation/Inbox/test-results/CodeCoverage/cobertura-coverage.xml
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
           hugo-version: '0.89.4'
           extended: true
+      
+      - name: Add reports to hugo static html site
+        run: |
+          grep -irl "Unit test results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/unit-test/unit_test_report.md
+          ls -la ${{ steps.unit-test-to-html.outputs.report-file }}
+          cp ${{ steps.unit-test-to-html.outputs.report-file }} ./hugo/content/reports/unit-test/unit-test.html
+
+          grep -irl "Vulnerability scan results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/vulnerability-scan-client/vulnerability_scan_report.md
+          ls -la ${{ steps.client-scan-to-html.outputs.report-file }}
+          cp ${{ steps.client-scan-to-html.outputs.report-file }} ./hugo/content/reports/vulnerability-scan-client/vulnerability-scan.html
+
+          grep -irl "Vulnerability scan results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/vulnerability-scan-vehicleapi/vulnerability_scan_report.md
+          ls -la ${{ steps.vehicleapi-scan-to-html.outputs.report-file }}
+          cp ${{ steps.vehicleapi-scan-to-html.outputs.report-file }} ./hugo/content/reports/vulnerability-scan-vehicleapi/vulnerability-scan.html
+
+          grep -irl "Code coverage results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/code-coverage/code_coverage_report.md
+          ls -la ${{ steps.code-coverage-to-html.outputs.report-file }}
+          cp ${{ steps.code-coverage-to-html.outputs.report-file }} ./hugo/content/reports/code-coverage/code-coverage.html
+
+          grep -irl "Integration test results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/integration-test/integration_test_report.md
+          ls -la ${{ steps.integration-test-to-html.outputs.report-file }}
+          cp ${{ steps.integration-test-to-html.outputs.report-file }} ./hugo/content/reports/integration-test/integration-test.html
 
       - name: Build
         working-directory: ${{github.workspace}}/hugo
@@ -170,9 +217,8 @@ jobs:
           echo "Download theme hugo-geekdoc v${GEEKDOC_THEME_VERSION}"
           mkdir -p themes/hugo-geekdoc/
           curl -L https://github.com/thegeeklab/hugo-geekdoc/releases/download/v${GEEKDOC_THEME_VERSION}/hugo-geekdoc.tar.gz | tar -xz -C themes/hugo-geekdoc/ --strip-components=1
-          echo "Build release documentation for local file system usage"
           echo "Build release documentation for GitHub Pages"
-          hugo -D
+          hugo -d ./public --environment=pages
       - name: Publish to GH Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
