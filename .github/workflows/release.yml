@@ -182,6 +182,7 @@ jobs:
       
       - name: Add reports to hugo static html site
         run: |
+          cp -r .vehicleApp/Documentation/Inbox/test-results/code-coverage hugo/content/reports
           grep -irl "Unit test results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/unit-test/unit_test_report.md
           ls -la ${{ steps.unit-test-to-html.outputs.report-file }}
           cp ${{ steps.unit-test-to-html.outputs.report-file }} ./hugo/content/reports/unit-test/unit-test.html
