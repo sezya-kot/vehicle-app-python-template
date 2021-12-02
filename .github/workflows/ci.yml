@@ -103,6 +103,15 @@ jobs:
           sourcePath: .sdv/tmp/CodeCoverage
           packagePath: .sdv/tmp/Documentation/renderer
 
+      - name: Package code coverage files (HTML)
+        uses: ./.github/actions/package
+        with:
+          name: "code-coverage"
+          type: "code-coverage"
+          schema: "Cobertura"
+          sourcePath: hugo/content/reports/code-coverage
+          packagePath: .sdv/tmp/Documentation/renderer
+
       - name: Upload test results as artifacts
         uses: actions/upload-artifact@v2
         if: always()
@@ -117,31 +126,6 @@ jobs:
         with:
           percentage: "45"
           filename: ".sdv/tmp/CodeCoverage/clover.xml"
-      
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
-        with:
-          hugo-version: '0.89.4'
-          extended: true
-
-      - name: Build
-        working-directory: ${{github.workspace}}/hugo
-        env:
-          GEEKDOC_THEME_VERSION: 0.21.1
-        # hugo --minify not fully supported by hugo-geekdoc theme
-        run: |
-          echo "Download theme hugo-geekdoc v${GEEKDOC_THEME_VERSION}"
-          mkdir -p themes/hugo-geekdoc/
-          curl -L https://github.com/thegeeklab/hugo-geekdoc/releases/download/v${GEEKDOC_THEME_VERSION}/hugo-geekdoc.tar.gz | tar -xz -C themes/hugo-geekdoc/ --strip-components=1
-          echo "Build release documentation for GitHub Pages"
-          hugo -d ./public --environment=pages
-        # hugo -d ./public --environment=local
-      - name: Publish to GH Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{github.workspace}}/hugo/public
-          publish_branch: gh_pages
 
   initialize-matrix:
       runs-on: ubuntu-latest
@@ -345,37 +329,31 @@ jobs:
           path: |
             .sdv/tmp/Documentation/renderer/* 
 
-  # build-and-publish-hugo:
-  #   runs-on: ubuntu-latest
-  #   name: Build & Publish Release Documentation with Hugo
-  #   needs: [unit-tests]
+  build-and-publish-hugo:
+    runs-on: ubuntu-latest
+    name: Build & Publish Release Documentation with Hugo
+    needs: [unit-tests]
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: Setup Hugo
-  #       uses: peaceiris/actions-hugo@v2
-  #       with:
-  #         hugo-version: '0.89.4'
-  #         extended: true
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.89.4'
+          extended: true
 
-  #     - name: Build
-  #       working-directory: ${{github.workspace}}/hugo
-  #       env:
-  #         GEEKDOC_THEME_VERSION: 0.21.1
-  #       # hugo --minify not fully supported by hugo-geekdoc theme
-  #       run: |
-  #         pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=html=./hugo/content/reports/code-coverage --cov-branch ./src --cov-config=setup.cfg
-  #         echo "Download theme hugo-geekdoc v${GEEKDOC_THEME_VERSION}"
-  #         mkdir -p themes/hugo-geekdoc/
-  #         curl -L https://github.com/thegeeklab/hugo-geekdoc/releases/download/v${GEEKDOC_THEME_VERSION}/hugo-geekdoc.tar.gz | tar -xz -C themes/hugo-geekdoc/ --strip-components=1
-  #         echo "Build release documentation for GitHub Pages"
-  #         hugo -d ./public --environment=pages
-  #       # hugo -d ./public --environment=local
-  #     - name: Publish to GH Pages
-  #       uses: peaceiris/actions-gh-pages@v3
-  #       with:
-  #         github_token: ${{ secrets.GITHUB_TOKEN }}
-  #         publish_dir: ${{github.workspace}}/hugo/public
-  #         publish_branch: gh_pages
+      - name: Build
+        working-directory: ${{github.workspace}}/hugo
+        env:
+          GEEKDOC_THEME_VERSION: 0.21.1
+        # hugo --minify not fully supported by hugo-geekdoc theme
+        run: |
+          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=html=./hugo/content/reports/code-coverage --cov-branch ./src --cov-config=setup.cfg
+          echo "Download theme hugo-geekdoc v${GEEKDOC_THEME_VERSION}"
+          mkdir -p themes/hugo-geekdoc/
+          curl -L https://github.com/thegeeklab/hugo-geekdoc/releases/download/v${GEEKDOC_THEME_VERSION}/hugo-geekdoc.tar.gz | tar -xz -C themes/hugo-geekdoc/ --strip-components=1
+          echo "Build release documentation for GitHub Pages"
+          hugo -d ./public --environment=pages
+        # hugo -d ./public --environment=local
           
