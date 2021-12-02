@@ -182,6 +182,10 @@ jobs:
       
       - name: Add reports to hugo static html site
         run: |
+          pip install pytest pytest-cov coverage2clover
+
+          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=html:hugo/content/reports/code-coverage --cov-branch ./src --cov-config=setup.cfg
+          
           grep -irl "Unit test results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/unit-test/unit_test_report.md
           ls -la ${{ steps.unit-test-to-html.outputs.report-file }}
           cp ${{ steps.unit-test-to-html.outputs.report-file }} ./hugo/content/reports/unit-test/unit-test.html
@@ -193,8 +197,6 @@ jobs:
           grep -irl "Vulnerability scan results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/vulnerability-scan-vehicleapi/vulnerability_scan_report.md
           ls -la ${{ steps.vehicleapi-scan-to-html.outputs.report-file }}
           cp ${{ steps.vehicleapi-scan-to-html.outputs.report-file }} ./hugo/content/reports/vulnerability-scan-vehicleapi/vulnerability-scan.html
-
-          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=html:./hugo/content/reports/code-coverage/ --cov-branch ./src --cov-config=setup.cfg
 
           grep -irl "Integration test results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/integration-test/integration_test_report.md
           ls -la ${{ steps.integration-test-to-html.outputs.report-file }}
