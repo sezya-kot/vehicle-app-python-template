@@ -198,7 +198,7 @@ jobs:
           ls -la ${{ steps.integration-test-to-html.outputs.report-file }}
           cp ${{ steps.integration-test-to-html.outputs.report-file }} ./hugo/content/reports/integration-test/integration-test.html
 
-          grep -irl "Code coverage results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/code-coverage/code_coverage_report.md
+          grep -irl "Code coverage test" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/code-coverage/code_coverage_report.md
 
           sed -i '1,13d' hugo/content/reports/*/*_report.md
 
