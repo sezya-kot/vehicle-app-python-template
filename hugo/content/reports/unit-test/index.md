@@ -6,8 +6,5 @@ title: "Unit Test Results"
 
 ## Rendered Html Reports
 
-[Link to report](unit-test-results/xunit-report.html)
-{{% include-pb-resource "xunit-report.html" %}}
-
-<!-- [Link to report](unit-test-results/junit2html-report.html)
-{{% include-pb-resource "junit2html-report.html" %}} -->
+[Link to report](unit-test/unit-test.html)
+{{% include-pb-resource "unit-test.html" %}}
