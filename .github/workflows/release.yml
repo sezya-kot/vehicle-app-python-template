@@ -216,6 +216,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Upload helm chart
     needs: [release-documentation, upload-images]
+    strategy: 
+      matrix: 
+        component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
 
     steps:
       - name: Checkout repository
@@ -223,8 +226,10 @@ jobs:
 
       - id: get_version
         uses: battila7/get-version-action@v2
-      
+       
+      - run: echo "Matrix display"
       - run: echo ${{ matrix.component.AppType }}
+      - run: echo "Matrix display ends"
       # - name: Update vehicleapi tag value in the related HelmChart values.yaml
       #   uses: fjogeleit/yaml-update-action@master
       #   with:
