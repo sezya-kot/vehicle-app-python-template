@@ -1,7 +1,7 @@
 {
     "Name": "SeatAdjuster",
     "Components": [
-        { "Name": "vehicle-api-mock", "Folder": "src/vehicle_sdk/vehicle_api_mock/", "StartProgram": "vehicleapi.py", "Port": 50051, "IsPublisher": 1},
-        { "Name": "seat-adjuster-app", "Folder": "src", "StartProgram": "run.py", "Port": 50008, "IsPublisher": 1, "DockerFolder": "."}
+        { "Name": "vehicleapi", "Folder": "src/vehicle_sdk/vehicle_api_mock/", "StartProgram": "vehicleapi.py", "Port": 50051, "IsPublisher": 1, "AppType": "imageSeatAdjusterApp"},
+        { "Name": "seat-adjuster-app", "Folder": "src", "StartProgram": "run.py", "Port": 50008, "IsPublisher": 1, "DockerFolder": ".", "AppType": "imageVehicleApi"}
     ]
 }
