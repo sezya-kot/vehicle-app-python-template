@@ -215,7 +215,7 @@ jobs:
   upload-helm:
     runs-on: ubuntu-latest
     name: Upload helm chart
-    needs: [release-documentation, upload-images]
+    needs: [release-documentation, upload-images,initialize-matrix]
     strategy: 
       matrix: 
         component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
