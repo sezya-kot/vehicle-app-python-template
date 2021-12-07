@@ -179,6 +179,16 @@ jobs:
         with:
           hugo-version: '0.89.4'
           extended: true
+
+      - name: Set tags output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Check output
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ steps.vars.outputs.tag }}
       
       - name: Add reports to hugo static html site
         run: |
@@ -200,7 +210,10 @@ jobs:
 
           grep -irl "Code coverage test" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/code-coverage/code_coverage_report.md
 
+          sed -i -e 's/@tag/$RELEASE_VERSION/g' ./hugo/data/menu/more.yaml
           sed -i '1,13d' hugo/content/reports/*/*_report.md
+
+          cat ./hugo/data/menu/more.yaml
 
       - name: Build
         working-directory: ${{github.workspace}}/hugo
