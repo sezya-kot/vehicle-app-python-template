@@ -41,7 +41,7 @@
 			"config": "./.dapr/config.yaml",
 			"appProtocol": "grpc",
 			"metricsPort": 9091,
-			"label": "daprd-debug-SeatAdjuster-client",
+			"label": "daprd-debug-SeatAdjuster-run",
 			"type": "daprd",
 			"args": [
                 "-dapr-grpc-port",
@@ -52,7 +52,7 @@
 		},
 		{
 			"appId": "client",
-			"label": "daprd-down-SeatAdjuster-client",
+			"label": "daprd-down-SeatAdjuster-run",
 			"type": "daprd-down"
 		}
 	]

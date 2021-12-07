@@ -22,7 +22,7 @@ from dapr.ext.grpc import App
 from flask import jsonify, request
 from grpc import local_channel_credentials
 
-from VehicleSdk import VehicleClient
+from vehicle_sdk.client import VehicleClient
 
 class BfbAdapter:
     def process(self, data: any):

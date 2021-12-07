@@ -12,23 +12,20 @@
 # ********************************************************************************/
 
 import json
-import logging
-import os
 from typing import Any
 
-from cloudevents.sdk.event import v1
-from dapr.ext.grpc import App
 from flask import jsonify, request
 from grpc import local_channel_credentials
 
-import swdc_comfort_seats_pb2
-from VehicleSdk import VehicleClient
+import vehicle_sdk.swdc_comfort_seats_pb2 as swdc_comfort_seats_pb2
+from vehicle_sdk.client import VehicleClient
+from vehicle_sdk.talent import Talent
 
 class SetPositionRequestProcessor:
     
-    def process(self, data: any, resp_topic: str, vehicleClient: VehicleClient):
+    def process(self, data: any, resp_topic: str, vehicleClient: VehicleClient, talent: Talent):
         resp_data = self.getProcessedResponse(data, vehicleClient)
-        self.publishDataToTopic(resp_data, resp_topic, vehicleClient)
+        self.publishDataToTopic(resp_data, resp_topic, talent)
 
     def getProcessedResponse(self, data, vehicleClient):
         try:
@@ -52,10 +49,10 @@ class SetPositionRequestProcessor:
         return resp_data
 
     
-    def publishDataToTopic(self, resp_data: dict, resp_topic: str, vehicleClient: VehicleClient):
+    def publishDataToTopic(self, resp_data: dict, resp_topic: str, talent: Talent):
         status = 0
         try:
-            vehicleClient.PublishEvent(
+            talent.publish_event(
                 resp_topic,
                 json.dumps(resp_data)
             )

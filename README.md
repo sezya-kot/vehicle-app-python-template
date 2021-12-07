@@ -62,13 +62,13 @@ The `.docker\config.json` has to have following proxy settings:
 1. Start the VehicleApi Mock
 
    ```bash
-   dapr run --app-id vehicleapi --app-protocol grpc --app-port 50051 --components-path ./.dapr/components --config ./.dapr/config.yaml  python3 ./vehicleapi/vehicleapi.py
+   dapr run --app-id vehicleapi --app-protocol grpc --app-port 50051 --components-path ./.dapr/components --config ./.dapr/config.yaml  python3 ./src/vehicle_sdk/vehicle_api_mock/vehicleapi.py
    ```
 
 1. Start and check sample vehicleApp
 
    ```bash
-   dapr run --app-id app-skeleton --app-protocol grpc --app-port 50008 --config ./.dapr/config.yaml --components-path ./.dapr/components  python3 ./src/client.py 
+   dapr run --app-id app-skeleton --app-protocol grpc --app-port 50008 --config ./.dapr/config.yaml --components-path ./.dapr/components  python3 ./src/run.py 
    ```
 
 1. Debug the sample vehicleApp

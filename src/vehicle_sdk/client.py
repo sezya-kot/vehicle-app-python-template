@@ -15,21 +15,21 @@ import sys
 import os
 import grpc
 
-import swdc_comfort_seats_pb2
-import swdc_comfort_seats_pb2_grpc
-from dapr.proto import api_service_v1, api_v1
-
+import vehicle_sdk.swdc_comfort_seats_pb2 as swdc_comfort_seats_pb2
+import vehicle_sdk.swdc_comfort_seats_pb2_grpc as swdc_comfort_seats_pb2_grpc
+import vehicle_sdk.databroker_pb2 as databroker_pb2
+import vehicle_sdk.databroker_pb2_grpc as databroker_pb2_grpc
 from typing import Optional
 
 class VehicleClient:
     def __init__(self, port: Optional[int] = None):
         if not port:
-            port = os.getenv('DAPR_GRPC_PORT')
+            port = int(os.getenv('DAPR_GRPC_PORT'))
         self._address = f'localhost:{port}'
         self._channel = grpc.insecure_channel(self._address)   # type: ignore
         self._metadata = (('dapr-app-id', 'vehicleapi'),)
-        self._daprStub =  api_service_v1.DaprStub(self._channel)
         self.Seats = self._Seats(self._channel, self._metadata)
+        self.vehicleDataBroker = self._vehicleDataBroker(self._channel, self._metadata)
 
     def close(self):
         """Closes runtime gRPC channel."""
@@ -45,14 +45,12 @@ class VehicleClient:
     def __exit__(self, exc_type, exc_value, traceback) -> None:
         self.close()
 
-    def PublishEvent(self, topic: str, data: any):
-        req = api_v1.PublishEventRequest(
-            pubsub_name='mqtt-pubsub',
-            topic=topic,
-            data=bytes(data, 'utf-8'),
-            metadata={'rawPayload': 'true'},)
-        self._daprStub.PublishEvent(req)
-
+    # Telemetry section
+    def get_vehicle_speed(self) -> int:
+        metadataReply: databroker_pb2.GetMetadataReply = self.vehicleDataBroker.GetMetadata(["Vehicle.Speed"])   
+        getDatapointsReply: databroker_pb2.GetDatapointsReply = self.vehicleDataBroker.GetDatapoints([metadataReply.list[0].id])
+        return getDatapointsReply[0].datapoints[0].int32_value
+            
     class _Seats:
         def __init__(self, channel, metadata):
             self._stub = swdc_comfort_seats_pb2_grpc.SeatsStub(channel)   # type: ignore
@@ -73,3 +71,22 @@ class VehicleClient:
                 metadata=self._metadata)
             return response
 
+    class _vehicleDataBroker:
+        def __init__(self, channel, metadata):  
+            self._stub = databroker_pb2_grpc.VehicleDataStub(channel) # type: ignore
+            self._metadata = metadata
+
+        def GetDatapoints(self, ids: list):
+            response = self._stub.GetDatapoints.with_call(databroker_pb2.GetDatapointsRequest(ids = ids),
+                metadata=self._metadata)
+            return response
+
+        def Subscribe(self, ids: list, rule: str):
+            response = self._stub.Subscribe(databroker_pb2.SubscribeRequest(ids = ids, rule = rule),
+                metadata=self._metadata)
+            return response
+            
+        def GetMetadata(self, names: list):
+            response = self._stub.GetMetadata(databroker_pb2.GetMetadataRequest(names = names),
+                metadata=self._metadata)
+            return response
