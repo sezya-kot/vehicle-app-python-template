@@ -212,6 +212,8 @@ jobs:
           grep -irl "Code coverage test" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/code-coverage/code_coverage_report.md
 
           sed -i -e 's/@tag/${{ steps.vars.outputs.tag }}/g' ./hugo/data/menu/more.yaml
+          sed -i -e 's/@tag/${{ steps.vars.outputs.tag }}/g' ./hugo/config/_default/config.toml
+
           sed -i '1,13d' hugo/content/reports/*/*_report.md
 
       - name: Build
