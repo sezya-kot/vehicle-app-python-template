@@ -137,12 +137,14 @@ jobs:
           inboxPath: .vehicleApp/Documentation/Inbox/test-results
           outboxPath: .vehicleApp/Documentation/Outbox
           templatePath: ./.github/actions/templates
+
       - name: Upload generated documentation as an artifacts
         uses: actions/upload-artifact@v2
         if: always()
         with:
           name: generated-documentation
-          path: .vehicleApp/Documentation/Outbox/
+          path: |
+            .vehicleApp/Documentation/Outbox/
       - name: zip
         run: |
           zip -r .vehicleApp/Documentation/release-documentation-md.zip .vehicleApp/Documentation/Outbox
@@ -237,61 +239,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{github.workspace}}/hugo/public
           publish_branch: gh_pages
-  deploy-stage:
-    runs-on: ubuntu-latest
-    name: Deploy stage
-    needs: [release-documentation]
-    env:
-      OTA_Secret: ${{secrets.OTA_SYSTEM_CREDENTIALS}}      
-
-    defaults:
-      run:
-        shell: bash
-
-    environment:
-      name: Stage
-      url: https://www.bosch-mobility-solutions.com/en/about-us/current-news/software-defined-vehicles/
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Get secret Data
-        id: parse-ota-secret 
-        shell: sh
-        run: |   
-          chmod 0755 ./.sdv/parse-secret.sh
-          sh ./.sdv/parse-secret.sh $OTA_Secret
-
-      - name: test
-        run: echo ${{ env.CONTAINER_REGISTRY }}
-
-      - id: get_version
-        uses: battila7/get-version-action@v2
-
-      - run: echo "Using VehicleApp version ${{ steps.get_version.outputs.version-without-v }} from tag"
-
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '14.x'
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Login to OPS Azure Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}
-          username: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER }}
-          password: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD }}
 
   upload-helm:
     runs-on: ubuntu-latest
     name: Upload helm chart
-    needs: [release-documentation]
+    needs: [release-documentation, upload-images]
 
     steps:
       - name: Checkout repository
