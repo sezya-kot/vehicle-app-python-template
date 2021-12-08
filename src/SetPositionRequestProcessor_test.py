@@ -13,7 +13,7 @@
 
 
 from set_position_request_processor import SetPositionRequestProcessor
-from VehicleSdk import VehicleClient
+from vehicle_sdk.client import VehicleClient
 
 
 def test_for_exception_SetPositionRequestProcessor():
@@ -45,4 +45,4 @@ def getSetPositionRequestProcessorInstance():
     return SetPositionRequestProcessor()
 
 def getVehicleClientInstance():
-    return VehicleClient()
+    return VehicleClient(50051)

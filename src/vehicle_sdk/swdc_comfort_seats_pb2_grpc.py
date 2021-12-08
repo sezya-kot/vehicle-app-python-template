@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import swdc_comfort_seats_pb2 as swdc__comfort__seats__pb2
+import vehicle_sdk.swdc_comfort_seats_pb2 as swdc__comfort__seats__pb2
 
 
 class SeatsStub(object):
