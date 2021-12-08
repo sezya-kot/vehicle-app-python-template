@@ -47,6 +47,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2      
 
+      - name: Parse OTA System credentials
+        env:
+          OTA_SYSTEM_CREDENTIALS:  ${{ secrets.OTA_SYSTEM_CREDENTIALS }}
+        run: |
+          ./.sdv/parse-secret.sh
+
       - id: get_version
         uses: battila7/get-version-action@v2
 
@@ -61,9 +67,9 @@ jobs:
       - name: Login to OPS Azure Container Registry
         uses: docker/login-action@v1
         with:
-          registry: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}
-          username: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER }}
-          password: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD }}
+          registry: ${{ env.CONTAINER_REGISTRY }}
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ env.REGISTRY_PASSWORD }}
 
       - id: github-repository-name-case-adjusted
         name: Prepare repository name in lower case for docker upload. This supports repository names in mixed case
@@ -81,7 +87,6 @@ jobs:
         run: |
           echo "Copy vApp image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$COMMIT' to 'docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION'"
           skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$COMMIT" "docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION"
-
 
   release-documentation:
     name: Generate release documentation
@@ -151,56 +156,6 @@ jobs:
             .vehicleApp/Documentation/release-documentation-md.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  deploy-stage:
-    runs-on: ubuntu-latest
-    name: Deploy stage
-    needs: [release-documentation]
-    env:
-      OTA_Secret: ${{secrets.OTA_SYSTEM_CREDENTIALS}}      
-
-    defaults:
-      run:
-        shell: bash
-
-    environment:
-      name: Stage
-      url: https://www.bosch-mobility-solutions.com/en/about-us/current-news/software-defined-vehicles/
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Get secret Data
-        id: parse-ota-secret 
-        shell: sh
-        run: |   
-          chmod 0755 ./.sdv/parse-secret.sh
-          sh ./.sdv/parse-secret.sh $OTA_Secret
-
-      - name: test
-        run: echo ${{ env.CONTAINER_REGISTRY }}
-
-      - id: get_version
-        uses: battila7/get-version-action@v2
-
-      - run: echo "Using VehicleApp version ${{ steps.get_version.outputs.version-without-v }} from tag"
-
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '14.x'
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Login to OPS Azure Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}
-          username: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER }}
-          password: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD }}
 
   upload-helm:
     runs-on: ubuntu-latest
@@ -210,6 +165,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2       
+
+      - name: Parse OTA System credentials
+        env:
+          OTA_SYSTEM_CREDENTIALS:  ${{ secrets.OTA_SYSTEM_CREDENTIALS }}
+        run: |
+          ./.sdv/parse-secret.sh
 
       - id: get_version
         uses: battila7/get-version-action@v2
@@ -243,9 +204,9 @@ jobs:
 
       - name: Login to helm registry
         env:
-          REGISTRY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}
-          USERNAME: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER }}
-          PASSWORD: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD }}
+            REGISTRY: ${{ env.CONTAINER_REGISTRY }}
+            USERNAME: ${{ env.REGISTRY_USER }}
+            PASSWORD: ${{ env.REGISTRY_PASSWORD }}
         run: |
           export HELM_EXPERIMENTAL_OCI=1
           echo $PASSWORD | helm registry login $REGISTRY --username $USERNAME --password-stdin
@@ -254,7 +215,7 @@ jobs:
         env:
           VAPP_NAME: "seat-adjuster-app"
           VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
-          REGISTRY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}   
+          REGISTRY: ${{ env.CONTAINER_REGISTRY }}  
         run: |
           export HELM_EXPERIMENTAL_OCI=1
           helm push $VAPP_NAME-$VAPP_VERSION.tgz oci://$REGISTRY/helm
