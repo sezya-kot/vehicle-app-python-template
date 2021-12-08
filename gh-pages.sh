@@ -15,7 +15,7 @@ mkdir ./hugo/content/reports/unit-test
 mkdir ./hugo/content/reports/vulnerability-scan-client
 mkdir ./hugo/content/reports/vulnerability-scan-vehicleapi
 
-echo $'---\ntitle: "Code Coverage Report"\n---\n{{% include-pb-resource "unit_test_report.md" %}}' > ./hugo/content/reports/code-coverage/index.md
+echo $'---\ntitle: "Code Coverage Test"\n---\n{{% include-pb-resource "code_coverage_report.md" %}}' > ./hugo/content/reports/code-coverage/index.md
 echo $'---\ntitle: "Integration Test Results"\n---\n{{% include-pb-resource "integration_test_report.md" %}}\n## Rendered Html Reports\n[Link to report](integration-test/integration-test.html)\n{{% include-pb-resource "integration-test.html" %}}\n' > ./hugo/content/reports/integration-test/index.md
 echo $'---\ntitle: "Unit Test Results"\n---\n{{% include-pb-resource "unit_test_report.md" %}}## Rendered Html Reports\n[Link to report](unit-test/unit-test.html)\n{{% include-pb-resource "unit-test.html" %}}\n' > ./hugo/content/reports/unit-test/index.md
 echo $'---\ntitle: "Vulnerability Scan Results"\n---\n{{% include-pb-resource "vulnerability_scan_report.md" %}}\n## Rendered Html Reports\n[Link to report](vulnerability-scan-client/vulnerability-scan.html)\n{{% include-pb-resource "vulnerability-scan.html" %}}\n' > ./hugo/content/reports/vulnerability-scan-client/index.md
