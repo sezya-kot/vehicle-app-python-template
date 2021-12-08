@@ -161,9 +161,7 @@ jobs:
   deploy-stage:
     runs-on: ubuntu-latest
     name: Deploy stage
-    needs: [release-documentation]
-    env:
-      OTA_Secret: ${{secrets.OTA_SYSTEM_CREDENTIALS}}      
+    needs: [release-documentation]   
 
     defaults:
       run:
@@ -176,14 +174,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Get secret Data
-        id: parse-ota-secret 
-        shell: sh
-        run: |   
-          chmod 0755 ./.sdv/parse-secret.sh
-          sh ./.sdv/parse-secret.sh $OTA_Secret
-      - name: test
-        run: echo ${{ env.CONTAINER_REGISTRY }}
+      - name: Parse OTA System credentials
+        env:
+          OTA_SYSTEM_CREDENTIALS:  ${{ secrets.OTA_SYSTEM_CREDENTIALS }}
+        run: |
+          ./.sdv/parse-secret.sh
 
       - id: get_version
         uses: battila7/get-version-action@v2
