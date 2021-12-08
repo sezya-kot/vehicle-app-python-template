@@ -9,4 +9,4 @@ printf 'more:\n  - name: Releases\n    ref: "https://github.com/SoftwareDefinedV
 
 
 # mkdir hugo/layouts/shortcode
-echo $'{{$pbFile := .Get 0}}\n{{ if strings.HasSuffix $pbFile ".html" }}\n<iframe src="{{ with .Page.Resources.GetMatch $pbFile }}{{ .RelPermalink }}{{ end }}" frameborder="0" seamless style="width:100%;height:1000px;" onload="this.style.height=(this.contentDocument.body.scrollHeight + 40) + \'px\';"></iframe>\n{{ else if strings.HasSuffix $pbFile ".md" }}\n{{ with .Page.Resources.GetMatch $pbFile }}{{ .RawContent | safeHTML }}{{ end }}\n{{ end }}' > ./hugo/layouts/shortcode/include-pb-resource.html
+echo $'{{$pbFile := .Get 0}}\n{{ if strings.HasSuffix $pbFile ".html" }}\n<iframe src="{{ with .Page.Resources.GetMatch $pbFile }}{{ .RelPermalink }}{{ end }}" frameborder="0" seamless style="width:100%;height:1000px;" onload="this.style.height=(this.contentDocument.body.scrollHeight + 40) + \'px\';"></iframe>\n{{ else if strings.HasSuffix $pbFile ".md" }}\n{{ with .Page.Resources.GetMatch $pbFile }}{{ .RawContent | safeHTML }}{{ end }}\n{{ end }}' > ./hugo/layouts/shortcodes/include-pb-resource.html
