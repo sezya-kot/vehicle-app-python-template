@@ -173,7 +173,7 @@ jobs:
           echo $RELEASE_VERSION
           echo ${{ steps.vars.outputs.tag }}
       
-      - name: Add reports to hugo static html site
+      - name: Create and Add reports to hugo static html site
         run: |
           hugo new site hugo
 
@@ -186,7 +186,7 @@ jobs:
           sed -i '1d' hugo/content/documentation/_index.md
           sed -i '1s/^/---\ntitle: "VehicleApp using Python"\ndraft: false\n---\n/' hugo/content/documentation/_index.md
 
-          cp ./sdv-pages/content/reports/* ./hugo/content/reports
+          cp .vehicleApp/Documentation/Outbox/* ./hugo/content/reports
 
           sed -i '1,13d' hugo/content/reports/*.md
           sed -i '1s/^/---\ntitle: "Code Coverage Test"\ndraft: false\n---\n/'  hugo/content/reports/CodeCoverage-*.md
@@ -195,7 +195,7 @@ jobs:
           cat hugo/content/reports/VulnerabilityScan-*.md >  hugo/content/reports/vulnerability-scan-results.md
           sed -i '1s/^/---\ntitle: "Vulnerability Scan Results"\ndraft: false\n---\n/'  hugo/content/reports/vulnerability-scan-results.md
           rm hugo/content/reports/VulnerabilityScan-*.md
-          
+
           mkdir ./hugo/config
           mkdir ./hugo/config/_default
           mkdir ./hugo/config/pages
