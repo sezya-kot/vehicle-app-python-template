@@ -333,11 +333,10 @@ jobs:
         with:
           hugo-version: '0.89.4'
           extended: true
-      - name: Script
+      - name: Build Script
         working-directory: ${{github.workspace}}
         run: |
           bash ./.github/workflows/build.sh
-          cat ./hugo/data/menu/main.yaml
 
       - name: Build
         working-directory: ${{github.workspace}}/hugo
