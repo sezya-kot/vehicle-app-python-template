@@ -2,7 +2,7 @@
 
 # mkdir hugo/data/menu
 echo "---" > ./hugo/data/menu/main.yaml
-printf "header:\n  - name: GitHub\n    ref: https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template\n    icon: gdoc_github\n    external: true\n" >> ./hugo/data/menu/extra.yaml
+printf "header:\n  - name: GitHub\n    ref: https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template\n    icon: gdoc_github\n    external: true\n" >> ./hugo/data/menu/main.yaml
 
 echo "---" > ./hugo/data/menu/more.yaml
 printf 'more:\n  - name: Releases\n    ref: "https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/releases"\n    external: true\n    icon: "gdoc_download"\n  - name: "View Source"\n    ref: "https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/tree/@tag"\n    external: true\n    icon: "gdoc_github"\n' >> ./hugo/data/menu/more.yaml
