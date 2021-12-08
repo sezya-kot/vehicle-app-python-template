@@ -192,6 +192,7 @@ jobs:
       
       - name: Add reports to hugo static html site
         run: |
+          bash ./gh-pages.sh
           grep -irl "Unit test results" ./.vehicleApp/Documentation/Outbox/ | head -1 | xargs -I '{}' cp '{}' ./hugo/content/reports/unit-test/unit_test_report.md
           ls -la ${{ steps.unit-test-to-html.outputs.report-file }}
           cp ${{ steps.unit-test-to-html.outputs.report-file }} ./hugo/content/reports/unit-test/unit-test.html
@@ -212,8 +213,6 @@ jobs:
 
           sed -i -e 's/@tag/${{ steps.vars.outputs.tag }}/g' ./hugo/data/menu/more.yaml
           sed -i '1,13d' hugo/content/reports/*/*_report.md
-
-          cat ./hugo/data/menu/more.yaml
 
       - name: Build
         working-directory: ${{github.workspace}}/hugo

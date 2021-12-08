@@ -336,7 +336,7 @@ jobs:
       - name: Build Script
         working-directory: ${{github.workspace}}
         run: |
-          bash ./.github/workflows/build.sh
+          bash ./gh-pages.sh
 
       - name: Build
         working-directory: ${{github.workspace}}/hugo
