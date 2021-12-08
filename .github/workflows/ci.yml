@@ -336,7 +336,8 @@ jobs:
       - name: Script
         working-directory: ${{github.workspace}}
         run: |
-          bash ./.github/workflow/build.sh
+          bash ./.github/workflows/build.sh
+          cat ./hugo/data/menu/main.yaml
 
       - name: Build
         working-directory: ${{github.workspace}}/hugo
