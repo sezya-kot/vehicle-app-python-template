@@ -319,35 +319,3 @@ jobs:
           name: 'test-results'
           path: |
             .sdv/tmp/Documentation/renderer/* 
-
-  build-and-publish-hugo:
-    runs-on: ubuntu-latest
-    name: Build & Publish Release Documentation with Hugo
-    needs: [unit-tests]
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
-        with:
-          hugo-version: '0.89.4'
-          extended: true
-      - name: Build Script
-        working-directory: ${{github.workspace}}
-        run: |
-          bash ./gh-pages.sh
-
-      - name: Build
-        working-directory: ${{github.workspace}}/hugo
-        env:
-          GEEKDOC_THEME_VERSION: 0.21.1
-        # hugo --minify not fully supported by hugo-geekdoc theme
-        run: |
-          echo "Download theme hugo-geekdoc v${GEEKDOC_THEME_VERSION}"
-          mkdir -p themes/hugo-geekdoc/
-          curl -L https://github.com/thegeeklab/hugo-geekdoc/releases/download/v${GEEKDOC_THEME_VERSION}/hugo-geekdoc.tar.gz | tar -xz -C themes/hugo-geekdoc/ --strip-components=1
-          echo "Build release documentation for GitHub Pages"
-          hugo -d ./public --environment=pages
-        # hugo -d ./public --environment=local
-          
