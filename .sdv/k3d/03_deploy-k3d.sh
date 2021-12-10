@@ -1,5 +1,5 @@
 # Build, push vehicleapi image
-cd /workspaces/vehicle-app-python-template/vehicleapi
+cd /workspaces/vehicle-app-python-template/src/vehicle_sdk/vehicle_api_mock
 docker build -f Dockerfile.local -t localhost:12345/vehicleapi:local .
 docker push localhost:12345/vehicleapi:local
 

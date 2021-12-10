@@ -14,7 +14,7 @@
 apiVersion: dapr.io/v1alpha1
 kind: Configuration
 metadata:
-  name: daprconfig
+  name: config
 spec:
   tracing:
     samplingRate: "1"
