@@ -3,7 +3,8 @@ k3d cluster delete dev-cluster
 k3d registry delete k3d-devregistry.localhost
 
 # Create k3d registry & cluster
-k3d registry create devregistry.localhost --port 12345
+k3d registry create 
+.localhost --port 12345
 k3d cluster create dev-cluster --registry-use k3d-devregistry.localhost:12345 -p "31883:31883"
 
 GITHUB_URL=https://github.com/kubernetes/dashboard/releases
