@@ -17,7 +17,7 @@ spec:
         dapr.io/app-id: "seatadjuster"
         dapr.io/app-port: "50008"
         dapr.io/log-level: "debug"
-        dapr.io/config: "daprconfig"
+        dapr.io/config: "config"
         dapr.io/app-protocol: "grpc"
     spec:
       containers:

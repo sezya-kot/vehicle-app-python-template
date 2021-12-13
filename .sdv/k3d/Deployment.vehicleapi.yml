@@ -17,7 +17,7 @@ spec:
         dapr.io/app-id: "vehicleapi"
         dapr.io/app-port: "50051"
         dapr.io/log-level: "debug"
-        dapr.io/config: "daprconfig"
+        dapr.io/config: "config"
         dapr.io/app-protocol: "grpc"
     spec:
       containers:
