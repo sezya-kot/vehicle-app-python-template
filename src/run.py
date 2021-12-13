@@ -15,7 +15,6 @@ import json
 import logging
 from typing import Any
 from set_position_request_processor import SetPositionRequestProcessor
-from bfb_adapter import BfbAdapter
 from vehicle_sdk.talent import Talent, subscribeDataPoints, subscribeTopic
 from vehicle_sdk.client import VehicleClient
 from vehicle_sdk.databroker_pb2 import Notification
@@ -29,14 +28,6 @@ class SeatAdjusterTalent(Talent):
         data = json.loads(data)
         print(f'Set Position Request received: data={data}', flush=True)  # noqa: E501
         self.onSetPositionRequestReceived(data, "seatadjuster/setPosition/response/gui-app")
-
-    @subscribeTopic("seatadjuster/setSeatPosition")
-    def onSetPositionRequestBfbAppReceived(self, data: any) -> None:
-        bfb_data = json.loads(data)
-        print(f'Set Position Request received: data={bfb_data}', flush=True)  # noqa: E501
-        bfbAdapter = BfbAdapter()
-        data = bfbAdapter.process(bfb_data)
-        self.onSetPositionRequestReceived(data, "seatadjuster/setPosition/response")
 
     def onSetPositionRequestReceived(self, data: any, resp_topic: str) -> None:
         vehicleClient = VehicleClient()
