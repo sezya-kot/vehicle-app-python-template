@@ -3,8 +3,7 @@
 This Python vehicleApp repository includes a sample vehicleApp based on the Software defined vehicle platform. GitHub workflows are used to build the container image for the vehicleApp, run unit and integration tests, collect the test results and create a release documentation and
 publish the vehicleApp. A detailed description of the workflow you can find [here](https://github.com/SoftwareDefinedVehicle/swdc-iotea-talent-template-repositories/blob/main/docs/vehicle_app_releases.md).
  
-![refernce Architecture](https://raw.githubusercontent.com/SoftwareDefinedVehicle/swdc-iotea-talent-template-repositories/main/docs/assets/publish_container.png?token=AA67KRN36QNSSQTHLGN5FLLBSTIL4)  
-
+![refernce Architecture](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/tree/main/docs/assets/publish_container.png)
 
 Note: this is a template repository. Please create your own repository from this template repository by clicking the green button `Use this template`.
 
