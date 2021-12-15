@@ -169,4 +169,4 @@ Response is written to topic `TBD`.
      * Open `Actions` on the repository and see the result
 
 ## Run the application in a Kubernetes-Cluster within the DevContainer
-To run the setup within a Kubernetes Cluster within the DevContainer, scripts are provided to install prerequisites, configure the cluster and deploy the application. The steps are documented [here](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/main/.sdv/k3d/README-k3d.md).
+To run the setup within a Kubernetes Cluster within the DevContainer, scripts are provided to install prerequisites, configure the cluster and deploy the application. The steps are documented [here](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/blob/main/.sdv/k3d/README-k3d.md).
