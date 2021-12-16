@@ -3,7 +3,7 @@
 This Python vehicleApp repository includes a sample vehicleApp based on the Software defined vehicle platform. GitHub workflows are used to build the container image for the vehicleApp, run unit and integration tests, collect the test results and create a release documentation and
 publish the vehicleApp. A detailed description of the workflow you can find [here](docs/vehicle_app_releases.md).
  
-![refernce Architecture](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/blob/usr/mandeep/5571-documentation-improvment/docs/assets/publish_container.png)
+![refernce Architecture](docs/assets/publish_container.png)
 
 Note: this is a template repository. Please create your own repository from this template repository by clicking the green button `Use this template`.
 
