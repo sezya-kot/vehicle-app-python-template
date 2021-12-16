@@ -1,11 +1,16 @@
-FROM ghcr.io/softwaredefinedvehicle/vehicle-app-python-template/vehicleapi_base
+FROM python:3.9-slim-bullseye
 
 RUN apt-get update 
-RUN apt-get upgrade
+RUN apt-get upgrade -y
 
 WORKDIR /vehicleapi
-COPY . .
+ADD ./* $HOME/vehicleapi/
 RUN pip3 install -r requirements.txt
+
+RUN apt-get update 
+RUN apt-get upgrade -y
+
+LABEL org.opencontainers.image.source="https://github.com/softwaredefinedvehicle/vehicle-app-python-template"
 
 EXPOSE 50051
 

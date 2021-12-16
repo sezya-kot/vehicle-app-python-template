@@ -14,10 +14,8 @@ sudo apt-get update
 sudo apt-get install -y kubectl
 
 # Install brew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" # TODO automate "Press RETURN"
-echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/vscode/.profile
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" < /dev/null
 
 # (Optional) Install k9s
-brew install derailed/k9s/k9s
+/home/linuxbrew/.linuxbrew/bin/brew install derailed/k9s/k9s
 

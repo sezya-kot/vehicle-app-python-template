@@ -43,9 +43,9 @@ The `.docker\config.json` has to have following proxy settings:
             "noProxy":"host.docker.internal,localhost,127.0.0.1,.bosch.com"
          }
       },
-      "stackOrchestrator":"swarm"
-   }
+   "stackOrchestrator":"swarm"
 }
+
 ```
 </details>
 
