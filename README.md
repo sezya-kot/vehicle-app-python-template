@@ -170,3 +170,89 @@ Response is written to topic `TBD`.
 
 ## Run the application in a Kubernetes-Cluster within the DevContainer
 To run the setup within a Kubernetes Cluster within the DevContainer, scripts are provided to install prerequisites, configure the cluster and deploy the application. The steps are documented [here](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/blob/main/.sdv/k3d/README-k3d.md).
+
+## Folder Structure
+Here is the basic suggested skeleton for our repo 
+
+```bash
+├── deploy
+│   └── helm
+│       └── templates
+├── docs
+│   └── assets
+├── examples
+│   ├── PubSub
+│   │   ├── SeatPositionController
+│   │   └── SeatProfileHandler
+│   └── SimpleInvoke
+│       ├── receiver
+│       └── sender
+├── IntegrationTests
+├── proto
+├── src
+│   ├── __pycache__
+│   └── vehicle_sdk
+│       └── vehicle_api_mock
+└── vehicleapi
+    └── __pycache__
+```
+## How it works
+
+Deploy directory contains helm configuration e.g. charts and templates. It deploy two containers which are `seat-adjuster-app` and `vehicle-api`
+```bash
+deploy
+└── helm
+    ├── Chart.yaml
+    ├── templates
+    │   ├── _helpers.tpl
+    │   ├── seat-adjuster-app.yaml
+    │   └── vehicle-api.yaml
+    └── values.yaml
+```
+
+Docs directory has all the documentaion related readMe file and artifacts
+```bash
+docs
+├── assets
+│   └── publish_container.png
+└── vehicle_app_releases.md
+```
+Example directory contains the examples to help developer get started.
+```bash
+├── examples
+│   ├── PubSub
+│   │   ├── SeatPositionController
+│   │   └── SeatProfileHandler
+│   └── SimpleInvoke
+│       ├── receiver
+│       └── sender
+```
+This folder contains intergration test realted to seat adjuster app.
+```bash
+IntegrationTests/
+├── SeatAdjuster.tst.ps1
+└── Test-SdvVehicleApp.ps1
+```
+
+This folder consist of proto files required to generate necessary artifacts for the app.
+```bash
+proto/
+├── databroker.proto
+└── swdc_comfort_seats.proto
+```
+This is the main folder which consist entire `vehicle_sdk` which has client and talent. Using client we can call various methods e.g. `Move`, `MoveComponent`,`currentPosition`,`GetMetadata`,`GetDatapoints` and `Subscribe` of `Seat` class and `VehickeDataBroker` Class
+```bash
+├── src
+│   ├── __pycache__
+│   └── vehicle_sdk
+│       └── vehicle_api_mock
+```
+This folder has all the generated artifacts from proto files
+```bash
+├── vehicleapi
+│   └── __pycache__
+│       ├── databroker_pb2.cpython-38.pyc
+│       ├── databroker_pb2_grpc.cpython-38.pyc
+│       ├── swdc_comfort_seats_pb2.cpython-38.pyc
+│       └── swdc_comfort_seats_pb2_grpc.cpython-38.pyc
+```
