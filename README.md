@@ -234,7 +234,7 @@ IntegrationTests/
 └── Test-SdvVehicleApp.ps1
 ```
 
-This folder consist of proto files required to generate necessary artifacts for the app.
+proto folder consist of proto files required to generate necessary artifacts for the app.
 ```bash
 proto/
 ├── databroker.proto
@@ -247,7 +247,7 @@ This is the main folder which consist entire `vehicle_sdk` which has client and 
 │   └── vehicle_sdk
 │       └── vehicle_api_mock
 ```
-This folder has all the generated artifacts from proto files
+vehicleapi folder has all the generated artifacts from proto files
 ```bash
 ├── vehicleapi
 │   └── __pycache__
