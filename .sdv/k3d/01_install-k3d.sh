@@ -18,4 +18,3 @@ sudo apt-get install -y kubectl
 
 # (Optional) Install k9s
 /home/linuxbrew/.linuxbrew/bin/brew install derailed/k9s/k9s
-
