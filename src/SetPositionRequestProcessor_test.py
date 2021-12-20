@@ -13,7 +13,7 @@
 
 
 from set_position_request_processor import SetPositionRequestProcessor
-from vehicle_sdk.client import VehicleClient
+from sdv.client import VehicleClient
 
 
 def test_for_exception_SetPositionRequestProcessor():

@@ -22,8 +22,17 @@ Troubleshooting:
     - It will install k8s dashboard and show token
     - > **PROXY:** When running devcontainer behind corporate proxy, execute script as following: ```./02_configure-k3d.sh proxy```
 - 03_deploy-k3d.sh
-    - It will build seat-adjuster application and deploy it to the cluster
-    - > **PROXY:** When running devcontainer behind corporate proxy, execute script as following: ```./03_deploy-k3d.sh proxy```
+  - Create /src/github_token.txt file with following contents:
+    ```
+    <username>:<token>
+    ```
+    token = GitHub PAT
+
+    username = GitHub User
+  - github_token.txt is part of .gitignore so it would not be checked in. 
+
+  - It will build seat-adjuster application and deploy it to the cluster
+  - > **PROXY:** When running devcontainer behind corporate proxy, execute script as following: ```./03_deploy-k3d.sh proxy```
 
 ## Connecting to MQTT broker within the k8s cluster
 - Seatadjuster app communicates over the mqtt broker outside of k8s cluster

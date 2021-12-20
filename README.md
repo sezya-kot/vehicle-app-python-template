@@ -59,10 +59,14 @@ The `.docker\config.json` has to have following proxy settings:
      * Select the branch to clone from the list
      > If the development container fails to build successfully (e.g. due to network issues) then wait for the current build to finish and then press <kbd>F1</kbd> and run the command `Remote-Containers: Rebuild Container Without Cache`
 
+1. Install vehicle sdk
+   ```bash
+   pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git
+   ```
 1. Start the VehicleApi Mock
 
    ```bash
-   dapr run --app-id vehicleapi --app-protocol grpc --app-port 50051 --components-path ./.dapr/components --config ./.dapr/config.yaml  python3 ./src/vehicle_sdk/vehicle_api_mock/vehicleapi.py
+   bash .sdv/run-vehicleapi.sh
    ```
 
 1. Start and check sample vehicleApp

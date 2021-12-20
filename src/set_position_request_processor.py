@@ -17,9 +17,9 @@ from typing import Any
 from flask import jsonify, request
 from grpc import local_channel_credentials
 
-import vehicle_sdk.swdc_comfort_seats_pb2 as swdc_comfort_seats_pb2
-from vehicle_sdk.client import VehicleClient
-from vehicle_sdk.talent import Talent
+import sdv.swdc_comfort_seats_pb2 as swdc_comfort_seats_pb2
+from sdv.client import VehicleClient
+from sdv.talent import Talent
 
 class SetPositionRequestProcessor:
     

@@ -3,7 +3,8 @@
 if [ -n "$1" ]; then
     echo "Building image with proxy configuration"
     # Build, push vehicleapi image
-    cd /workspaces/vehicle-app-python-template/src/vehicle_sdk/vehicle_api_mock
+    pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git
+    cd /home/vscode/.local/lib/python3.8/site-packages/sdv/vehicle_api_mock
     docker build \
     -f Dockerfile \
     -t localhost:12345/vehicleapi:local \
@@ -16,8 +17,9 @@ if [ -n "$1" ]; then
     docker push localhost:12345/vehicleapi:local
 
     cd /workspaces/vehicle-app-python-template/src
-    docker build \
+    DOCKER_BUILDKIT=1 docker build \
     -f Dockerfile \
+    --progress=plain --secret id=github_token,src=github_token.txt \
     -t localhost:12345/seatadjuster:local \
     --build-arg HTTP_PROXY="http://host.docker.internal:3128" \
     --build-arg HTTPS_PROXY="http://host.docker.internal:3128" \
@@ -30,12 +32,13 @@ if [ -n "$1" ]; then
 else
     echo "Building image without proxy configuration"
     # Build, push vehicleapi image - NO PROXY
-    cd /workspaces/vehicle-app-python-template/src/vehicle_sdk/vehicle_api_mock
+    pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git
+    cd /home/vscode/.local/lib/python3.8/site-packages/sdv/vehicle_api_mock
     docker build -f Dockerfile -t localhost:12345/vehicleapi:local .
     docker push localhost:12345/vehicleapi:local
 
     cd /workspaces/vehicle-app-python-template/src
-    docker build -f Dockerfile -t localhost:12345/seatadjuster:local .
+    DOCKER_BUILDKIT=1 docker build -f Dockerfile --progress=plain --secret id=github_token,src=github_token.txt -t localhost:12345/seatadjuster:local .
     docker push localhost:12345/seatadjuster:local
 
     cd /workspaces/vehicle-app-python-template/.sdv/k3d

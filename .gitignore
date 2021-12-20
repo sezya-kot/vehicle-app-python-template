@@ -351,3 +351,7 @@ MigrationBackup/
 
 # sdv temp folder
 .sdv/tmp/
+
+# github_token file
+src/github_token.txt
+github_token.txt

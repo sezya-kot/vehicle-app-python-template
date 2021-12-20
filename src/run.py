@@ -15,9 +15,9 @@ import json
 import logging
 from typing import Any
 from set_position_request_processor import SetPositionRequestProcessor
-from vehicle_sdk.talent import Talent, subscribeDataPoints, subscribeTopic
-from vehicle_sdk.client import VehicleClient
-from vehicle_sdk.databroker_pb2 import Notification
+from sdv.talent import Talent, subscribeDataPoints, subscribeTopic
+from sdv.client import VehicleClient
+from sdv.databroker_pb2 import Notification
 
 class SeatAdjusterTalent(Talent):
     def __init__(self):

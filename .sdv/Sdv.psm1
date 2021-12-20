@@ -287,7 +287,13 @@ Function Import-SdvVehicleAppConfiguration {
             Write-Verbose ("Processing component '{0}'" -f $Component.Name)
 
             Write-Verbose ("Combining vehicleApp root folder '{0}' and component folder '{0}' to get full name.")
-            $Component.Folder = Join-Path $RootFolder -ChildPath $Component.Folder 
+            $Component.Folder = Join-Path $RootFolder -ChildPath $Component.Folder
+
+            if($Component.Folder -like '*..*') {
+                $Component.Folder = $Component.Folder.Substring($Component.Folder.IndexOf('..')+2)
+            } 
+            
+
             Write-Verbose ("Full component folder name is '{0}'" -f $Component.Folder)
 
             $ProgrammingLanguage = $Component | Get-SdvComponentProgrammingLanguage
@@ -341,6 +347,9 @@ Function Initialize-SdvComponent {
     )
 
     process {
+        if($Folder -like '*..*') {
+            $Folder = $Folder.Substring($Folder.IndexOf('..')+2)
+        }
         Write-Verbose ("Changing to component folder '{0}'" -f $Folder)
         Push-Location $Folder
         switch ($ProgrammingLanguage) {
