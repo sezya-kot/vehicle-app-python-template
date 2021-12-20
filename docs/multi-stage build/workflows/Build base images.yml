@@ -47,13 +47,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2      
 
-      - name: Clone actions repository 
-        uses: actions/checkout@v2
-        with:
-          repository: SoftwareDefinedVehicle/swdc-actions
-          ssh-key: ${{ secrets.SDV_ACTIONS_PRIVATE_KEY }}
-          path: "./.github/swdc-actions"
-
       - name: Check Docker version
         run: docker --version    
 
@@ -110,15 +103,6 @@ jobs:
       - name: "${{ matrix.component.Name }} -- Show base image scan results"
         if: ${{ always() }}
         run: cat ./junit.xml
-
-      - name: "${{ matrix.component.Name }} -- Package base image vulnerability scan files"
-        uses: ./.github/swdc-actions/documentation/package
-        with:
-          name: "VulnerabilityScan-base-${{ matrix.component.Name }}"
-          type: "VulnerabilityScan"
-          schema: "JUnit"
-          sourcePath: ./junit.xml
-          packagePath: .sdv/Documentation/renderer
 
       - name: "${{ matrix.component.Name }} -- Upload base image trivy report as artifacts"
         if: ${{ always() && steps.image_build.outcome == 'success' }}
