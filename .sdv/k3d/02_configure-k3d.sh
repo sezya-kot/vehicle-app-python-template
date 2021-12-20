@@ -1,11 +1,23 @@
+#!/bin/bash
+
 # Delete cluster and registry
 k3d cluster delete dev-cluster
 k3d registry delete k3d-devregistry.localhost
 
 # Create k3d registry & cluster
-k3d registry create 
-.localhost --port 12345
-k3d cluster create dev-cluster --registry-use k3d-devregistry.localhost:12345 -p "31883:31883"
+k3d registry create devregistry.localhost --port 12345
+if [ -n "$1" ]; then
+  echo "Creating cluster with proxy configuration"
+  k3d cluster create dev-cluster \
+    --registry-use k3d-devregistry.localhost:12345 \
+    -p "31883:31883" \
+    -e "HTTP_PROXY=http://host.docker.internal:3128@server:0" \
+    -e "HTTPS_PROXY=http://host.docker.internal:3128@server:0" \
+    -e "NO_PROXY=localhost@server:0" 
+else
+  echo "Creating cluster without proxy configuration"
+  k3d cluster create dev-cluster --registry-use k3d-devregistry.localhost:12345 -p "31883:31883"
+fi
 
 GITHUB_URL=https://github.com/kubernetes/dashboard/releases
 VERSION_KUBE_DASHBOARD=$(curl -w '%{url_effective}' -I -L -s -S ${GITHUB_URL}/latest -o /dev/null | sed -e 's|.*/||')
