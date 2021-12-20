@@ -180,19 +180,8 @@ Here is the basic suggested skeleton for our repo
 │       └── templates
 ├── docs
 │   └── assets
-├── examples
-│   ├── PubSub
-│   │   ├── SeatPositionController
-│   │   └── SeatProfileHandler
-│   └── SimpleInvoke
-│       ├── receiver
-│       └── sender
 ├── IntegrationTests
-├── proto
 ├── src
-│   ├── __pycache__
-│   └── vehicle_sdk
-│       └── vehicle_api_mock
 └── vehicleapi
     └── __pycache__
 ```
@@ -217,42 +206,18 @@ docs
 │   └── publish_container.png
 └── vehicle_app_releases.md
 ```
-Example directory contains the examples to help developer get started.
-```bash
-├── examples
-│   ├── PubSub
-│   │   ├── SeatPositionController
-│   │   └── SeatProfileHandler
-│   └── SimpleInvoke
-│       ├── receiver
-│       └── sender
-```
-This folder contains intergration test realted to seat adjuster app.
+
+This folder contains intergration test related to seat adjuster app.
 ```bash
 IntegrationTests/
 ├── SeatAdjuster.tst.ps1
 └── Test-SdvVehicleApp.ps1
 ```
 
-proto folder consist of proto files required to generate necessary artifacts for the app.
-```bash
-proto/
-├── databroker.proto
-└── swdc_comfort_seats.proto
-```
-This is the main folder which consist entire `vehicle_sdk` which has client and talent. Using client we can call various methods e.g. `Move`, `MoveComponent`,`currentPosition`,`GetMetadata`,`GetDatapoints` and `Subscribe` of `Seat` class and `VehickeDataBroker` Class
+This is the main folder which has client and talent. Using client we can call various methods e.g. `Move`, `MoveComponent`,`currentPosition`,`GetMetadata`,`GetDatapoints` and `Subscribe` of `Seat` class and `VehickeDataBroker` Class
 ```bash
 ├── src
 │   ├── __pycache__
 │   └── vehicle_sdk
 │       └── vehicle_api_mock
-```
-vehicleapi folder has all the generated artifacts from proto files
-```bash
-├── vehicleapi
-│   └── __pycache__
-│       ├── databroker_pb2.cpython-38.pyc
-│       ├── databroker_pb2_grpc.cpython-38.pyc
-│       ├── swdc_comfort_seats_pb2.cpython-38.pyc
-│       └── swdc_comfort_seats_pb2_grpc.cpython-38.pyc
 ```
