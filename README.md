@@ -182,8 +182,6 @@ Here is the basic suggested skeleton for our repo
 │   └── assets
 ├── IntegrationTests
 ├── src
-└── vehicleapi
-    └── __pycache__
 ```
 ## How it works
 
@@ -199,7 +197,7 @@ deploy
     └── values.yaml
 ```
 
-Docs directory has all the documentaion related readMe file and artifacts
+Docs directory has all the documentation related readMe file and artifacts
 ```bash
 docs
 ├── assets
@@ -214,10 +212,7 @@ IntegrationTests/
 └── Test-SdvVehicleApp.ps1
 ```
 
-This is the main folder which has client and talent. Using client we can call various methods e.g. `Move`, `MoveComponent`,`currentPosition`,`GetMetadata`,`GetDatapoints` and `Subscribe` of `Seat` class and `VehickeDataBroker` Class
+This is the main folder which contains the source code of the vehicle application. 
 ```bash
 ├── src
-│   ├── __pycache__
-│   └── vehicle_sdk
-│       └── vehicle_api_mock
 ```
