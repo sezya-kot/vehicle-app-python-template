@@ -1,10 +1,9 @@
 # VehicleApp using Python
 
 This Python vehicleApp repository includes a sample vehicleApp based on the Software defined vehicle platform. GitHub workflows are used to build the container image for the vehicleApp, run unit and integration tests, collect the test results and create a release documentation and
-publish the vehicleApp. A detailed description of the workflow you can find [here](https://github.com/SoftwareDefinedVehicle/swdc-iotea-talent-template-repositories/blob/main/docs/vehicle_app_releases.md).
+publish the vehicleApp. A detailed description of the workflow you can find [here](docs/vehicle_app_releases.md).
  
-![refernce Architecture](https://raw.githubusercontent.com/SoftwareDefinedVehicle/swdc-iotea-talent-template-repositories/main/docs/assets/publish_container.png?token=AA67KRN36QNSSQTHLGN5FLLBSTIL4)  
-
+![refernce Architecture](docs/assets/publish_container.png)
 
 Note: this is a template repository. Please create your own repository from this template repository by clicking the green button `Use this template`.
 
@@ -168,4 +167,50 @@ Response is written to topic `TBD`.
      * Open `Actions` on the repository and see the result
 
 ## Run the application in a Kubernetes-Cluster within the DevContainer
-To run the setup within a Kubernetes Cluster within the DevContainer, scripts are provided to install prerequisites, configure the cluster and deploy the application. The steps are documented [here](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/main/.sdv/k3d/README-k3d.md).
+To run the setup within a Kubernetes Cluster within the DevContainer, scripts are provided to install prerequisites, configure the cluster and deploy the application. The steps are documented [here](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/blob/main/.sdv/k3d/README-k3d.md).
+
+## Folder Structure
+Here is the basic suggested skeleton for our repo 
+
+```bash
+├── deploy
+│   └── helm
+│       └── templates
+├── docs
+│   └── assets
+├── IntegrationTests
+├── src
+```
+## How it works
+
+Deploy directory contains helm configuration e.g. charts and templates. It deploy two containers which are `seat-adjuster-app` and `vehicle-api`
+```bash
+deploy
+└── helm
+    ├── Chart.yaml
+    ├── templates
+    │   ├── _helpers.tpl
+    │   ├── seat-adjuster-app.yaml
+    │   └── vehicle-api.yaml
+    └── values.yaml
+```
+
+Docs directory has all the documentation related readMe file and artifacts
+```bash
+docs
+├── assets
+│   └── publish_container.png
+└── vehicle_app_releases.md
+```
+
+This folder contains intergration test related to seat adjuster app.
+```bash
+IntegrationTests/
+├── SeatAdjuster.tst.ps1
+└── Test-SdvVehicleApp.ps1
+```
+
+This is the main folder which contains the source code of the vehicle application. 
+```bash
+├── src
+```

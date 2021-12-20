@@ -51,5 +51,3 @@ echo
 echo "Use the following token to login:"
 echo
 kubectl -n kubernetes-dashboard describe secret admin-user-token | grep ^token
-
-
