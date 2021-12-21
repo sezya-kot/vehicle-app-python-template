@@ -2,7 +2,7 @@
 
 This Python vehicleApp repository includes a sample vehicleApp based on the Software defined vehicle platform. GitHub workflows are used to build the container image for the vehicleApp, run unit and integration tests, collect the test results and create a release documentation and
 publish the vehicleApp. A detailed description of the workflow you can find [here](docs/vehicle_app_releases.md).
- 
+
 ![refernce Architecture](docs/assets/publish_container.png)
 
 Note: this is a template repository. Please create your own repository from this template repository by clicking the green button `Use this template`.
@@ -71,35 +71,35 @@ The `.docker\config.json` has to have following proxy settings:
 1. Start and check sample vehicleApp
 
    ```bash
-   dapr run --app-id app-skeleton --app-protocol grpc --app-port 50008 --config ./.dapr/config.yaml --components-path ./.dapr/components  python3 ./src/run.py 
+   dapr run --app-id app-skeleton --app-protocol grpc --app-port 50008 --config ./.dapr/config.yaml --components-path ./.dapr/components  python3 ./src/run.py
    ```
 
 1. Debug the sample vehicleApp
 
-> If opening the devcontainer for the first time, a manual reload of the dapr extension is required. 
+> If opening the devcontainer for the first time, a manual reload of the dapr extension is required.
 
    * Press <kbd>F5</kbd> to start the vehicleVapp and see the log output on the `DEBUG CONSOLE`    
 
-   * To debug the vehicleAPI Mock and the vehicle app together, choose the "SeatAdjuster" compound configuration and run it. 
+   * To debug the vehicleAPI Mock and the vehicle app together, choose the "SeatAdjuster" compound configuration and run it.
 
 1. Run unit test and adjust tests
    * Run the unit tests from the Visual Studio Code test runner by clicking on the Testrunner in the toolbar and press on the play button
-     
+
 
 1. dapr Dashboard
    * The dapr dashboard provides provides an overview over running dapr components and configuration.
    * To launch the dashboard in a web browser, open a terminal and type `dapr dashboard`   
-   
+
 1. Zipkin Tracing
    * Open forwarded ports in VS Code and add port 9411 if not available
    * Click on `Open in Browser` on forwarded port to open the Zipkin Tracing in the web browser.
-     
+
 1. Cleanup
 
-   To stop your services from running, simply stop the "dapr run" process. Alternatively, you can spin down each of your services with the Dapr CLI "stop" command. For example, to spin down both services, run these commands in a new terminal: 
+   To stop your services from running, simply stop the "dapr run" process. Alternatively, you can spin down each of your services with the Dapr CLI "stop" command. For example, to spin down both services, run these commands in a new terminal:
 
    <!-- STEP
-   expected_stdout_lines: 
+   expected_stdout_lines:
      - 'app stopped successfully: nodeapp'
      - 'app stopped successfully: pythonapp'
    expected_stderr_lines:
@@ -108,7 +108,7 @@ The `.docker\config.json` has to have following proxy settings:
    -->
 
    ```bash
-   dapr stop --app-id app-skeleton 
+   dapr stop --app-id app-skeleton
    ```
 
    ```bash
@@ -122,7 +122,7 @@ The `.docker\config.json` has to have following proxy settings:
 
 1. Request Seat-Adjustment inside the vehicle
 
-Send MQTT message to topic `seatadjuster/setPosition/request/gui-app`. 
+Send MQTT message to topic `seatadjuster/setPosition/request/gui-app`.
 
 Example:
 ```json
@@ -146,20 +146,20 @@ Example:
     "ts": 0123456677,
     "p": {
       "path": "Vehicle.Cabin.Seat.Row1.Pos1.Position",
-      "value": "1000" 
+      "value": "1000"
     }
 }
 ```
 
 Response is written to topic `TBD`.
 
-  
+
 ## Release the vehicleApp to push it to the container registry
    * In order to deploy the vehicleApp you need to set the secrets on repository
      * Open `Settings`, go to `Secrets`, click on `Manage your environments and add repository secrets` and add the following secrets (button `Add Secret`):
        * EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER
        * EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT (set the value e.g. to "swdceuwedevgsopscr.azurecr.io")
-       * EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD 
+       * EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD
    * Open the Code page of your repository on gitHub.com and click on `Create a new release` in the Releases section on the right side
    * Enter a version and click on `Publish release`
      * Note: you can start the version with a `v` which will be removed though, e.g. "v1.0.0" will result in a "1.0.0" (see [version-without-v](https://github.com/battila7/get-version-action)).
@@ -167,10 +167,13 @@ Response is written to topic `TBD`.
      * Open `Actions` on the repository and see the result
 
 ## Run the application in a Kubernetes-Cluster within the DevContainer
-To run the setup within a Kubernetes Cluster within the DevContainer, scripts are provided to install prerequisites, configure the cluster and deploy the application. The steps are documented [here](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/blob/main/.sdv/k3d/README-k3d.md).
+[Follow documentation here](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/main/.sdv/k3d/README-k3d.md).
+
+## Building multi-stage image
+[Follow documentation here](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/blob/main/docs/multi-stage%20build/README.md).
 
 ## Folder Structure
-Here is the basic suggested skeleton for our repo 
+Here is the basic suggested skeleton for our repo
 
 ```bash
 ├── deploy
@@ -210,7 +213,7 @@ IntegrationTests/
 └── Test-SdvVehicleApp.ps1
 ```
 
-This is the main folder which contains the source code of the vehicle application. 
+This is the main folder which contains the source code of the vehicle application.
 ```bash
 ├── src
 ```
