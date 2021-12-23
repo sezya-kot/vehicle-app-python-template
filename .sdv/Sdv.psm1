@@ -85,14 +85,14 @@ Function Write-SdvError {
 
 Function Start-VehicleAppWithDockerCompose {
     Enter-LoggingGroup "build vehicleApp"
-    docker-compose up --build -d 
+    docker-compose up --build -d
     Exit-LoggingGroup
-    
+
     Enter-LoggingGroup "get vehicleApp logs"
     Start-Sleep 5
     docker-compose logs
     Exit-LoggingGroup
-    
+
     Enter-LoggingGroup "stopping vehicleApp"
     docker-compose down
     Exit-LoggingGroup
@@ -102,7 +102,7 @@ Function Start-VehicleAppWithDaprCli {
     Write-SdvLogging ("Starting vehicleApp as job")
     $Job = Start-Job { dapr run --app-id nodeapp --app-port 3000 --dapr-http-port 3500 node examples/SimpleInvoke/receiver/app.js }
     Write-SdvLogging ("Started job {0} ({1})" -f $Job.Id, $Job.Command)
-    
+
     Write-SdvLogging ("Waiting for the application to start")
     do {
         $Applications = dapr list -o json | ConvertFrom-Json
@@ -110,18 +110,18 @@ Function Start-VehicleAppWithDaprCli {
         Write-SdvLogging ("Found '{0}' application(s): '{1}'" -f $ApplicationCount, ($Applications.appId -join "', '"))
     } until ($Applications.appId -contains "nodeapp")
     Write-SdvLogging ("Sending new order")
-    dapr invoke --app-id nodeapp --method neworder --data-file examples/SimpleInvoke/receiver/sample.json   
-    
+    dapr invoke --app-id nodeapp --method neworder --data-file examples/SimpleInvoke/receiver/sample.json
+
     Write-SdvLogging ("Stopping vehicleApp")
-    dapr stop --app-id nodeapp   
-    
+    dapr stop --app-id nodeapp
+
     Enter-LoggingGroup "job output"
     Write-SdvLogging "Getting job output "
     Write-SdvLogging "## Job output start ########################################################################################################################"
     $Job | Wait-Job | Receive-Job
     Write-SdvLogging "## Job output end ##########################################################################################################################"
     Exit-LoggingGroup
-    
+
     Write-SdvLogging "## Removing job"
     Write-SdvLogging "List of jobs before remove"
     Get-Job
@@ -138,7 +138,7 @@ Function Start-SdvComponent {
 
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [string]$Folder,
-        
+
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [string]$StartProgram,
 
@@ -163,10 +163,10 @@ Function Start-SdvComponent {
         }
         Write-SdvLogging ("Starting component {0} on port {1} with command line '{2}'" -f $Name, $Port, $CommandLine)
         $ComponentScriptBlock = [scriptblock]::Create($CommandLine)
-        $Job = Start-Job -Name $Name -ScriptBlock $ComponentScriptBlock   
-        
+        $Job = Start-Job -Name $Name -ScriptBlock $ComponentScriptBlock
+
         Write-SdvLogging ("Started backgound job {0} to run dapr app '{1}'. Command line was: {2}" -f $Job.Id, $Name, $Job.Command)
-        
+
         Write-SdvLogging ("Waiting for $Name to start")
         do {
             $Applications = dapr list -o json | ConvertFrom-Json
@@ -176,7 +176,7 @@ Function Start-SdvComponent {
                 $ApplicationHasStopped = $true
             }
             $ApplicationIsRunning = $Applications.appId -contains $Name
-        } until ($ApplicationHasStopped -or $ApplicationIsRunning)    
+        } until ($ApplicationHasStopped -or $ApplicationIsRunning)
         Exit-LoggingGroup
     }
 }
@@ -200,7 +200,7 @@ Function Stop-SdvComponent {
         Get-Job $Name | Wait-Job | Receive-Job
         Write-SdvLogging "## Job output end ##########################################################################################################################"
         Exit-LoggingGroup
-    
+
         Enter-LoggingGroup ("Removing job ({0})" -f $Name)
         Write-SdvLogging "List of jobs before remove"
         Get-Job
@@ -271,12 +271,12 @@ Function Import-SdvVehicleAppConfiguration {
 
     process {
         Write-Verbose ("Importing vehicleApp configuration from '{0}'" -f $Fullname)
-        $Configuration = Get-Content $Fullname | ConvertFrom-Json -Depth 10 
+        $Configuration = Get-Content $Fullname | ConvertFrom-Json -Depth 10
 
         $RootFolder = Split-Path $Fullname -Parent
         Write-Verbose ("Adding '{0}' as root folder" -f $RootFolder)
-        $Configuration | Add-Member -MemberType NoteProperty -Name 'RootFolder' -Value $RootFolder  
-        
+        $Configuration | Add-Member -MemberType NoteProperty -Name 'RootFolder' -Value $RootFolder
+
         foreach ($Component in $Configuration.Components ) {
             Write-Verbose ("Processing component in folder '{0}'" -f $Component.Folder)
 
@@ -291,8 +291,8 @@ Function Import-SdvVehicleAppConfiguration {
 
             if($Component.Folder -like '*..*') {
                 $Component.Folder = $Component.Folder.Substring($Component.Folder.IndexOf('..')+2)
-            } 
-            
+            }
+
 
             Write-Verbose ("Full component folder name is '{0}'" -f $Component.Folder)
 
@@ -301,7 +301,7 @@ Function Import-SdvVehicleAppConfiguration {
             if ([string]::IsNullOrEmpty($Component.StartProgram)) {
                 Write-Verbose ("Component start program not provided in configuration. Using auto detect.")
                 switch ($Component.ProgrammingLanguage) {
-                    "node" { 
+                    "node" {
                         $StartProgram = ($Component.Name + ".js")
                     }
                     "python3" {
@@ -321,8 +321,8 @@ Function Import-SdvVehicleAppConfiguration {
                 Write-Verbose ("Docker folder not provided in configuration. Setting docker folder to component folder'{0}'" -f $Component.Folder)
                 $Component | Add-Member -MemberType NoteProperty -Name "DockerFolder" -Value $Component.Folder
             }
-        }  
-        
+        }
+
         return $Configuration
     }
 }
@@ -353,7 +353,7 @@ Function Initialize-SdvComponent {
         Write-Verbose ("Changing to component folder '{0}'" -f $Folder)
         Push-Location $Folder
         switch ($ProgrammingLanguage) {
-            "node" { 
+            "node" {
                 Write-Verbose ("--------------------------------------------------------")
                 Write-Verbose ("Running 'npm install'")
                 npm install
@@ -363,11 +363,11 @@ Function Initialize-SdvComponent {
                 Write-Verbose ("--------------------------------------------------------")
                 if (Test-Path "./requirements.txt") {
                     Write-Verbose ("Running 'pip3 install -r ./requirements.txt'")
-                    pip3 install -r ./requirements.txt 
+                    pip3 install -r ./requirements.txt
                 } else {
                     Write-Verbose ("Failed to find requirements.txt in component folder. Falling back to requirements.txt in vehicleApp folder")
                     Write-Verbose ("Running 'pip3 install -r ../requirements.txt'")
-                    pip3 install -r ../requirements.txt 
+                    pip3 install -r ../requirements.txt
                 }
                 Write-Verbose ("--------------------------------------------------------")
             }

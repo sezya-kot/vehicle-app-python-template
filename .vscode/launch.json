@@ -24,7 +24,7 @@
                 "SeatAdjuster/client"
             ]
         }
-    ],    
+    ],
     "configurations": [
         {
             "type": "python",
@@ -59,6 +59,6 @@
             "type": "PowerShell",
             "request": "launch",
             "cwd": ""
-        }        
+        }
     ]
 }

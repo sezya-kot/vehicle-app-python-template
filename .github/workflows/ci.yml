@@ -18,7 +18,7 @@ on:
   push:
     # Run only on branches/commits and not tags
     branches:
-      - '**'
+      - main
   pull_request:
     branches:
       - main
@@ -26,13 +26,15 @@ on:
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
-    name: Run unit tests
+    name: Run unit tests and linters
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
 
-      - name: Clone actions repository 
+      - name: Clone actions repository
         uses: actions/checkout@v2
         with:
           repository: SoftwareDefinedVehicle/release-documentation-action
@@ -65,19 +67,24 @@ jobs:
       - name: Install required packages
         shell: pwsh
         run: |
-          pip install -r src/requirements.txt 
-          pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git
+          pip install -r src/requirements.txt
+          pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git@v0.1.0
 
       - name: Start mqtt
         shell: bash
         run: docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto:1.6.9
-          
+
+      - name: Run Linters
+        uses: pre-commit/action@v2.0.3
+        with:
+          token: ${{ secrets.SDV_GITHUB_AUTOMATION_TOKEN }}
+
       - name: unit test
         shell: bash
         run: |
-          pip install pytest pytest-cov coverage2clover 
+          pip install pytest pytest-cov coverage2clover
           pip install coveragepy-lcov --no-warn-conflicts
-          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=xml:.sdv/tmp/CodeCoverage/cobertura-coverage.xml --cov-branch ./src --cov-config=setup.cfg    
+          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=xml:.sdv/tmp/CodeCoverage/cobertura-coverage.xml --cov-branch ./src --cov-config=setup.cfg
           coverage2clover -i .sdv/tmp/CodeCoverage/cobertura-coverage.xml -o .sdv/tmp/CodeCoverage/clover.xml
           coveragepy-lcov --data_file_path ./.coverage --output_file_path .sdv/tmp/CodeCoverage/lcov.info
 
@@ -131,10 +138,10 @@ jobs:
       name: Setting up build matrix
       outputs:
         deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
- 
+
       steps:
       - name: Checkout repository
-        uses: actions/checkout@v2   
+        uses: actions/checkout@v2
 
       - name: Get matrix data
         id: export-deployment-matrix
@@ -149,15 +156,15 @@ jobs:
       runs-on: ubuntu-latest
       #needs: [initialize-matrix, build-base-images]
       needs: initialize-matrix
-      strategy: 
-        matrix: 
+      strategy:
+        matrix:
           component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
 
       steps:
       - name: Checkout repository
-        uses: actions/checkout@v2      
+        uses: actions/checkout@v2
 
-      - name: Clone actions repository 
+      - name: Clone actions repository
         uses: actions/checkout@v2
         with:
           repository: SoftwareDefinedVehicle/release-documentation-action
@@ -165,7 +172,7 @@ jobs:
           path: "./.github/actions"
 
       - name: Check Docker version
-        run: docker --version    
+        run: docker --version
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -199,7 +206,7 @@ jobs:
       - name: Install sdv Package
         shell: bash
         run: |
-          pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git
+          pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git@v0.1.0
 
       - name: "${{ matrix.component.Name }} -- Build multi-arch image"
         id: image_build
@@ -232,7 +239,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
           format: 'template'
           template: '@.sdv/junit.tpl'
-          output: 'junit.xml'      
+          output: 'junit.xml'
 
       - name: "${{ matrix.component.Name }} -- Show scan results"
         if: ${{ always() }}
@@ -261,7 +268,7 @@ jobs:
         with:
           check_name: Trivy Scan Results (${{ matrix.component.Name }})
           comment_title: Trivy Scan Results (${{ matrix.component.Name }})
-          files: ./junit.xml          
+          files: ./junit.xml
 
       - name: "${{ matrix.component.Name }} -- Push image to ghcr"
         if: ${{ steps.image_build.outcome == 'success' }}
@@ -282,9 +289,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2  
+        uses: actions/checkout@v2
 
-      - name: Clone actions repository 
+      - name: Clone actions repository
         uses: actions/checkout@v2
         with:
           repository: SoftwareDefinedVehicle/release-documentation-action
@@ -313,11 +320,11 @@ jobs:
         run: |
           git config --global user.email "swdc-github-automation@users.noreply.github.com"
           git config --global user.name "SwdC.Dev Github Automation"
-      
+
       - name: Install sdv Package
         shell: bash
         run: |
-          pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git
+          pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git@v0.1.0
 
       - name: Initialize vehicleApp projects
         shell: pwsh
@@ -329,18 +336,18 @@ jobs:
 
       - name: Start mqtt
         shell: bash
-        run: docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto:1.6.9          
+        run: docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto:1.6.9
 
-      - name: Test SeatAdjuster vehicleApp 
+      - name: Test SeatAdjuster vehicleApp
         shell: pwsh
-        run: ./IntegrationTests/Test-SdvVehicleApp.ps1     
+        run: ./IntegrationTests/Test-SdvVehicleApp.ps1
 
       - name: Publish Integration Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: .sdv/tmp/IntegrationTest/junit.xml   
-          check_name: Integration Test Results     
+          files: .sdv/tmp/IntegrationTest/junit.xml
+          check_name: Integration Test Results
           fail_on: "test failures"
 
       - name: Package integration test result files
@@ -350,12 +357,12 @@ jobs:
           type: "IntegrationTest"
           schema: "JUnit"
           sourcePath: .sdv/tmp/IntegrationTest
-          packagePath: .sdv/tmp/Documentation/renderer        
-          
+          packagePath: .sdv/tmp/Documentation/renderer
+
       - name: Upload test results as artifacts
         uses: actions/upload-artifact@v2
         if: always()
         with:
           name: 'test-results'
           path: |
-            .sdv/tmp/Documentation/renderer/*         
+            .sdv/tmp/Documentation/renderer/*

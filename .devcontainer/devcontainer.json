@@ -25,7 +25,11 @@
 		"python.pythonPath": "/usr/local/bin/python",
 		"python.linting.enabled": true,
 		"python.linting.pylintEnabled": true,
-		"python.linting.pylintPath": "/usr/local/bin/pylint"
+		"python.linting.pylintPath": "/usr/local/bin/pylint",
+		"python.formatting.provider": "black",
+		"python.linting.banditEnabled": true,
+		"python.linting.flake8Enabled": true
+
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.
@@ -41,7 +45,9 @@
 		"ms-vsliveshare.vsliveshare-pack",
 		"rpdswtk.vsmqtt",
 		"dotjoshjohnson.xml",
-		"ms-kubernetes-tools.vscode-kubernetes-tools"
+		"ms-kubernetes-tools.vscode-kubernetes-tools",
+		"matangover.mypy",
+		"semgrep.semgrep"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

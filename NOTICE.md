@@ -6,13 +6,13 @@ http://www.eclipse.org/legal/epl-2.0.
 
 SPDX-License-Identifier: EPL-2.0
 
-## Contributors: 
+## Contributors:
 *   Robert Bosch GmbH - initial API and implementation
 *   Microsoft Corporation - initial API and implementation
 
 ## Third-party Content
 
-### Devcontainer 
+### Devcontainer
 
 | Software            | License                                                                                                          |
 | :------------------ | :--------------------------------------------------------------------------------------------------------------- |
@@ -66,5 +66,3 @@ SPDX-License-Identifier: EPL-2.0
 | :------: | :------------------------------------------------------------------: |
 |  Thread  | https://github.com/loretoparisi/python-threading/blob/master/LICENSE |
 |   GRPC   |           https://github.com/grpc/grpc/blob/master/LICENSE           |
-
-

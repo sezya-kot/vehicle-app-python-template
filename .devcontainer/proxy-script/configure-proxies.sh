@@ -16,7 +16,7 @@ echo "#######################################################"
 echo "### Configure-proxies                               ###"
 echo "#######################################################"
 
-echo "Use proxies: $USE_PROXIES" 
+echo "Use proxies: $USE_PROXIES"
 echo "Username: $USERNAME"
 echo "Http-proxy: $HTTP_PROXY"
 echo "Https-proxy: $HTTPS_PROXY"
@@ -63,7 +63,7 @@ if [ "${USE_PROXIES}" = "true" ]; then
     echo "FTP_PROXY is ${FTP_PROXY}"
     echo "ALL_PROXY is ${ALL_PROXY}"
     echo "NO_PROXY is ${NO_PROXY}"
-    
+
     mkdir -p /home/${USERNAME}
     echo "export HTTP_PROXY=\"${HTTP_PROXY}\"" >> /home/${USERNAME}/.profile
     echo "export http_proxy=\"${HTTP_PROXY}\"" >> /home/${USERNAME}/.profile
@@ -88,10 +88,10 @@ if [ "${USE_PROXIES}" = "true" ]; then
 
     # # Apply common tools proxy settings for installed tools
     if [ "${CONFIGURE_GIT}" = "true" ]; then
-        su -c "git config --global http.proxy ${HTTP_PROXY}" ${USERNAME} 
+        su -c "git config --global http.proxy ${HTTP_PROXY}" ${USERNAME}
         su -c "git config --global https.proxy ${HTTPS_PROXY}" ${USERNAME}
 
-        git config --global http.proxy ${HTTP_PROXY} 
+        git config --global http.proxy ${HTTP_PROXY}
         git config --global https.proxy ${HTTPS_PROXY}
     fi
 

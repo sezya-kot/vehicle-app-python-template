@@ -60,7 +60,7 @@ The `.docker\config.json` has to have following proxy settings:
 
 1. Install vehicle sdk
    ```bash
-   pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git
+   pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git@v0.1.0
    ```
 1. Start the VehicleApi Mock
 
@@ -78,7 +78,7 @@ The `.docker\config.json` has to have following proxy settings:
 
 > If opening the devcontainer for the first time, a manual reload of the dapr extension is required.
 
-   * Press <kbd>F5</kbd> to start the vehicleVapp and see the log output on the `DEBUG CONSOLE`    
+   * Press <kbd>F5</kbd> to start the vehicleVapp and see the log output on the `DEBUG CONSOLE`
 
    * To debug the vehicleAPI Mock and the vehicle app together, choose the "SeatAdjuster" compound configuration and run it.
 
@@ -88,7 +88,7 @@ The `.docker\config.json` has to have following proxy settings:
 
 1. dapr Dashboard
    * The dapr dashboard provides provides an overview over running dapr components and configuration.
-   * To launch the dashboard in a web browser, open a terminal and type `dapr dashboard`   
+   * To launch the dashboard in a web browser, open a terminal and type `dapr dashboard`
 
 1. Zipkin Tracing
    * Open forwarded ports in VS Code and add port 9411 if not available
@@ -142,7 +142,7 @@ Example:
     "pVer": "1.0",              // payload version of the command
     "eVer": "2.0",
     "cId": "<uuid>",            // correlation Id - Internally generated
-    "cmdName": "${commandName}",  
+    "cmdName": "${commandName}",
     "ts": 0123456677,
     "p": {
       "path": "Vehicle.Cabin.Seat.Row1.Pos1.Position",

@@ -13,38 +13,45 @@
 
 import json
 import logging
-from typing import Any
-from set_position_request_processor import SetPositionRequestProcessor
-from sdv.talent import Talent, subscribeDataPoints, subscribeTopic
+
 from sdv.client import VehicleClient
-from sdv.databroker_pb2 import Notification
+from sdv.proto.databroker_pb2 import Notification
+from sdv.talent import Talent, subscribeDataPoints, subscribeTopic
+
+from set_position_request_processor import SetPositionRequestProcessor
+
 
 class SeatAdjusterTalent(Talent):
     def __init__(self):
         super().__init__()
 
     @subscribeTopic("seatadjuster/setPosition/request/gui-app")
-    def onSetPositionRequestGuiAppReceived(self, data: any) -> None:
+    def onSetPositionRequestGuiAppReceived(self, data: str) -> None:
         data = json.loads(data)
-        print(f'Set Position Request received: data={data}', flush=True)  # noqa: E501
-        self.onSetPositionRequestReceived(data, "seatadjuster/setPosition/response/gui-app")
+        print(f"Set Position Request received: data={data}", flush=True)  # noqa: E501
+        self.onSetPositionRequestReceived(
+            data, "seatadjuster/setPosition/response/gui-app"
+        )
 
-    def onSetPositionRequestReceived(self, data: any, resp_topic: str) -> None:
+    def onSetPositionRequestReceived(self, data: str, resp_topic: str) -> None:
         vehicleClient = VehicleClient()
         vehicleSpeed = vehicleClient.get_vehicle_speed()
-        if vehicleSpeed == 0: 
+        if vehicleSpeed == 0:
             setPositionRequestProcessor = SetPositionRequestProcessor()
             setPositionRequestProcessor.process(data, resp_topic, vehicleClient, self)
         else:
-            print('Not allowed to move seat because vehicle speed is {vehicleSpeed} and not 0')
-    
+            print(
+                "Not allowed to move seat because vehicle speed is {vehicleSpeed} and not 0"
+            )
+
     @subscribeDataPoints(["Vehicle.Speed"])
-    def onDataPointUpdates(self, notification: Notification):
-        self.vehicle_speed = notification.datapoints[0].int32_value
+    def onDataPointUpdates(self, notification: Notification):  # type: ignore
+        self.vehicle_speed = notification.datapoints[0].int32_value  # type: ignore
         print(notification, flush=True)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     logging.basicConfig()
-    print(f'Starting seat adjuster app...', flush=True)
+    print("Starting seat adjuster app...", flush=True)
     seatAdjusterTalent = SeatAdjusterTalent()
     seatAdjusterTalent.run()

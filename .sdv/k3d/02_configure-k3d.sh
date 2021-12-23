@@ -13,7 +13,7 @@ if [ -n "$1" ]; then
     -p "31883:31883" \
     -e "HTTP_PROXY=http://host.docker.internal:3128@server:0" \
     -e "HTTPS_PROXY=http://host.docker.internal:3128@server:0" \
-    -e "NO_PROXY=localhost@server:0" 
+    -e "NO_PROXY=localhost@server:0"
 else
   echo "Creating cluster without proxy configuration"
   k3d cluster create dev-cluster --registry-use k3d-devregistry.localhost:12345 -p "31883:31883"
@@ -45,7 +45,7 @@ kubectl apply -f ./.dapr/components/statestore.yaml
 echo
 echo "Kubernetes Dashboard has been installed. It can take some minutes till the dashboard is available."
 echo "Run 'kubectl proxy' to make the dashbpard available from outside the cluster and use this url to open the dasboard:"
-echo 
+echo
 echo "http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/"
 echo
 echo "Use the following token to login:"

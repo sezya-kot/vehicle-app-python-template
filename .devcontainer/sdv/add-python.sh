@@ -27,6 +27,6 @@ echo "### Installing python version 3                     ###"
 echo "#######################################################"
 sudo apt-get install -y python3
 sudo apt-get install -y python3-pip
-sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10 
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 pip3 install pytest pytest-cov coverage2clover
-pip3 install -U flake8 
+pip3 install -U flake8

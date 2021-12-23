@@ -20,15 +20,15 @@ echo "### Re-installing dapr if not available - fallback  ###"
 echo "#######################################################"
 if ! command -v dapr &> /dev/null
 then
-    #Re-installing dapr 
+    #Re-installing dapr
     sh .devcontainer/sdv/add-dapr.sh
 fi
 
 echo "#######################################################"
 echo "### Initializing dapr                               ###"
 echo "#######################################################"
-dapr uninstall --all 
-dapr init 
+dapr uninstall --all
+dapr init
 
 echo "#######################################################"
 echo "### Initializing vehicleApp project                 ###"

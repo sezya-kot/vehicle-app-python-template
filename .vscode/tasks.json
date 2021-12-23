@@ -33,7 +33,7 @@
 			"appId": "vehicleapi",
 			"label": "daprd-down-SeatAdjuster-vehicleapi",
 			"type": "daprd-down"
-		},		
+		},
 		{
 			"appId": "client",
 			"appPort": 50008,

@@ -16,6 +16,6 @@ export HTTPS_PROXY=${HTTPS_PROXY}
 export NO_PROXY=${NO_PROXY}
 
 echo "#######################################################"
-echo "### Initializing mosquitto broker                   ###" 
+echo "### Initializing mosquitto broker                   ###"
 echo "#######################################################"
 docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto:1.6.9

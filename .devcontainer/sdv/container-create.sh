@@ -29,7 +29,7 @@ yes | /tmp/library-scripts/common-debian.sh 2>&1 | tee -a /usr/local/share/commo
 
 echo "#######################################################"
 echo "### Executing docker-in-docker-debian.sh            ###"
-echo "#######################################################" 
+echo "#######################################################"
 yes | /tmp/library-scripts/docker-in-docker-debian.sh 2>&1 | tee -a /usr/local/share/docker-in-docker-debian.log
 
 echo "#######################################################"

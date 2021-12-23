@@ -28,5 +28,3 @@ else
       echo "Installing dapr latest version: $latest_release"
       wget -q https://raw.githubusercontent.com/dapr/cli/master/install/install.sh -O - | /bin/bash
 fi
-
-

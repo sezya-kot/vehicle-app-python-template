@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2   
+        uses: actions/checkout@v2
 
       - name: Get matrix data
         id: export-deployment-matrix
@@ -39,16 +39,16 @@ jobs:
     name: "Building base image (${{ matrix.component.Name }})"
     runs-on: ubuntu-latest
     needs: initialize-matrix
-    strategy: 
-      matrix: 
+    strategy:
+      matrix:
         component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2      
+        uses: actions/checkout@v2
 
       - name: Check Docker version
-        run: docker --version    
+        run: docker --version
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -98,7 +98,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
           format: 'template'
           template: '@.sdv/junit.tpl'
-          output: 'junit.xml'      
+          output: 'junit.xml'
 
       - name: "${{ matrix.component.Name }} -- Show base image scan results"
         if: ${{ always() }}
@@ -118,7 +118,7 @@ jobs:
         with:
           check_name: Trivy Base Image Scan Results (${{ matrix.component.Name }})
           comment_title: Trivy Base Image Scan Results (${{ matrix.component.Name }})
-          files: ./junit.xml          
+          files: ./junit.xml
 
       - name: "${{ matrix.component.Name }} -- Push base image to ghcr"
         if: ${{ steps.image_build.outcome == 'success' }}
@@ -131,4 +131,3 @@ jobs:
           skopeo copy --all oci-archive:seatadjuster-${{ matrix.component.Name }}-base.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:latest"
           skopeo inspect --raw "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" | jq
           skopeo inspect "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION"
-

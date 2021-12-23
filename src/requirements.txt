@@ -19,3 +19,11 @@ opencensus == 0.8.0
 opencensus-ext-grpc == 0.7.2
 dapr >= 1.4.0
 Flask==2.0.2
+pre-commit >= 2.16.0
+pydocstyle >= 6.1.1
+semgrep >= 0.77.0
+black
+mypy >= 0.910
+mypy-protobuf >= 3.0.0
+types-protobuf >= 0.1.14
+grpc-stubs >= 1.24.7

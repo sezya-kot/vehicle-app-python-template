@@ -11,7 +11,7 @@ BeforeAll {
     Enter-LoggingGroup ("Stopping application {0}" -f $Component.Name)
     Find-SdvVehicleApp | Get-SdvComponent | Stop-SdvComponent | Tee-Object -Variable 'Output'
     Exit-LoggingGroup
-    $AppOutput = $Output | Where-Object { $_ -match "== APP ==" }    
+    $AppOutput = $Output | Where-Object { $_ -match "== APP ==" }
 }
 
 Describe "Main Loop" {
@@ -21,12 +21,12 @@ Describe "Main Loop" {
             $AppOutput = '== APP == Request setting seat position to  1'
             $AppOutput | should -contain '== APP == Request setting seat position to  1'
         }
-        
+
         It 'should receive the new seat position subscription' {
             $AppOutput = '== APP == Subscriber received: id=1, SeatPosition="1", content_type="application/json"'
             $AppOutput | should -contain '== APP == Subscriber received: id=1, SeatPosition="1", content_type="application/json"'
         }
-    }    
+    }
 
     Context "vehicleapi" {
         It 'should have processed the new seat position' {

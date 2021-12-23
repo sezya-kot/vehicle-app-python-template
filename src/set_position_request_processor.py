@@ -11,55 +11,44 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
+"""This module contains the SetPositionRequestProcessor class."""
+
 import json
-from typing import Any
 
-from flask import jsonify, request
-from grpc import local_channel_credentials
-
-import sdv.swdc_comfort_seats_pb2 as swdc_comfort_seats_pb2
 from sdv.client import VehicleClient
+from sdv.proto.swdc_comfort_seats_pb2 import BASE, SeatLocation
 from sdv.talent import Talent
 
-class SetPositionRequestProcessor:
-    
-    def process(self, data: any, resp_topic: str, vehicleClient: VehicleClient, talent: Talent):
-        resp_data = self.getProcessedResponse(data, vehicleClient)
-        self.publishDataToTopic(resp_data, resp_topic, talent)
 
-    def getProcessedResponse(self, data, vehicleClient):
+class SetPositionRequestProcessor:
+    """A class to process position requests."""
+
+    def process(
+        self, data: str, resp_topic: str, vehicleClient: VehicleClient, talent: Talent
+    ):
+        """Process the position request."""
+        resp_data = self.__getProcessedResponse(data, vehicleClient)
+        self.__publishDataToTopic(resp_data, resp_topic, talent)
+
+    def __getProcessedResponse(self, data, vehicleClient):
         try:
-            location = swdc_comfort_seats_pb2.SeatLocation(row=1, index=1)
-            component = swdc_comfort_seats_pb2.BASE
-            vehicleClient.Seats.MoveComponent(location, component, data["position"])
-            resp_data = {
-                'requestId': data["requestId"],
-                'result': {
-                    'status': 0
-                }
-            }
+            location = SeatLocation(row=1, index=1)
+            vehicleClient.Seats.MoveComponent(location, BASE, data["position"])
+            resp_data = {"requestId": data["requestId"], "result": {"status": 0}}
         except Exception as ex:
-             resp_data = {
-                'requestId': data["requestId"],
-                'result': {
-                    'status': 1,
-                    'message': self.getErrorMessageFrom(ex)
-                }
+            resp_data = {
+                "requestId": data["requestId"],
+                "result": {"status": 1, "message": self.__getErrorMessageFrom(ex)},
             }
         return resp_data
 
-    
-    def publishDataToTopic(self, resp_data: dict, resp_topic: str, talent: Talent):
+    def __publishDataToTopic(self, resp_data: dict, resp_topic: str, talent: Talent):
         status = 0
         try:
-            talent.publish_event(
-                resp_topic,
-                json.dumps(resp_data)
-            )
-        except Exception as ex:
+            talent.publish_event(resp_topic, json.dumps(resp_data))
+        except Exception:
             status = -1
         return status
-    
 
-    def getErrorMessageFrom(self, ex: Exception):
-        return 'Exception details: ' + ex.args[0].debug_error_string
+    def __getErrorMessageFrom(self, ex: Exception):
+        return "Exception details: " + ex.args[0].debug_error_string

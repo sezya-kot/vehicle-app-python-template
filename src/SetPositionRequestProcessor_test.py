@@ -12,37 +12,44 @@
 # ********************************************************************************/
 
 
-from set_position_request_processor import SetPositionRequestProcessor
 from sdv.client import VehicleClient
+
+from set_position_request_processor import SetPositionRequestProcessor
 
 
 def test_for_exception_SetPositionRequestProcessor():
-    response = getSetPositionRequestProcessorInstance().getProcessedResponse(getSampleRequestData(), getVehicleClientInstance())
+    processor = getSetPositionRequestProcessorInstance()
+    response = processor._SetPositionRequestProcessor__getProcessedResponse(
+        getSampleRequestData(), getVehicleClientInstance()
+    )
     message = response["result"]["message"]
     hasException = message.__contains__("Exception details:")
     assert hasException
 
-# def test_with_bfb_app_publishDataToTopic():
-#     responseStatus = getSetPositionRequestProcessorInstance().publishDataToTopic(getSampleRequestData(), "bfb-app", getVehicleClientInstance())
-#     assert responseStatus == 0
-
-# def test_with_gui_app_publishDataToTopic():
-#     responseStatus = getSetPositionRequestProcessorInstance().publishDataToTopic(getSampleRequestData(), "gui-app", getVehicleClientInstance())
-#     assert responseStatus == 0
 
 def test_for_exception_with_bfb_app_publishDataToTopic():
-    responseStatus = getSetPositionRequestProcessorInstance().publishDataToTopic(getSampleRequestData(), "bfb-app", getVehicleClientInstance())
+    processor = getSetPositionRequestProcessorInstance()
+    responseStatus = processor._SetPositionRequestProcessor__publishDataToTopic(
+        getSampleRequestData(), "bfb-app", getVehicleClientInstance()
+    )
     assert responseStatus == -1
 
+
 def test_for_exception_with_gui_app_publishDataToTopic():
-    responseStatus = getSetPositionRequestProcessorInstance().publishDataToTopic(getSampleRequestData(), "gui-app", getVehicleClientInstance())
+    processor = getSetPositionRequestProcessorInstance()
+    responseStatus = processor._SetPositionRequestProcessor__publishDataToTopic(
+        getSampleRequestData(), "gui-app", getVehicleClientInstance()
+    )
     assert responseStatus == -1
+
 
 def getSampleRequestData():
     return {"position": 330, "requestId": "123456789"}
 
+
 def getSetPositionRequestProcessorInstance():
     return SetPositionRequestProcessor()
+
 
 def getVehicleClientInstance():
     return VehicleClient(50051)
