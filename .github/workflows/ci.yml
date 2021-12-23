@@ -68,7 +68,7 @@ jobs:
         shell: pwsh
         run: |
           pip install -r src/requirements.txt
-          pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git@v0.1.0
+          pip install -r src/requirements-sdv.txt
 
       - name: Start mqtt
         shell: bash
@@ -206,7 +206,7 @@ jobs:
       - name: Install sdv Package
         shell: bash
         run: |
-          pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git@v0.1.0
+          pip install -r src/requirements-sdv.txt
 
       - name: "${{ matrix.component.Name }} -- Build multi-arch image"
         id: image_build
@@ -324,7 +324,7 @@ jobs:
       - name: Install sdv Package
         shell: bash
         run: |
-          pip install git+https://github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git@v0.1.0
+          pip install -r src/requirements-sdv.txt
 
       - name: Initialize vehicleApp projects
         shell: pwsh

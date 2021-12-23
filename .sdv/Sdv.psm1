@@ -293,6 +293,10 @@ Function Import-SdvVehicleAppConfiguration {
                 $Component.Folder = $Component.Folder.Substring($Component.Folder.IndexOf('..')+2)
             }
 
+            if($Component.DockerFolder -like '*..*') {
+                $Component.DockerFolder = $Component.DockerFolder.Substring($Component.DockerFolder.IndexOf('..')+2)
+            }
+
 
             Write-Verbose ("Full component folder name is '{0}'" -f $Component.Folder)
 
@@ -349,6 +353,9 @@ Function Initialize-SdvComponent {
     process {
         if($Folder -like '*..*') {
             $Folder = $Folder.Substring($Folder.IndexOf('..')+2)
+        }
+        if($DockerFolder -like '*..*') {
+            $DockerFolder = $DockerFolder.Substring($DockerFolder.IndexOf('..')+2)
         }
         Write-Verbose ("Changing to component folder '{0}'" -f $Folder)
         Push-Location $Folder

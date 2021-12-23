@@ -355,3 +355,4 @@ MigrationBackup/
 # github_token file
 src/github_token.txt
 github_token.txt
+.sdv/k3d/github_token.txt

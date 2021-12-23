@@ -7,7 +7,7 @@ RUN apt-get install -y git
 
 ADD ./* $HOME/src/
 WORKDIR /src
-RUN --mount=type=secret,id=github_token credential=$(cat /run/secrets/github_token); pip3 install git+https://${credential}@github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git
+RUN --mount=type=secret,id=github_token credential=$(cat /run/secrets/github_token); pip3 install git+https://${credential}@github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git@v0.1.2
 RUN pip3 install -r requirements.txt
 
 RUN apt-get update
