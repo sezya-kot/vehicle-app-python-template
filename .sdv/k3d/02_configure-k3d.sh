@@ -25,11 +25,6 @@ kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/${VERSI
 kubectl apply -f ./k8s-dashboard-admin-user.yml
 kubectl apply -f ./k8s-dashboard-admin-role.yml
 
-# Install Redis
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
-helm install redis bitnami/redis
-
 # Install Mosquitto
 kubectl apply -f ./mosquitto.yml
 
@@ -39,7 +34,6 @@ dapr init -k #--runtime-version=1.5.0 Use to select specific version
 # Apply Dapr config
 kubectl apply -f ./.dapr/config.yaml
 kubectl apply -f ./.dapr/components/pubsub.yaml
-kubectl apply -f ./.dapr/components/statestore.yaml
 
 # Show the Token of the Kubernetes Dashboard admin user
 echo

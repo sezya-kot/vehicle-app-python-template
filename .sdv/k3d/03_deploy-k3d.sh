@@ -37,7 +37,7 @@ else
     docker build -f vehicle_api_mock/Dockerfile -t localhost:12345/vehicleapi:local . --no-cache
     docker push localhost:12345/vehicleapi:local
 
-    cd /workspaces/vehicle-app-python-templatec/src
+    cd /workspaces/vehicle-app-python-template/src
     DOCKER_BUILDKIT=1 docker build -f Dockerfile --progress=plain --secret id=github_token,src=github_token.txt -t localhost:12345/seatadjuster:local . --no-cache
     docker push localhost:12345/seatadjuster:local
 
