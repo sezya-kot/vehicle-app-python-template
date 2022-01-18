@@ -21,8 +21,9 @@ dapr >= 1.4.0
 Flask==2.0.2
 pre-commit >= 2.16.0
 pydocstyle >= 6.1.1
-semgrep >= 0.77.0
 black
+bandit
+pylint
 mypy >= 0.910
 mypy-protobuf >= 3.0.0
 types-protobuf >= 0.1.14

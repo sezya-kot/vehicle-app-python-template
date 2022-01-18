@@ -33,4 +33,5 @@ dapr init
 echo "#######################################################"
 echo "### Initializing vehicleApp project                 ###"
 echo "#######################################################"
-pwsh -Command "Import-Module ./.sdv/Sdv.psm1; Find-SdvVehicleApp -Recurse | Get-SdvComponent | Initialize-SdvComponent -Verbose"
+pip3 install -r ./src/requirements.txt
+pip3 install -r ./src/requirements-sdv.txt

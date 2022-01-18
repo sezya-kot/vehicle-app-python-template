@@ -46,8 +46,7 @@
 		"rpdswtk.vsmqtt",
 		"dotjoshjohnson.xml",
 		"ms-kubernetes-tools.vscode-kubernetes-tools",
-		"matangover.mypy",
-		"semgrep.semgrep"
+		"matangover.mypy"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
