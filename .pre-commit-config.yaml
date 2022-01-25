@@ -42,7 +42,7 @@ repos:
         args: [
           "-rn",
           "-sn",
-          "rcfile=.pylintrc"
+          "--rcfile=.pylintrc"
           ]
         types_or: [python]
 

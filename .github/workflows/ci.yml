@@ -130,7 +130,7 @@ jobs:
         id: test-coverage
         uses: johanvanhelden/gha-clover-test-coverage-check@v1
         with:
-          percentage: "45"
+          percentage: "20"
           filename: ".sdv/tmp/CodeCoverage/clover.xml"
 
   initialize-matrix:

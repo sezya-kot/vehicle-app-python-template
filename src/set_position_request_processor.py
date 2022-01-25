@@ -23,17 +23,17 @@ from sdv.talent import Talent
 class SetPositionRequestProcessor:
     """A class to process position requests."""
 
-    def process(
+    async def process(
         self, data: str, resp_topic: str, vehicle_client: VehicleClient, talent: Talent
     ):
         """Process the position request."""
-        resp_data = self.__get_processed_response(data, vehicle_client)
-        self.__publish_data_to_topic(resp_data, resp_topic, talent)
+        resp_data = await self.__get_processed_response(data, vehicle_client)
+        await self.__publish_data_to_topic(resp_data, resp_topic, talent)
 
-    def __get_processed_response(self, data, vehicle_client):
+    async def __get_processed_response(self, data, vehicle_client):
         try:
             location = SeatLocation(row=1, index=1)
-            vehicle_client.Seats.MoveComponent(location, BASE, data["position"])
+            await vehicle_client.Seats.MoveComponent(location, BASE, data["position"])
             resp_data = {"requestId": data["requestId"], "result": {"status": 0}}
         except Exception as ex:
             resp_data = {
@@ -42,10 +42,12 @@ class SetPositionRequestProcessor:
             }
         return resp_data
 
-    def __publish_data_to_topic(self, resp_data: dict, resp_topic: str, talent: Talent):
+    async def __publish_data_to_topic(
+        self, resp_data: dict, resp_topic: str, talent: Talent
+    ):
         status = 0
         try:
-            talent.publish_event(resp_topic, json.dumps(resp_data))
+            await talent.publish_mqtt_event(resp_topic, json.dumps(resp_data))
         except Exception:
             status = -1
         return status

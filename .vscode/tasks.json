@@ -15,26 +15,6 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"appId": "vehicleapi",
-			"appPort": 50051,
-			"componentsPath": "./.dapr/components",
-			"config": "./.dapr/config.yaml",
-			"appProtocol": "grpc",
-			"label": "daprd-debug-SeatAdjuster-vehicleapi",
-			"type": "daprd",
-			"args": [
-                "-dapr-grpc-port",
-                "52001",
-				"-dapr-http-port",
-				"3501"
-            ],
-		},
-		{
-			"appId": "vehicleapi",
-			"label": "daprd-down-SeatAdjuster-vehicleapi",
-			"type": "daprd-down"
-		},
-		{
 			"appId": "client",
 			"appPort": 50008,
 			"componentsPath": "./.dapr/components",

@@ -12,13 +12,13 @@
 # ********************************************************************************/
 """A sample talent for adjusting seat positions."""
 
+import asyncio
 import json
 import logging
-from typing import Optional
+import signal
 
-from sdv.client import VehicleClient
 from sdv.proto.databroker_pb2 import Notification
-from sdv.talent import Talent, subscribeDataPoints, subscribeTopic
+from sdv.talent import Talent, subscribe_data_points, subscribe_topic
 
 from set_position_request_processor import SetPositionRequestProcessor
 
@@ -33,40 +33,42 @@ class SeatAdjusterTalent(Talent):
     upon such a request, but only if Vehicle.Speed equals 0.
     """
 
-    def __init__(self):
-        """Always call the super class __init__."""
-        self.current_vehicle_speed: Optional[int] = None
-        super().__init__()
-
-    @subscribeTopic("seatadjuster/setPosition/request/gui-app")
-    def on_set_position_request_received(self, data: str) -> None:
-        """Handle incoming MQTT seat change request event."""
+    @subscribe_topic("seatadjuster/setPosition/request/gui-app")
+    async def on_set_position_request_received(self, data: str) -> None:
+        """Handle set position request from GUI app from MQTT topic"""
         data = json.loads(data)
-        print(f"Set Position Request received: data={data}", flush=True)
-        self._on_set_position_request_received(
+        print(f"Set Position Request received: data={data}", flush=True)  # noqa: E501
+        await self._on_set_position_request_received(
             data, "seatadjuster/setPosition/response/gui-app"
         )
 
-    def _on_set_position_request_received(self, data: str, resp_topic: str) -> None:
-        vehicle_client = VehicleClient()
-        self.current_vehicle_speed = vehicle_client.get_vehicle_speed()
-        if self.current_vehicle_speed == 0:
-            request_processor = SetPositionRequestProcessor()
-            request_processor.process(data, resp_topic, vehicle_client, self)
+    async def _on_set_position_request_received(
+        self, data: str, resp_topic: str
+    ) -> None:
+        vehicle_speed = await self.vehicle_client.get_vehicle_speed()
+        if vehicle_speed == 0:
+            processor = SetPositionRequestProcessor()
+            await processor.process(data, resp_topic, self.vehicle_client, self)
         else:
             print(
                 "Not allowed to move seat because vehicle speed is {vehicleSpeed} and not 0"
             )
 
-    @subscribeDataPoints(["Vehicle.Speed"])
-    def on_data_point_updates(self, notification: Notification):  # type: ignore
-        """Handle incoming updates of the Vehicle.Speed signal from the VehicleDataBroker."""
-        self.current_vehicle_speed = notification.datapoints[0].int32_value  # type: ignore
+    @subscribe_data_points(["Vehicle.Speed"])
+    def on_vehicle_speed_change(self, notification: Notification):  # type: ignore
+        """Handle vehicle speed change"""
         print(notification, flush=True)
 
 
-if __name__ == "__main__":
+async def main():
+    """Main function"""
     logging.basicConfig()
     print("Starting seat adjuster app...", flush=True)
-    seatAdjusterTalent = SeatAdjusterTalent()
-    seatAdjusterTalent.run()
+    seat_adjuster_talent = SeatAdjusterTalent()
+    await seat_adjuster_talent.run()
+
+
+LOOP = asyncio.get_event_loop()
+LOOP.add_signal_handler(signal.SIGTERM, LOOP.stop)
+LOOP.run_until_complete(main())
+LOOP.close()
