@@ -67,7 +67,7 @@ jobs:
       - name: Install required packages
         shell: pwsh
         run: |
-          pip install -r src/requirements.txt
+          pip install -r src/requirements-dev.txt
           pip install -r src/requirements-sdv.txt
 
       - name: Start mqtt
