@@ -33,5 +33,5 @@ dapr init
 echo "#######################################################"
 echo "### Initializing vehicleApp project                 ###"
 echo "#######################################################"
-pip3 install -r ./src/requirements.txt
+pip3 install -r ./src/requirements-dev.txt
 pip3 install -r ./src/requirements-sdv.txt

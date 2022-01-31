@@ -72,7 +72,7 @@ The `.docker\config.json` has to have following proxy settings:
 
 1. Debug the sample vehicleApp
 
-> If opening the devcontainer for the first time, a manual reload of the dapr extension is required.
+   > If opening the devcontainer for the first time, a manual reload of the dapr extension is required.
 
    * Press <kbd>F5</kbd> to start the vehicleVapp and see the log output on the `DEBUG CONSOLE`
 

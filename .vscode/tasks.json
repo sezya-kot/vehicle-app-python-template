@@ -15,7 +15,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"appId": "client",
+			"appId": "seat-adjuster",
 			"appPort": 50008,
 			"componentsPath": "./.dapr/components",
 			"config": "./.dapr/config.yaml",
