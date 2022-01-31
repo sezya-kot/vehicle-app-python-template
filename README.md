@@ -119,17 +119,17 @@ The `.docker\config.json` has to have following proxy settings:
 
 1. Send MQTT messages to seat adjuster app
 
-   * Make sure, Vehicle Api Mock and Seat Adjuster App are running. 
+   * Make sure, Vehicle Api Mock and Seat Adjuster App are running.
    * Open `VSMqtt` extension in VS Code and connect to `mosquitto (local)`
    * Set `Publish Topic` = `seatadjuster/setPosition/request/gui-app`
    * Set `Subscribe Topic` = `seatadjuster/setPosition/response/gui-app` and click subscribe.
    * Publish Example Payload:
-   
+
    ```json
    {"position": 300, "requestId": "xyz"}
    ```
 
-   * This should trigger a seat adjustment in the app. The result is written to the response topic. 
+   * This should trigger a seat adjustment in the app. The result is written to the response topic.
 
 
 ## Release the vehicleApp to push it to the container registry
