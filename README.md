@@ -67,7 +67,7 @@ The `.docker\config.json` has to have following proxy settings:
 1. Start and check sample vehicleApp
 
    ```bash
-   dapr run --app-id app-skeleton --app-protocol grpc --app-port 50008 --config ./.dapr/config.yaml --components-path ./.dapr/components  python3 ./src/run.py
+   dapr run --app-id seat-adjuster-app --app-protocol grpc --app-port 50008 --config ./.dapr/config.yaml --components-path ./.dapr/components  python3 ./src/run.py
    ```
 
 1. Debug the sample vehicleApp
@@ -105,7 +105,7 @@ The `.docker\config.json` has to have following proxy settings:
    -->
 
    ```bash
-   dapr stop --app-id app-skeleton
+   dapr stop --app-id seat-adjuster-app
    ```
 
    ```bash
@@ -117,38 +117,19 @@ The `.docker\config.json` has to have following proxy settings:
    To see that services have stopped running, run `dapr list`, noting that your services no longer appears!
 
 
-1. Request Seat-Adjustment inside the vehicle
+1. Send MQTT messages to seat adjuster app
 
-Send MQTT message to topic `seatadjuster/setPosition/request/gui-app`.
+   * Make sure, Vehicle Api Mock and Seat Adjuster App are running. 
+   * Open `VSMqtt` extension in VS Code and connect to `mosquitto (local)`
+   * Set `Publish Topic` = `seatadjuster/setPosition/request/gui-app`
+   * Set `Subscribe Topic` = `seatadjuster/setPosition/response/gui-app` and click subscribe.
+   * Publish Example Payload:
+   
+   ```json
+   {"position": 300, "requestId": "xyz"}
+   ```
 
-Example:
-```json
-{"position": 300, "requestId": "xyz"}
-```
-
-Response is written to topic `seatadjuster/setPosition/response/gui-app`.
-
-1. Request Seat-Adjustment from the cloud
-
-Send MQTT message to topic `seatAdjuster/${commandName}`.
-
-Example:
-```json
-{
-    "appId": "seatAdjuster",      // fixed value for BfB datapoint API
-    "pVer": "1.0",              // payload version of the command
-    "eVer": "2.0",
-    "cId": "<uuid>",            // correlation Id - Internally generated
-    "cmdName": "${commandName}",
-    "ts": 0123456677,
-    "p": {
-      "path": "Vehicle.Cabin.Seat.Row1.Pos1.Position",
-      "value": "1000"
-    }
-}
-```
-
-Response is written to topic `TBD`.
+   * This should trigger a seat adjustment in the app. The result is written to the response topic. 
 
 
 ## Release the vehicleApp to push it to the container registry
