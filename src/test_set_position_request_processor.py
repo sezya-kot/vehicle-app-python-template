@@ -22,10 +22,11 @@ from set_position_request_processor import SetPositionRequestProcessor
 @pytest.mark.asyncio
 async def test_request_processor():
     processor = get_set_position_request_processor_instance()
-    await processor._SetPositionRequestProcessor__get_processed_response(
+    response = await processor._SetPositionRequestProcessor__get_processed_response(
         get_sample_request_data(), get_vehicle_client_instance()
     )
-    assert True
+    has_exception = response["result"]["message"].__contains__("Exception details:")
+    assert has_exception
 
 
 @pytest.mark.asyncio
