@@ -53,4 +53,4 @@ class SetPositionRequestProcessor:
         return status
 
     def __get_error_message_from(self, ex: Exception):
-        return "Exception details: " + ex.args[0].debug_error_string
+        return f"Exception details: {ex}"

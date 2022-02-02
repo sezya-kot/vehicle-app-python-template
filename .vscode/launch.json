@@ -20,8 +20,9 @@
     "configurations": [
         {
             "type": "python",
+            "justMyCode": false,
             "request": "launch",
-            "name": "SeatAdjuster/client",
+            "name": "SeatAdjuster",
             "program": "${workspaceFolder}/src/run.py",
             "console": "integratedTerminal",
             "preLaunchTask": "daprd-debug-SeatAdjuster-run",
