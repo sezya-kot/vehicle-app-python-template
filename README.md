@@ -160,7 +160,7 @@ The `.docker\config.json` has to have following proxy settings:
      * Open `Actions` on the repository and see the result
 
 ## Run the application in a Kubernetes-Cluster within the DevContainer
-[Follow documentation here](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/main/.sdv/k3d/README-k3d.md).
+[Follow documentation here](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/blob/main/.sdv/k3d/README-k3d.md).
 
 ## Building multi-stage image
 [Follow documentation here](https://github.com/SoftwareDefinedVehicle/vehicle-app-python-template/blob/main/docs/multi-stage%20build/README.md).
