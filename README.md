@@ -174,7 +174,6 @@ Here is the basic suggested skeleton for our repo
 │       └── templates
 ├── docs
 │   └── assets
-├── IntegrationTests
 ├── src
 ```
 ## How it works
@@ -197,13 +196,6 @@ docs
 ├── assets
 │   └── publish_container.png
 └── vehicle_app_releases.md
-```
-
-This folder contains intergration test related to seat adjuster app.
-```bash
-IntegrationTests/
-├── SeatAdjuster.tst.ps1
-└── Test-SdvVehicleApp.ps1
 ```
 
 This is the main folder which contains the source code of the vehicle application.

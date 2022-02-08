@@ -30,11 +30,12 @@ jobs:
 
       - name: Get matrix data
         id: export-deployment-matrix
-        shell: pwsh
         run: |
-          Import-Module ./.sdv/Sdv.psm1 -Force
-          $MatrixJson = Find-SdvVehicleApp | Get-SdvComponent | ConvertTo-Json -Compress
-          Write-Output "::set-output name=deployment-matrix::$MatrixJson"
+          SITE_PACKAGES=$(python -m site --user-site)
+          sed -i "s|SITE_PACKAGES|$SITE_PACKAGES|g" ./vehicleApp.json
+          MATRIX=$(cat ./vehicleApp.json | tr '\n' ' ')
+
+          echo "::set-output name=deployment-matrix::$MATRIX"
   upload-images:
     name: "Upload image (${{ matrix.component.Name }})"
     runs-on: ubuntu-latest
@@ -119,7 +120,7 @@ jobs:
         id: wait-for-CI
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: "Integration Tests"
+          checkName: "build-images"
           ref:  ${{ steps.condval.outputs.value }}
           timeoutSeconds: 600
 
@@ -190,7 +191,6 @@ jobs:
 
           sed -i '1,13d' hugo/content/reports/*.md
           sed -i '1s/^/---\ntitle: "Code Coverage Test"\ndraft: false\n---\n/'  hugo/content/reports/CodeCoverage-*.md
-          sed -i '1s/^/---\ntitle: "Integration Test Results"\ndraft: false\n---\n/'  hugo/content/reports/IntegrationTest-*.md
           sed -i '1s/^/---\ntitle: "Unit Test Results"\ndraft: false\n---\n/'  hugo/content/reports/UnitTest-*.md
           cat hugo/content/reports/VulnerabilityScan-*.md >  hugo/content/reports/vulnerability-scan-results.md
           sed -i '1s/^/---\ntitle: "Vulnerability Scan Results"\ndraft: false\n---\n/'  hugo/content/reports/vulnerability-scan-results.md

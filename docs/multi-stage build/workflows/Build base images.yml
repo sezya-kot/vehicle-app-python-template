@@ -31,9 +31,11 @@ jobs:
         id: export-deployment-matrix
         shell: pwsh
         run: |
-          Import-Module ./.sdv/Sdv.psm1 -Force
-          $MatrixJson = Find-SdvVehicleApp | Get-SdvComponent | ConvertTo-Json -Compress
-          Write-Output "::set-output name=deployment-matrix::$MatrixJson"
+          SITE_PACKAGES=$(python -m site --user-site)
+          sed -i "s|SITE_PACKAGES|$SITE_PACKAGES|g" ./vehicleApp.json
+          MATRIX=$(cat ./vehicleApp.json | tr '\n' ' ')
+
+          echo "::set-output name=deployment-matrix::$MATRIX"
 
   build-base-images:
     name: "Building base image (${{ matrix.component.Name }})"

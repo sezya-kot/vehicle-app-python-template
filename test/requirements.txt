@@ -11,15 +11,4 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-apiVersion: dapr.io/v1alpha1
-kind: Configuration
-metadata:
-  name: config
-spec:
-  tracing:
-    samplingRate: "1"
-    zipkin:
-      endpointAddress: "http://zipkin.default.svc.cluster.local:9411/api/v2/spans"
-  features:
-    - name: proxy.grpc
-      enabled: true
+paho-mqtt>=1.6

@@ -356,3 +356,6 @@ MigrationBackup/
 src/github_token.txt
 github_token.txt
 .sdv/k3d/github_token.txt
+
+# get_helm.sh script
+get_helm.sh
