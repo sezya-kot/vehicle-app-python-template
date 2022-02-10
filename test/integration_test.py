@@ -16,8 +16,8 @@ class MessageCallback:
 
 def test_set_position():
     request_id = "abc"
-    request_topic = "seatadjuster/setPosition/response/gui-app"
-    response_topic = "seatadjuster/setPosition/request/gui-app"
+    request_topic = "seatadjuster/setPosition/request/gui-app"
+    response_topic = "seatadjuster/setPosition/response/gui-app"
     mqtt_hostname = "localhost"
     mqtt_port = 31883
     timeout = 20000
@@ -30,16 +30,15 @@ def test_set_position():
     msg_callback = MessageCallback()
     client.on_message = msg_callback
 
-    client.subscribe(topic=request_topic)
+    client.subscribe(topic=response_topic)
 
     client.loop_start()
-
-    client.publish(topic=response_topic, payload=json.dumps(payload))
 
     counter = 0
     interval = 100
 
     while msg_callback.message is None and counter < timeout:
+        client.publish(topic=request_topic, payload=json.dumps(payload))
         counter += interval
         time.sleep(interval / 1000)
 

@@ -24,7 +24,7 @@ kubectl create deployment zipkin --image openzipkin/zipkin
 kubectl expose deployment zipkin --type ClusterIP --port 9411
 
 # Init Dapr in cluster
-dapr init -k #--runtime-version=1.5.0 Use to select specific version
+dapr init -k --wait --timeout 600 #--runtime-version=1.5.0 Use to select specific version
 
 # Apply Dapr config
 kubectl apply -f ./.dapr/config.yaml

@@ -14,4 +14,4 @@ done
 
 helm install sdv-chart ./../../deploy/helm --values ./values.yml --wait --timeout 60s --debug
 
-sleep 20s
+sleep 5s
