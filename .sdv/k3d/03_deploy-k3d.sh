@@ -24,7 +24,7 @@ if [ -n "$1" ]; then
     --build-arg ALL_PROXY="http://host.docker.internal:3128" \
     --build-arg NO_PROXY="localhost,127.0.0.1" .
 
-    cd $WORKING_DIR/..
+    cd $WORKING_DIR/../../src
     DOCKER_BUILDKIT=1 docker build \
     -f Dockerfile \
     --progress=plain --secret id=$GITHUB_TOKEN \
