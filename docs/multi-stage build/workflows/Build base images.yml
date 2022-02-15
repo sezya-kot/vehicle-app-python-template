@@ -78,7 +78,7 @@ jobs:
           pull: true
           push: false
           outputs: |
-            type=oci,dest=./seatadjuster-${{ matrix.component.Name }}-base.tar
+            type=oci,dest=./sdv-${{ matrix.component.Name }}-base.tar
           context: ${{ matrix.component.DockerFolder }}
           file: ${{ matrix.component.Folder }}/Dockerfile.base
           platforms: linux/amd64,linux/aarch64
@@ -87,14 +87,14 @@ jobs:
 
       - name: "${{ matrix.component.Name }} -- Inspect tar image with skopeo"
         run: |
-          skopeo inspect --raw oci-archive:seatadjuster-${{ matrix.component.Name }}-base.tar | jq
-          skopeo inspect oci-archive:seatadjuster-${{ matrix.component.Name }}-base.tar
-          skopeo copy oci-archive:seatadjuster-${{ matrix.component.Name }}-base.tar docker-archive:seatadjuster-${{ matrix.component.Name }}-base-arch.tar
+          skopeo inspect --raw oci-archive:sdv-${{ matrix.component.Name }}-base.tar | jq
+          skopeo inspect oci-archive:sdv-${{ matrix.component.Name }}-base.tar
+          skopeo copy oci-archive:sdv-${{ matrix.component.Name }}-base.tar docker-archive:sdv-${{ matrix.component.Name }}-base-arch.tar
 
       - name: "${{ matrix.component.Name }} -- Scan base docker image for vulnerabilities"
         uses: aquasecurity/trivy-action@0.0.18
         with:
-          input: seatadjuster-${{ matrix.component.Name }}-base-arch.tar
+          input: sdv-${{ matrix.component.Name }}-base-arch.tar
           exit-code: '1'
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
@@ -130,6 +130,6 @@ jobs:
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
         shell: bash
         run: |
-          skopeo copy --all oci-archive:seatadjuster-${{ matrix.component.Name }}-base.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:latest"
+          skopeo copy --all oci-archive:sdv-${{ matrix.component.Name }}-base.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:latest"
           skopeo inspect --raw "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" | jq
           skopeo inspect "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION"

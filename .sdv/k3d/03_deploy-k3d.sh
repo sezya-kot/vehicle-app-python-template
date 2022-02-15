@@ -17,23 +17,25 @@ if [ -n "$1" ]; then
     cd $SITE_PACKAGES/sdv/
     docker build \
     -f vehicle_api_mock/Dockerfile \
-    -t sdv/vehicleapi:local \
+    -t localhost:12345/vehicleapi:local \
     --build-arg HTTP_PROXY="http://host.docker.internal:3128" \
     --build-arg HTTPS_PROXY="http://host.docker.internal:3128" \
     --build-arg FTP_PROXY="http://host.docker.internal:3128" \
     --build-arg ALL_PROXY="http://host.docker.internal:3128" \
-    --build-arg NO_PROXY="localhost,127.0.0.1" .
+    --build-arg NO_PROXY="localhost,127.0.0.1" . --no-cache
+     docker push localhost:12345/vehicleapi:local
 
     cd $WORKING_DIR/../../src
     DOCKER_BUILDKIT=1 docker build \
     -f Dockerfile \
     --progress=plain --secret id=$GITHUB_TOKEN \
-    -t sdv/seatadjuster:local \
+    -t localhost:12345/seatadjuster:local \
     --build-arg HTTP_PROXY="http://host.docker.internal:3128" \
     --build-arg HTTPS_PROXY="http://host.docker.internal:3128" \
     --build-arg FTP_PROXY="http://host.docker.internal:3128" \
     --build-arg ALL_PROXY="http://host.docker.internal:3128" \
-    --build-arg NO_PROXY="localhost,127.0.0.1" .
+    --build-arg NO_PROXY="localhost,127.0.0.1" . --no-cache
+    docker push localhost:12345/seatadjuster:local
 
     cd $WORKING_DIR
 else

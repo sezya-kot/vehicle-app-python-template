@@ -4,15 +4,15 @@ There might be a need from developer to use multi-stage build. Using such an app
 ## How does it work?
 
 **Files:**
-* seat-adjuster (Dockerfile, Dockerfile.base)
+* seatadjuster (Dockerfile, Dockerfile.base)
   * Base image is build and pushed to the git repository. While building application image (Dockerfile), prebuilt base image will be used.
-* vehicle-api (Dockerfile, Dockerfile.base)
+* vehicleapi (Dockerfile, Dockerfile.base)
   * Base image is build and pushed to the git repository. While building application image (Dockerfile), prebuilt base image will be used.
 * workflow (build_base_images.yml)
 
 **Get it running:**
 * Copy workflow file (build_base_images.yml) to ```.github/workflows```
-* Create Dockerfile and Dockerfile.base for **seat-adjuster** files in: ```/src```
+* Create Dockerfile and Dockerfile.base for **seatadjuster** files in: ```/src```
   <details>
       <summary> Dockerfile </summary>
 
@@ -44,7 +44,7 @@ There might be a need from developer to use multi-stage build. Using such an app
         LABEL org.opencontainers.image.source="https://github.com/softwaredefinedvehicle/vehicle-app-python-template"
 
   </details>
-* Create Dockerfile and Dockerfile.base for **vehicle-api** files in: ```/src/vehicle_sdk/vehicle_api_mock```
+* Create Dockerfile and Dockerfile.base for **vehicleapi** files in: ```/src/vehicle_sdk/vehicle_api_mock```
   <details>
       <summary> Dockerfile </summary>
 

@@ -8,7 +8,7 @@
         "DockerFolder": "SITE_PACKAGES/sdv"
     },
     {
-        "Name": "seat-adjuster-app",
+        "Name": "seatadjuster",
         "Folder": "src",
         "StartProgram": "run.py",
         "Port": 50008,

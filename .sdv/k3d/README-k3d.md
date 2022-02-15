@@ -38,7 +38,7 @@ Troubleshooting:
     username = GitHub User
   - github_token.txt is part of .gitignore so it would not be checked in.
 
-  - It will build seat-adjuster application and deploy it to the cluster
+  - It will build seatadjuster application and deploy it to the cluster
   - > **PROXY:** When running devcontainer behind corporate proxy, execute script as following: ```./03_deploy-k3d.sh proxy```
 - Register brew bin path
     - ```echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/vscode/.profile```

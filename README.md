@@ -111,9 +111,8 @@ Now that the VehicleAPI is running, let's start the sample vehicleApp to verify 
 
 Open a new terminal and start the vehicleApp with the following command:
 ```bash
-dapr run --app-id seat-adjuster-app --app-protocol grpc --app-port 50008 --config ./.dapr/config.yaml --components-path ./.dapr/components  python3 ./src/run.py
+dapr run --app-id seatadjuster --app-protocol grpc --app-port 50008 --config ./.dapr/config.yaml --components-path ./.dapr/components  python3 ./src/run.py
 ```
-
 Once the vehicleApp is started, you can expect to receive the current vehicle's speed, which should be reported as 0 because the vehicle has stopped.
 
 You will see messages such as
