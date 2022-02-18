@@ -22,10 +22,10 @@ ARG ENABLE_NONROOT_DOCKER="true"
 ARG USE_MOBY="true"
 
 ENV USE_PROXIES="true"
-ENV HTTP_PROXY="http://host.docker.internal:3128"
-ENV HTTPS_PROXY="http://host.docker.internal:3128"
-ENV FTP_PROXY="http://host.docker.internal:3128"
-ENV ALL_PROXY="http://host.docker.internal:3128"
+ENV HTTP_PROXY="http://172.17.0.1:3128"
+ENV HTTPS_PROXY="http://172.17.0.1:3128"
+ENV FTP_PROXY="http://172.17.0.1:3128"
+ENV ALL_PROXY="http://172.17.0.1:3128"
 ENV NO_PROXY="localhost,127.0.0.1,0.0.0.0,10.0.0.0/8,192.168.122.0/24,cattle-system.svc,.svc,.cluster.local"
 # Force dapr to use localhost traffic
 ENV DAPR_HOST_IP="127.0.0.1"
@@ -37,20 +37,9 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ENV DOCKER_BUILDKIT=1
 
-COPY proxy-script/*.sh /tmp/proxy-script/
-COPY library-scripts/*.sh /tmp/library-scripts/
 COPY sdv/ /tmp/sdv/
 
 RUN /bin/bash /tmp/sdv/container-create.sh 2>&1 | tee -a /usr/local/share/container-create.log
 
-
 # Add daprd to the path for the VS Code Dapr extension.
 ENV PATH=$PATH:/home/vscode/.dapr/bin
-
-VOLUME [ "/var/lib/docker" ]
-
-# Setting the ENTRYPOINT to docker-init.sh will start up the Docker Engine
-# inside the container "overrideCommand": false is set in devcontainer.json.
-# The script will also execute CMD if you need to alter startup behaviors.
-ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
-CMD [ "sleep", "infinity" ]

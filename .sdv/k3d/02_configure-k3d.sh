@@ -2,13 +2,13 @@
 
 k3d registry create devregistry.localhost --port 12345
 
-if [ -n "$1" ]; then
+if [ -n "$HTTP_PROXY" ]; then
   echo "Creating cluster with proxy configuration"
   k3d cluster create dev-cluster \
     --registry-use k3d-devregistry.localhost:12345 \
     -p "31883:31883" \
-    -e "HTTP_PROXY=http://host.docker.internal:3128@server:0" \
-    -e "HTTPS_PROXY=http://host.docker.internal:3128@server:0" \
+    -e "HTTP_PROXY=$HTTP_PROXY@server:0" \
+    -e "HTTPS_PROXY=$HTTPS_PROXY@server:0" \
     -e "NO_PROXY=localhost@server:0"
 else
   echo "Creating cluster without proxy configuration"

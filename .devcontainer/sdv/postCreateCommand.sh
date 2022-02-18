@@ -15,14 +15,27 @@ export HTTP_PROXY=${HTTP_PROXY}
 export HTTPS_PROXY=${HTTPS_PROXY}
 export NO_PROXY=${NO_PROXY}
 
+chmod +x .devcontainer/sdv/*.sh
+
 echo "#######################################################"
-echo "### Re-installing dapr if not available - fallback  ###"
+echo "### Checking proxies                                ###"
 echo "#######################################################"
-if ! command -v dapr &> /dev/null
-then
-    #Re-installing dapr
-    sh .devcontainer/sdv/add-dapr.sh
-fi
+.devcontainer/sdv/configure-proxies.sh
+
+echo "#######################################################"
+echo "### Executing container-set.sh                      ###"
+echo "#######################################################"
+.devcontainer/sdv/container-set.sh 2>&1 | tee -a /usr/local/share/container-set.log
+
+echo "#######################################################"
+echo "### Executing add-python.sh                         ###"
+echo "#######################################################"
+.devcontainer/sdv/add-python.sh 2>&1 | tee -a /usr/local/share/add-python.log
+
+echo "#######################################################"
+echo "### Executing add-dapr.sh                           ###"
+echo "#######################################################"
+.devcontainer/sdv/add-dapr.sh 2>&1 | tee -a /usr/local/share/add-dapr.log
 
 echo "#######################################################"
 echo "### Initializing dapr                               ###"
@@ -31,7 +44,16 @@ dapr uninstall --all
 dapr init
 
 echo "#######################################################"
-echo "### Initializing vehicleApp project                 ###"
+echo "### Install python testing tools                    ###"
+echo "#######################################################"
+pip3 install pytest pytest-cov coverage2clover
+pip3 install pytest-asyncio
+pip3 install -U flake8
+pip3 install -U pylint
+pip3 install -U mypy
+
+echo "#######################################################"
+echo "### Install python requirements                     ###"
 echo "#######################################################"
 pip3 install -r ./src/requirements-dev.txt
 pip3 install -r ./src/requirements-sdv.txt

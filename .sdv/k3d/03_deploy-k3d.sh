@@ -10,7 +10,7 @@ else
     GITHUB_TOKEN="github_token"
 fi
 
-if [ -n "$1" ]; then
+if [ -n "$HTTP_PROXY" ]; then
     echo "Building image with proxy configuration"
     # Build, push vehicleapi image
     pip install -r ./../../src/requirements-sdv.txt
@@ -18,11 +18,11 @@ if [ -n "$1" ]; then
     docker build \
     -f vehicle_api_mock/Dockerfile \
     -t localhost:12345/vehicleapi:local \
-    --build-arg HTTP_PROXY="http://host.docker.internal:3128" \
-    --build-arg HTTPS_PROXY="http://host.docker.internal:3128" \
-    --build-arg FTP_PROXY="http://host.docker.internal:3128" \
-    --build-arg ALL_PROXY="http://host.docker.internal:3128" \
-    --build-arg NO_PROXY="localhost,127.0.0.1" . --no-cache
+    --build-arg HTTP_PROXY="$HTTP_PROXY" \
+    --build-arg HTTPS_PROXY="$HTTPS_PROXY" \
+    --build-arg FTP_PROXY="$FTP_PROXY" \
+    --build-arg ALL_PROXY="$ALL_PROXY" \
+    --build-arg NO_PROXY="$NO_PROXY" . --no-cache
      docker push localhost:12345/vehicleapi:local
 
     cd $WORKING_DIR/../../src
@@ -30,11 +30,11 @@ if [ -n "$1" ]; then
     -f Dockerfile \
     --progress=plain --secret id=$GITHUB_TOKEN \
     -t localhost:12345/seatadjuster:local \
-    --build-arg HTTP_PROXY="http://host.docker.internal:3128" \
-    --build-arg HTTPS_PROXY="http://host.docker.internal:3128" \
-    --build-arg FTP_PROXY="http://host.docker.internal:3128" \
-    --build-arg ALL_PROXY="http://host.docker.internal:3128" \
-    --build-arg NO_PROXY="localhost,127.0.0.1" . --no-cache
+    --build-arg HTTP_PROXY="$HTTP_PROXY" \
+    --build-arg HTTPS_PROXY="$HTTPS_PROXY" \
+    --build-arg FTP_PROXY="$FTP_PROXY" \
+    --build-arg ALL_PROXY="$ALL_PROXY" \
+    --build-arg NO_PROXY="$NO_PROXY" . --no-cache
     docker push localhost:12345/seatadjuster:local
 
     cd $WORKING_DIR

@@ -1,15 +1,5 @@
-# Install helm
-curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-chmod 700 get_helm.sh
-./get_helm.sh
-
-# Install brew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" < /dev/null
-
-# (Optional) Install k9s
-/home/linuxbrew/.linuxbrew/bin/brew install derailed/k9s/k9s
-echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> $HOME/.profile
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# Install k9s
+curl -sS https://webinstall.dev/k9s | bash
 
 # Install K8s dashboard
 GITHUB_URL=https://github.com/kubernetes/dashboard/releases

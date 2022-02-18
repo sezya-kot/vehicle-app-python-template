@@ -30,19 +30,9 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ENV DOCKER_BUILDKIT=1
 
-COPY proxy-script/*.sh /tmp/proxy-script/
-COPY library-scripts/*.sh /tmp/library-scripts/
 COPY sdv/ /tmp/sdv/
 
 RUN /bin/bash /tmp/sdv/container-create.sh 2>&1 | tee -a /usr/local/share/container-create.log
 
 # Add daprd to the path for the VS Code Dapr extension.
 ENV PATH=$PATH:/home/vscode/.dapr/bin
-
-VOLUME [ "/var/lib/docker" ]
-
-# Setting the ENTRYPOINT to docker-init.sh will start up the Docker Engine
-# inside the container "overrideCommand": false is set in devcontainer.json.
-# The script will also execute CMD if you need to alter startup behaviors.
-ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
-CMD [ "sleep", "infinity" ]

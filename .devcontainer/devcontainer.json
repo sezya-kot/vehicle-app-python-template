@@ -16,9 +16,6 @@
 	"name": "Dapr for sdv",
 	"dockerFile": "Dockerfile${localEnv:DEVCONTAINER_PROXY}",
 	"runArgs": ["--init", "--privileged"],
-	"mounts": [
-		"source=dockerenv-${containerWorkspaceFolderBasename},target=/var/lib/docker,type=volume"],
-	"overrideCommand": false,
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
@@ -31,6 +28,22 @@
 		"python.linting.flake8Enabled": true
 
 	},
+
+	"features": {
+        "docker-in-docker": {
+            "version": "latest",
+            "moby": true
+        },
+		"common": {
+			"username": "automatic",
+			"uid": "automatic",
+			"gid": "automatic",
+			"installZsh": true,
+			"installOhMyZsh": true,
+			"upgradePackages": true,
+			"nonFreePackages": false
+		}
+    },
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
