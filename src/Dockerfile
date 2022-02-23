@@ -1,11 +1,11 @@
 # syntax=docker/dockerfile:1.2
 
-FROM python:3.9-slim-bullseye as base
-
 # Build stage, to create a Virtual Environent
-FROM base as builder
+FROM --platform=$BUILDPLATFORM python:3.9-slim-bullseye as builder
 
-RUN apt-get update && apt-get upgrade -y
+ARG TARGETPLATFORM
+
+RUN apt-get update && apt-get upgrade -y && apt-get install -y binutils
 
 ADD ./* /
 
@@ -18,19 +18,23 @@ RUN --mount=type=secret,id=github_token credential=$(cat /run/secrets/github_tok
     && pip3 install --no-cache-dir -r requirements.txt \
     && pip3 install --no-cache-dir git+https://${credential}@github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git@v0.1.9
 
+RUN pip3 install pyinstaller && pip3 install staticx && pip3 install patchelf
+
+RUN pyinstaller run.py -F
+
+WORKDIR /dist
+
+RUN staticx run run-exe
+
 # Runner stage, to copy in the virtual environment and the app
-FROM base
+FROM --platform=$TARGETPLATFORM alpine:latest
 
-COPY --from=builder ./opt/venv /opt/venv
+COPY --from=builder ./dist/run-exe /dist/
 
-ADD ./* $HOME/src/
+WORKDIR /dist
 
-WORKDIR /src
-
-ENV PYTHONPATH=/src:/opt/venv
-ENV PATH=/opt/venv/bin/:$PATH
+ENV PATH="/dist:$PATH"
 
 LABEL org.opencontainers.image.source="https://github.com/softwaredefinedvehicle/vehicle-app-python-template"
 
-ENTRYPOINT ["python"]
-CMD ["run.py"]
+CMD ["./run-exe"]
