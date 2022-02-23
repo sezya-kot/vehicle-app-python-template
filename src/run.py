@@ -19,9 +19,13 @@ import signal
 
 from sdv.proto.databroker_pb2 import Notification
 from sdv.talent import Talent, subscribe_data_points, subscribe_topic
+from sdv.util.log import get_log_level, get_default_log_format,get_default_date_format
 
 from set_position_request_processor import SetPositionRequestProcessor
 
+logging.basicConfig(format=get_default_log_format(), datefmt=get_default_date_format())
+logging.getLogger().setLevel(get_log_level())
+logger = logging.getLogger(__name__)
 
 class SeatAdjusterTalent(Talent):
     """
@@ -37,7 +41,7 @@ class SeatAdjusterTalent(Talent):
     async def on_set_position_request_received(self, data: str) -> None:
         """Handle set position request from GUI app from MQTT topic"""
         data = json.loads(data)
-        print(f"Set Position Request received: data={data}", flush=True)  # noqa: E501
+        logger.info("Set Position Request received: data=%s", data)  # noqa: E501
         await self._on_set_position_request_received(
             data, "seatadjuster/setPosition/response/gui-app"
         )
@@ -50,15 +54,15 @@ class SeatAdjusterTalent(Talent):
             processor = SetPositionRequestProcessor()
             await processor.process(data, resp_topic, self.vehicle_client, self)
         else:
-            print(
-                "Not allowed to move seat because vehicle speed is {vehicleSpeed} and not 0"
+            logger.warning(
+                "Not allowed to move seat because vehicle speed is %s and not 0",
+                vehicle_speed,
             )
 
     @subscribe_data_points(["Vehicle.Speed"])
     def on_vehicle_speed_change(self, notification: Notification):  # type: ignore
         """Handle vehicle speed change"""
-        print(notification, flush=True)
-
+        logger.info(notification)
 
 async def main():
     """Main function"""
