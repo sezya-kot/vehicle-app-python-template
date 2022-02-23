@@ -66,8 +66,7 @@ class SeatAdjusterTalent(Talent):
 
 async def main():
     """Main function"""
-    logging.basicConfig()
-    print("Starting seat adjuster app...", flush=True)
+    logger.info("Starting seat adjuster app...")
     seat_adjuster_talent = SeatAdjusterTalent()
     await seat_adjuster_talent.run()
 
