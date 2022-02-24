@@ -185,4 +185,3 @@ Now that the ci-workflow was successful, you are ready to build your first relea
 * [Run the application in a Kubernetes-Cluster within the DevContainer](.sdv/k3d/README-k3d.md)
 * [Building multi-stage image](multi-stage%20build/README.md)
 * [Learn more about the DevContainer internals and tools that come with it](dev_further_topics.md)
-
