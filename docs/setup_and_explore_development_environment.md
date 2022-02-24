@@ -136,7 +136,7 @@ Let's send a message to your app using the mqtt broker that is running in the ba
 * You can see the response in the MQTT window.
 
 ## Trigger your Github Workflows
-GitHub workflows are used to build the container image for the vehicleApp, run unit and integration tests, collect the test results and create a release documentation and publish the vehicleApp. A detailed description of the workflow you can find [here](docs/vehicle_app_releases.md).
+GitHub workflows are used to build the container image for the vehicleApp, run unit and integration tests, collect the test results and create a release documentation and publish the vehicleApp. A detailed description of the workflow you can find [here](https://github.com/SoftwareDefinedVehicle/sdv-velositas-docs/blob/main/docs/vehicle_app_releases.md).
 
 Every time you commit to the repository a set of wokflows is executed automatically.
 
