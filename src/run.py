@@ -19,13 +19,14 @@ import signal
 
 from sdv.proto.databroker_pb2 import Notification
 from sdv.talent import Talent, subscribe_data_points, subscribe_topic
-from sdv.util.log import get_log_level, get_default_log_format,get_default_date_format
+from sdv.util.log import get_default_date_format, get_default_log_format, get_log_level
 
 from set_position_request_processor import SetPositionRequestProcessor
 
 logging.basicConfig(format=get_default_log_format(), datefmt=get_default_date_format())
 logging.getLogger().setLevel(get_log_level())
 logger = logging.getLogger(__name__)
+
 
 class SeatAdjusterTalent(Talent):
     """
@@ -63,6 +64,7 @@ class SeatAdjusterTalent(Talent):
     def on_vehicle_speed_change(self, notification: Notification):  # type: ignore
         """Handle vehicle speed change"""
         logger.info(notification)
+
 
 async def main():
     """Main function"""
