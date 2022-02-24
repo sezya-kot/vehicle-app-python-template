@@ -1,8 +1,8 @@
-# Setup and Explore Development Enviroment
+# Setup and Explore Development Environment
 
-The following information describes how to setup and configure the Development Container (DevContainer), and how to build, customize and test the sample vehicleApp that is included. You will learn how to use the vehicleApp SDK, how to interact with the vehicleApp vehicle API and how to do CI/CD using the pre-configured GitHub workflows that come with the repository.
+The following information describes how to setup and configure the Development Container (DevContainer), and how to build, customize and test the sample vehicleApp that is included in this repository. You will learn how to use the vehicleApp SDK, how to interact with the vehicle API and how to do CI/CD using the pre-configured GitHub workflows that come with the repository.
 
-Once you have completed all steps you will have a solid understanding of the Development Workflow and you will be able to reuse this Template Repository for your own projects - and hopefully save a lot of time.
+Once you have completed all steps you will have a solid understanding of the Development Workflow and you will be able to reuse this Template Repository for your own VehicleApp develpment project.
 
 ## VehicleApp Development with Visual Studio Code
 Visual Studio Code [Development Containers](https://code.visualstudio.com/docs/remote/create-dev-container#:~:text=%20Create%20a%20development%20container%20%201%20Path,additional%20software%20in%20your%20dev%20container.%20More%20) allow us to package a complete vehicleApp development environment including VS Code extensions, vehicleApp SDK, vehicleApp runtime and all other development & testing tools into a container that is then started within your VS Code session.
