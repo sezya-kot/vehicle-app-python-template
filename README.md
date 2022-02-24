@@ -7,7 +7,7 @@ This repository provides you with a complete development environment for your ow
 
 <img src="https://github.com/SoftwareDefinedVehicle/swdc-architecture/blob/472240015f07d82b3aa3b35ce07df36f51e1c3b3/06_designs/pi-4/vehicle-app-python-sdk/assets/vehicle_sdk_pi4.drawio.svg" alt="Reference Architecture" width="800"/>
 
-## Quickstart tutorial
+## Quickstart Tutorials
 1. [Setup and Explore Development Enviroment](docs/setup_and_explore_development_environment.md)
 2. [Develop your own Python SDK](docs/)
 3. [Develop your own Python VehicleApp](docs/)
