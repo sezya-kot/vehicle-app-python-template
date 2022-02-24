@@ -5,14 +5,17 @@ The following information describes how to setup and configure the Development C
 Once you have completed all steps you will have a solid understanding of the Development Workflow and you will be able to reuse this Template Repository for your own VehicleApp develpment project.
 
 ## VehicleApp Development with Visual Studio Code
-Visual Studio Code [Development Containers](https://code.visualstudio.com/docs/remote/create-dev-container#:~:text=%20Create%20a%20development%20container%20%201%20Path,additional%20software%20in%20your%20dev%20container.%20More%20) allow us to package a complete vehicleApp development environment including VS Code extensions, vehicleApp SDK, vehicleApp runtime and all other development & testing tools into a container that is then started within your VS Code session.
+Visual Studio Code [Development Containers](https://code.visualstudio.com/docs/remote/create-dev-container#:~:text=%20Create%20a%20development%20container%20%201%20Path,additional%20software%20in%20your%20dev%20container.%20More%20) allows to package a complete vehicleApp development environment including Visual Studio Code extensions, vehicleApp SDK, vehicleApp runtime and all other development & testing tools into a container that is then started within your Visual Studio Code session.
 
 To be able to use the DevContainer, you have to make sure to fulfill the following prerequisites:
 
 ### System prerequisites
 * Install Docker Engine / [Docker Desktop](https://www.docker.com/products/docker-desktop)
 * Install [Visual Studio Code](https://code.visualstudio.com)
-* Add [Remote-Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension via the marketplace or using the command line, e.g. with `code --install-extension ms-vscode-remote.remote-containers`
+* Add [Remote-Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension via marketplace or using the command line
+   ```
+   code --install-extension ms-vscode-remote.remote-containers
+   ```
 
 ### Proxy Configuration
 > Disclaimer: Non proxy configuration is used by default
@@ -20,10 +23,9 @@ To be able to use the DevContainer, you have to make sure to fulfill the followi
 If you are working behind a corporate proxy add the following environment variable so that the DevContainer will use the correct proxy settings.
 
 #### Windows:
-1. Edit environment variables for your account
-2. Create environment variable with name: `DEVCONTAINER_PROXY` with the value `.Proxy`
+1. Create an environment variable with name `DEVCONTAINER_PROXY` and with value `.Proxy` for your account
    * Don't forget (dot) in value of the environment variable
-3. Restart Visual Studio Code to pick up new environment variable
+2. Restart Visual Studio Code to pick up new environment variable
 
 #### macOS & Linux:
 ```
@@ -33,18 +35,18 @@ source ~/.bash_profile
 
 ### Proxy Troubleshooting
 
-If you experience issues during initial DevContainer build and you want to start over, then you want to make sure you clean all images and volumes in Docker Desktop, otherwise cache might be used. Use the docker desktop UI to remove all volumes and containers.
+If you experience issues during initial DevContainer build and you want to start over, then you want to make sure you clean all images and volumes in Docker Desktop, otherwise cache might be used. Use the Docker Desktop UI to remove all volumes and containers.
 
 In case the DevContainer is still not working, check if proxy settings are set correctly in the `.docker\config.json` file in User profile directory, see [Docker Documentation](https://docs.docker.com/network/proxy/) for more details.
 
-## Use the Template Repository
+## Use Template Repository
 Create your own repository copy from this Template Repository by clicking the green button `Use this template`. You don't have to include all branches.
 
 The name `MyOrg/MyFirstVehicleApp` is used as a reference during the rest of document.
 
 For more information on Template Repositories take a look at this [GitHub Tutorial](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)
 
-## Start the vehicleApp DevContainer
+## Start VehicleApp DevContainer
 With following steps you will clone and set up your development environment using the preconfigured DevContainer.
 
 1. Start Visual Studio Code
@@ -59,7 +61,7 @@ The first time you initialize the container it will take about 10 minutes to bui
 
 > When opening the DevContainer for the first time, a manual reload of the dapr extension is required. (Note: the reload button appears next to Dapr extension in extension menue).
 
-## Start and test the VehicleApp
+## Start and test VehicleApp
 Now that your DevContainer is up and running, it is time to take a look at what's inside:
 
 * VehicleApi Mock - The API offers the endpoints of the vehicle, for development data points are mocked.
@@ -68,7 +70,7 @@ Now that your DevContainer is up and running, it is time to take a look at what'
 
 There are many more tools coming with the DevContainer and you can learn more about them in the [extended Developer Documentation](dev_further_topics.md).
 
-### Start the VehicleApi Mock
+### Start VehicleApi Mock
 Open a terminal session and start the VehicleApi mock that comes with the devContainer. Once the process is running in the background, you will be able to interact with the Vehicle API from this sample app later.
 
 ```bash
@@ -80,7 +82,7 @@ You should see a new dapr-process and the VehicleApi running.
 
 > You can ignore the "method not found!" errors.
 
-### Start and check the VehicleApp
+### Start and check VehicleApp
 
 Now that the VehicleAPI is running, let's start the sample vehicleApp to verify that you receive actual data from the API.
 
@@ -103,36 +105,33 @@ You will see messages such as
 == APP ==
 ```
 
-Nice! Now stop the vehicleApp instance again: close the terminal window by hitting <kbd>Ctrl + C</kbd>.
+To stop the vehicleApp instance: close the terminal window by hitting <kbd>Ctrl + C</kbd>.
 
-### Debug the VehicleApp
+### Debug VehicleApp
 
-Great! You confirmed that the VehicleApi and the vehicleApp are running successfully. Let's run a debug session for the vehicleApp as next step.
+After VehicleApi and vehicleApp are running successfully, let's start a debug session for the vehicleApp as next step.
 
-Now press <kbd>F5</kbd> to start the vehicleApp and see the log output on the `DEBUG CONSOLE`
+* Press <kbd>F5</kbd> to start the vehicleApp to start a debug session and see the log output on the `DEBUG CONSOLE`
+* Open the main python file `src/run.py` file and set a breakpoint in `line 39`
 
-Congrats! You haves started your debug session. Let's set a breakpoint in the main python file:
-* open `src/run.py` file in VSCode
-* set a breakpoint in `line 39`
+In the next step you will use a mqtt message to trigger this breakpoint.
 
-In the next step you will use an mqtt message to trigger this breakpoint.
+### Send MQTT messages to VehicleApp
 
-### Send MQTT messages to seat adjuster app
-
-Let's send a message to your app using the mqtt broker that is running in the background.
+Let's send a message to your VehicleApp using the mqtt broker that is running in the background.
 
 * Make sure, Vehicle Api Mock and Seat Adjuster App are running.
-* Open `VSMqtt` extension in VS Code and connect to `mosquitto (local)`
+* Open `VSMqtt` extension in Visual Studio Code and connect to `mosquitto (local)`
 * Set `Subscribe Topic` = `seatadjuster/setPosition/response/gui-app` and click subscribe.
 * Set `Publish Topic` = `seatadjuster/setPosition/request/gui-app`
 * Set and publish a dummy payload:
 
-```json
-{"position": 300, "requestId": "xyz"}
-```
+   ```json
+   {"position": 300, "requestId": "xyz"}
+   ```
 
 * Now your breakpoint in the VehicleApp gets hit and you can inspect everything in your debug session
-* After resuming execution (<kbd>F5</kbd>), a response from your vehicleApp is published to the response topic
+* After resuming execution (<kbd>F5</kbd>), a response from your VehicleApp is published to the response topic
 * You can see the response in the MQTT window.
 
 ## Trigger your Github Workflows
@@ -142,15 +141,8 @@ Every time you commit to the repository a set of wokflows is executed automatica
 
 ![Reference Architecture](assets/publish_container.png)
 
-### Configure Secret for GitHub Workflows
-> This section will change as soon as the repositories are all public
-* Go to GitHub
-* Create new personal token
-* Go to repository > settings > Security > Secrets > Actions
-* Create new Secret "SDV_GITHUB_AUTOMATION_TOKEN" and copy/paste your Personal Token
-
 ### Run GitHub Workflow
-* Make modification to your file: e.g., remove the last empty line from src/run.py
+* Make modification to your file, e.g. remove the last empty line from `src/run.py`
 * Commit you change
    ```bash
    git add .
@@ -160,13 +152,12 @@ Every time you commit to the repository a set of wokflows is executed automatica
    ```bash
    git push
    ```
-* Open your git repository in your favorite browser
-* Navigate to "Actions" > [CI Workflows](../actions/workflows/ci.yml)
+* Open `Actions` of your github.com repository and go to [CI Workflow](../actions/workflows/ci.yml)
 * Check Workflow Output, it should look like this:
-![](dassets/ci-workflow-success.png)
+![](assets/ci-workflow-success.png)
 
 ## Build you first release
-Now that the ci-workflow was successful, you are ready to build your first release. Your goal is to build a ready-to-deploy container image.
+Now that the `CI Workflow` was successful, you are ready to build your first release. Your goal is to build a ready-to-deploy container image.
 
 ### Release the vehicleApp to push it to the container registry
 * In order to deploy the vehicleApp you need to set the secrets on repository
@@ -174,7 +165,7 @@ Now that the ci-workflow was successful, you are ready to build your first relea
     * EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT
     * EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER
     * EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD
-* Open the Code page of your repository on gitHub.com and click on `Create a new release` in the Releases section on the right side
+* Open the `Code` page of your repository on gitHub.com and click on `Create a new release` in the Releases section on the right side
 * Enter a version and click on `Publish release`
   * Note: you can start the verion with a `v` which will be removed though, e.g. "v1.0.0" will result in a "1.0.0" (see [vesion-without-v](https://github.com/battila7/get-version-action)).
 * The release workflow will be triggered
