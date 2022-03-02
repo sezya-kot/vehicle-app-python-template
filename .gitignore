@@ -359,3 +359,6 @@ github_token.txt
 
 # get_helm.sh script
 get_helm.sh
+
+# vehicleApp virtual environment
+vehicleApp/

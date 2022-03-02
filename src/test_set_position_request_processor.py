@@ -14,9 +14,10 @@
 # skip B101
 
 import pytest
-from sdv.client import VehicleClient
 
 from set_position_request_processor import SetPositionRequestProcessor
+from vdm.SeatService import SeatService
+from vdm.Vehicle import Vehicle
 
 
 @pytest.mark.asyncio
@@ -56,8 +57,8 @@ def get_sample_request_data():
 
 
 def get_set_position_request_processor_instance():
-    return SetPositionRequestProcessor()
+    return SetPositionRequestProcessor(Vehicle())
 
 
 def get_vehicle_client_instance():
-    return VehicleClient(50051)
+    return SeatService()

@@ -11,23 +11,19 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-grpcio>=1.26.0
-grpcio-tools>=1.26.0
-protobuf==3.19.3
-cloudevents >= 1.0.0
-opencensus == 0.8.0
-opencensus-ext-grpc == 0.7.2
-dapr >= 1.4.0
-Flask==2.0.2
-pre-commit >= 2.16.0
-pydocstyle >= 6.1.1
-black
-bandit
-pylint
-mypy >= 0.910
-mypy-protobuf >= 3.0.0
-types-protobuf >= 0.1.14
-grpc-stubs >= 1.24.7
-pytest
-wheel >= 0.37.1
-paho-mqtt>=1.6
+# pylint: disable=C0103
+
+from sdv.model import DataPointFloat, Model
+
+from vdm.Cabin import Cabin
+from vdm.Private import Private
+
+
+class Vehicle(Model):
+    """Vehicle model"""
+
+    def __init__(self):
+        super().__init__()
+        self.Speed = DataPointFloat("Speed", self)
+        self.Private = Private(self)
+        self.Cabin = Cabin(self)
