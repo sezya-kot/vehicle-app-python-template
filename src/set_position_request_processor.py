@@ -15,25 +15,29 @@
 
 import json
 
-from sdv.client import VehicleClient
 from sdv.proto.swdc_comfort_seats_pb2 import BASE, SeatLocation
-from sdv.talent import Talent
+from sdv.vehicle_app import VehicleApp
+
+from vdm.Vehicle import Vehicle
 
 
 class SetPositionRequestProcessor:
     """A class to process position requests."""
 
-    async def process(
-        self, data: str, resp_topic: str, vehicle_client: VehicleClient, talent: Talent
-    ):
-        """Process the position request."""
-        resp_data = await self.__get_processed_response(data, vehicle_client)
-        await self.__publish_data_to_topic(resp_data, resp_topic, talent)
+    def __init__(self, vehicle_client: Vehicle):
+        self.vehicle_client = vehicle_client
 
-    async def __get_processed_response(self, data, vehicle_client):
+    async def process(self, data: str, resp_topic: str, app: VehicleApp):
+        """Process the position request."""
+        resp_data = await self.__get_processed_response(data)
+        await self.__publish_data_to_topic(resp_data, resp_topic, app)
+
+    async def __get_processed_response(self, data):
         try:
             location = SeatLocation(row=1, index=1)
-            await vehicle_client.Seats.MoveComponent(location, BASE, data["position"])
+            await self.vehicle_client.Cabin.SeatService.MoveComponent(
+                location, BASE, data["position"]  # type: ignore
+            )
             resp_data = {"requestId": data["requestId"], "result": {"status": 0}}
         except Exception as ex:
             resp_data = {
@@ -43,11 +47,11 @@ class SetPositionRequestProcessor:
         return resp_data
 
     async def __publish_data_to_topic(
-        self, resp_data: dict, resp_topic: str, talent: Talent
+        self, resp_data: dict, resp_topic: str, app: VehicleApp
     ):
         status = 0
         try:
-            await talent.publish_mqtt_event(resp_topic, json.dumps(resp_data))
+            await app.publish_mqtt_event(resp_topic, json.dumps(resp_data))
         except Exception:
             status = -1
         return status

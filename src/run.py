@@ -18,17 +18,18 @@ import logging
 import signal
 
 from sdv.proto.databroker_pb2 import Notification
-from sdv.talent import Talent, subscribe_data_points, subscribe_topic
-from sdv.util.log import get_default_date_format, get_default_log_format, get_log_level
+from sdv.util.log import get_default_date_format, get_default_log_format
+from sdv.vehicle_app import VehicleApp, subscribe_data_points, subscribe_topic
 
 from set_position_request_processor import SetPositionRequestProcessor
+from vdm.Vehicle import Vehicle
 
 logging.basicConfig(format=get_default_log_format(), datefmt=get_default_date_format())
-logging.getLogger().setLevel(get_log_level())
+logging.getLogger().setLevel("INFO")
 logger = logging.getLogger(__name__)
 
 
-class SeatAdjusterTalent(Talent):
+class SeatAdjusterApp(VehicleApp):
     """
     A sample SeatAdjusterTalent.
 
@@ -37,6 +38,10 @@ class SeatAdjusterTalent(Talent):
     requests to change the seat position and calls the SeatService to move the seat
     upon such a request, but only if Vehicle.Speed equals 0.
     """
+
+    def __init__(self, vehicle_client: Vehicle):
+        super().__init__()
+        self.vehicle_client = vehicle_client
 
     @subscribe_topic("seatadjuster/setPosition/request/gui-app")
     async def on_set_position_request_received(self, data: str) -> None:
@@ -50,10 +55,11 @@ class SeatAdjusterTalent(Talent):
     async def _on_set_position_request_received(
         self, data: str, resp_topic: str
     ) -> None:
-        vehicle_speed = await self.vehicle_client.get_vehicle_speed()
+        vehicle_speed = await self.vehicle_client.Speed.get()
+
         if vehicle_speed == 0:
-            processor = SetPositionRequestProcessor()
-            await processor.process(data, resp_topic, self.vehicle_client, self)
+            processor = SetPositionRequestProcessor(self.vehicle_client)
+            await processor.process(data, resp_topic, self)
         else:
             logger.warning(
                 "Not allowed to move seat because vehicle speed is %s and not 0",
@@ -69,7 +75,7 @@ class SeatAdjusterTalent(Talent):
 async def main():
     """Main function"""
     logger.info("Starting seat adjuster app...")
-    seat_adjuster_talent = SeatAdjusterTalent()
+    seat_adjuster_talent = SeatAdjusterApp(Vehicle())
     await seat_adjuster_talent.run()
 
 
