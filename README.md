@@ -32,7 +32,9 @@ Add the following environment variable so that the DevContainer will use the cor
 1. Edit environment variables for your account
 2. Create environment variable with name: `DEVCONTAINER_PROXY` with the value `.Proxy`
    * Don't forget (dot) in value of the environment variable
-3. Restart Visual Studio Code to pick up new environment variable
+3. If you are using a different Port than 3128 for your Proxy, you have to set another environment variable as follows:
+   *  DEVCONTAINER_PROXY_PORT=<PortNumber>
+4. Restart Visual Studio Code to pick up new environment variable
 
 * macOS & Linux:
 ```
@@ -60,6 +62,9 @@ The `.docker\config.json` has to have following proxy settings:
 }
 
 ```
+
+#### If you are using macOS please notice that Docker Desktop 4.4.2 has problems with the proxy. The latest working version is 4.3.2
+
 </details>
 
 ## Use the Template Repository
