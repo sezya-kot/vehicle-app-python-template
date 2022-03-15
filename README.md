@@ -13,4 +13,6 @@ This repository provides you with a complete development environment for your ow
 3. [Develop your own Python VehicleApp](docs/)
 
 ## Contribution
-Contributions are welcome!
+- [GitHub Issues]()
+- [Mailing List]()
+- [Contribution](docs/contribution.md)

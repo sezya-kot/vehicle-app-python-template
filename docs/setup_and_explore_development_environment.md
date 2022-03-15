@@ -12,7 +12,7 @@ To be able to use the DevContainer, you have to make sure to fulfill the followi
 ### System prerequisites
 * Install Docker Engine / [Docker Desktop](https://www.docker.com/products/docker-desktop)
 * Install [Visual Studio Code](https://code.visualstudio.com)
-* Add [Remote-Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension via marketplace or using the command line
+* Add [Remote-Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension via the marketplace or using the command line
    ```
    code --install-extension ms-vscode-remote.remote-containers
    ```
@@ -23,9 +23,12 @@ To be able to use the DevContainer, you have to make sure to fulfill the followi
 If you are working behind a corporate proxy add the following environment variable so that the DevContainer will use the correct proxy settings.
 
 #### Windows:
-1. Create an environment variable with name `DEVCONTAINER_PROXY` and with value `.Proxy` for your account
+1. Edit environment variables for your account
+2. Create an environment variable with name the `DEVCONTAINER_PROXY` and with the value `.Proxy` for your account
    * Don't forget (dot) in value of the environment variable
-2. Restart Visual Studio Code to pick up new environment variable
+3. If you are using a different Port than 3128 for your Proxy, you have to set another environment variable as follows:
+   *  DEVCONTAINER_PROXY_PORT=<PortNumber>
+4. Restart Visual Studio Code to pick up new environment variable
 
 #### macOS & Linux:
 ```
@@ -152,7 +155,8 @@ Every time you commit to the repository a set of wokflows is executed automatica
    ```bash
    git push
    ```
-* Open `Actions` of your github.com repository and go to [CI Workflow](../actions/workflows/ci.yml)
+* Open your git repository in your favorite browser
+* Navigate to `Actions` and go to [CI Workflow](../actions/workflows/ci.yml)
 * Check Workflow Output, it should look like this:
 ![](assets/ci-workflow-success.png)
 
