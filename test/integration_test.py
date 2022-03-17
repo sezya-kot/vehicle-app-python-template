@@ -1,52 +1,124 @@
 import json
-import time
 
-import paho.mqtt.client as mqtt
-
-
-class MessageCallback:
-    """This class is a wrapper for the on_message callback of the MQTT broker."""
-
-    def __init__(self):
-        self.message = None
-
-    def __call__(self, client, userdata, message):
-        self.message = message
+import pytest
+from mqtt_helper import MqttClient
+from sdv.test.inttesthelper import IntTestHelper
 
 
-def test_set_position():
+@pytest.mark.asyncio
+@pytest.fixture(scope="session", autouse=True)
+def pytest_configure():
+    # # Use these for local execution
+    # pytest.mqtt_port = 1883
+    # pytest.inttesthelper_port = 55555
+
+    # Use these for cluster execution
+    pytest.mqtt_port = 31883
+    pytest.inttesthelper_port = 30555
+
+    pytest.request_topic = "seatadjuster/setPosition/request"
+    pytest.response_topic = "seatadjuster/setPosition/response"
+
+
+@pytest.mark.asyncio
+async def test_set_position_not_allowed():
+    mqtt_client = MqttClient(pytest.mqtt_port)
+    inttesthelper = IntTestHelper(pytest.inttesthelper_port)
     request_id = "abc"
-    request_topic = "seatadjuster/setPosition/request/gui-app"
-    response_topic = "seatadjuster/setPosition/response/gui-app"
-    mqtt_hostname = "localhost"
-    mqtt_port = 31883
-    timeout = 20000
 
     payload = {"position": 300, "requestId": request_id}
 
-    client = mqtt.Client()
-    client.connect(host=mqtt_hostname, port=mqtt_port)
+    response = await inttesthelper.set_float_datapoint(name="Vehicle.Speed", value=50)
 
-    msg_callback = MessageCallback()
-    client.on_message = msg_callback
+    assert len(response.errors) == 0
 
-    client.subscribe(topic=response_topic)
+    response = mqtt_client.publish_and_wait_for_response(
+        request_topic=pytest.request_topic,
+        response_topic=pytest.response_topic,
+        payload=payload,
+    )
 
-    client.loop_start()
+    assert response is not None
 
-    counter = 0
-    interval = 100
+    body = json.loads(str(response.payload.decode("utf-8")))
 
-    while msg_callback.message is None and counter < timeout:
-        client.publish(topic=request_topic, payload=json.dumps(payload))
-        counter += interval
-        time.sleep(interval / 1000)
+    assert body["requestId"] == request_id
+    assert body["status"] == 1
 
-    client.loop_stop()
 
-    assert msg_callback.message is not None
+@pytest.mark.asyncio
+async def test_set_position_allowed():
+    mqtt_client = MqttClient(pytest.mqtt_port)
+    inttesthelper = IntTestHelper(pytest.inttesthelper_port)
+    request_id = "abc"
 
-    body = json.loads(str(msg_callback.message.payload.decode("utf-8")))
+    payload = {"position": 300, "requestId": request_id}
+
+    response = await inttesthelper.set_float_datapoint(name="Vehicle.Speed", value=0)
+
+    assert len(response.errors) == 0
+
+    response = mqtt_client.publish_and_wait_for_response(
+        request_topic=pytest.request_topic,
+        response_topic=pytest.response_topic,
+        payload=payload,
+    )
+
+    assert response is not None
+
+    body = json.loads(str(response.payload.decode("utf-8")))
 
     assert body["requestId"] == request_id
     assert body["result"]["status"] == 0
+
+
+@pytest.mark.asyncio
+async def test_set_position_lt_0():
+    mqtt_client = MqttClient(pytest.mqtt_port)
+    inttesthelper = IntTestHelper(pytest.inttesthelper_port)
+    request_id = "abc"
+
+    payload = {"position": -1, "requestId": request_id}
+
+    response = await inttesthelper.set_float_datapoint(name="Vehicle.Speed", value=0)
+
+    assert len(response.errors) == 0
+
+    response = mqtt_client.publish_and_wait_for_response(
+        request_topic=pytest.request_topic,
+        response_topic=pytest.response_topic,
+        payload=payload,
+    )
+
+    assert response is not None
+
+    body = json.loads(str(response.payload.decode("utf-8")))
+
+    assert body["requestId"] == request_id
+    assert body["result"]["status"] == 1
+
+
+@pytest.mark.asyncio
+async def test_set_position__gt_1000():
+    mqtt_client = MqttClient(pytest.mqtt_port)
+    inttesthelper = IntTestHelper(pytest.inttesthelper_port)
+    request_id = "abc"
+
+    payload = {"position": 1001, "requestId": request_id}
+
+    response = await inttesthelper.set_float_datapoint(name="Vehicle.Speed", value=0)
+
+    assert len(response.errors) == 0
+
+    response = mqtt_client.publish_and_wait_for_response(
+        request_topic=pytest.request_topic,
+        response_topic=pytest.response_topic,
+        payload=payload,
+    )
+
+    assert response is not None
+
+    body = json.loads(str(response.payload.decode("utf-8")))
+
+    assert body["requestId"] == request_id
+    assert body["result"]["status"] == 1

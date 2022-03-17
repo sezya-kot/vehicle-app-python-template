@@ -15,7 +15,7 @@
 
 # pylint: disable=C0103
 
-from sdv.model import Model, ModelSpec, RangeSpec
+from sdv.model import Model, ModelCollection, NamedRange
 
 from vdm.Seat import Seat
 from vdm.SeatService import SeatService
@@ -29,6 +29,6 @@ class Cabin(Model):
 
         self.SeatService = SeatService()
 
-        self.Seat = ModelSpec[Seat](
-            [RangeSpec("Row", 1, 2), RangeSpec("Pos", 1, 3)], Seat(self)
+        self.Seat = ModelCollection[Seat](
+            [NamedRange("Row", 1, 2), NamedRange("Pos", 1, 3)], Seat(self)
         )

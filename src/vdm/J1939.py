@@ -19,10 +19,10 @@ from sdv.model import (
     DataPointFloat,
     DataPointSInt32,
     DataPointUInt32,
-    ListSpec,
+    Dictionary,
     Model,
-    ModelSpec,
-    RangeSpec,
+    ModelCollection,
+    NamedRange,
 )
 
 
@@ -179,12 +179,30 @@ class J1939(Model):
     def __init__(self, parent: Model):
         super().__init__(parent)
 
-        self.PGN65226 = ModelSpec[PGN65226]([RangeSpec("SA", 0, 254)], PGN65226(self))
-        self.PGN65248 = ModelSpec[PGN65248]([ListSpec(PGN65248)], PGN65226(self))
-        self.PGN65217 = ModelSpec[PGN65217]([ListSpec(PGN65217)], PGN65217(self))
-        self.PGN65276 = ModelSpec[PGN65276]([RangeSpec("SA", 0, 254)], PGN65276(self))
-        self.PGN57344 = ModelSpec[PGN57344]([ListSpec(PGN57344)], PGN57344(self))
-        self.PGN61440 = ModelSpec[PGN61440]([ListSpec(PGN61440)], PGN61440(self))
-        self.PGN61441 = ModelSpec[PGN61441]([ListSpec(PGN61441)], PGN61441(self))
-        self.PGN61443 = ModelSpec[PGN61443]([ListSpec(PGN61443)], PGN61443(self))
-        self.PGN6144 = ModelSpec[PGN6144]([RangeSpec("SA", 0, 254)], PGN6144(self))
+        self.PGN65226 = ModelCollection[PGN65226](
+            [NamedRange("SA", 0, 254)], PGN65226(self)
+        )
+        self.PGN65248 = ModelCollection[PGN65248](
+            [Dictionary(PGN65248)], PGN65226(self)
+        )
+        self.PGN65217 = ModelCollection[PGN65217](
+            [Dictionary(PGN65217)], PGN65217(self)
+        )
+        self.PGN65276 = ModelCollection[PGN65276](
+            [NamedRange("SA", 0, 254)], PGN65276(self)
+        )
+        self.PGN57344 = ModelCollection[PGN57344](
+            [Dictionary(PGN57344)], PGN57344(self)
+        )
+        self.PGN61440 = ModelCollection[PGN61440](
+            [Dictionary(PGN61440)], PGN61440(self)
+        )
+        self.PGN61441 = ModelCollection[PGN61441](
+            [Dictionary(PGN61441)], PGN61441(self)
+        )
+        self.PGN61443 = ModelCollection[PGN61443](
+            [Dictionary(PGN61443)], PGN61443(self)
+        )
+        self.PGN6144 = ModelCollection[PGN6144](
+            [NamedRange("SA", 0, 254)], PGN6144(self)
+        )

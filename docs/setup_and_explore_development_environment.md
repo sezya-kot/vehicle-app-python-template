@@ -62,7 +62,52 @@ The first time you initialize the container it will take about 10 minutes to bui
 
 > If the development container fails to build successfully (e.g. due to network issues) then wait for the current build to finish and then press <kbd>F1</kbd> and run the command `Remote-Containers: Rebuild Container Without Cache`
 
-> When opening the DevContainer for the first time, a manual reload of the dapr extension is required. (Note: the reload button appears next to Dapr extension in extension menue).
+> When opening the DevContainer for the first time, the following steps are necessary
+   - A manual reload of the dapr extension is required. (Note: the reload button appears next to Dapr extension in extension menue).
+   - A github_token txt file needs to be created. The procedure to create is as follows
+      - Create /github_token.txt file with following contents:
+         ```
+         <username>:<token>
+         ```
+         token = GitHub PAT
+
+         username = GitHub User
+      - github_token.txt is part of .gitignore so it would not be checked in. (This will be going away when we go open-source)
+   - To successfully pull seat-service and vehicle-data-broker github token needs to be available prior creation of devcontainer. Therefore after first run of devcontainer, create a github_token.txt and re-open devcontainer
+
+> Running Vehicle Abstraction Layer services (seatservice and vehicle-data-broker) in devcontainer
+   - When creating devcontainer, script will pull and install vehicle-data-broker and seatservice applications into devcontainer
+   - To pull a repositories, ```github_token.txt``` is required
+   - Once credentials are set, vehicle-data-broker and seatservice are installed and run as background processes
+   - To verify running VAL applications, ```tail``` or ```cat``` following log files:
+      - ```$HOME/databroker-dapr.log```
+      - ```$HOME/databroker-app.log```
+      - ```$HOME/seatservice-dapr.log```
+      - ```$HOME/seatservice-app.log```
+> Running Vehicle Abstraction Layer services (seatservice and vehicle-data-broker) as standalone application
+   - To run vehicle-data-broker or seatservice as standalone application, open following scripts in new terminal
+   - ```./.devcontainer/sdv/run-mosquitto.sh```
+   - ```./.devcontainer/sdv/run-databroker.sh```
+   - ```./.devcontainer/sdv/run-seatservice.sh```
+   - The script will automatically close previous instance and bootup new one
+> Testing integration of Vehicle Databroker
+   - Make sure that extension ```httpYac - Rest Client``` is installed
+   - Open script ```/test/vdb_collector.http```
+   - Change port to ```@port=55555```
+   - After pressing connect button, results with ```code:<value>``` should be returned
+> Testing integration of Seatservice
+   - Make sure that extension ```httpYac - Rest Client``` is installed
+   - Open script ```/test/seatservice.http```
+   - Change port to ```@port=50051```
+   - After pressing connect button, results with ```code:<value>``` should be returned
+> Using Vehicle Databroker CLI
+   - Databroker is up and running (see: *Running Vehicle Abstraction Layer services ...*)
+   - Execute: ```./.devcontainer/sdv/run-databroker-cli.sh```
+   - Follow documentation of Databroker-CLI
+> Using different version of VAL services
+   - Update ```./.devcontainer/sdv/settings.json```
+   - Follow steps above to download and re-run VAL services
+   - New version will be downloaded to ```./.devcontainer/sdv/assets/...```
 
 ## Start and test VehicleApp
 Now that your DevContainer is up and running, it is time to take a look at what's inside:

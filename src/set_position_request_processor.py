@@ -14,11 +14,14 @@
 """This module contains the SetPositionRequestProcessor class."""
 
 import json
+import logging
 
-from sdv.proto.swdc_comfort_seats_pb2 import BASE, SeatLocation
 from sdv.vehicle_app import VehicleApp
 
+from vdm.proto.seats_pb2 import BASE, SeatLocation
 from vdm.Vehicle import Vehicle
+
+logger = logging.getLogger(__name__)
 
 
 class SetPositionRequestProcessor:
@@ -49,12 +52,10 @@ class SetPositionRequestProcessor:
     async def __publish_data_to_topic(
         self, resp_data: dict, resp_topic: str, app: VehicleApp
     ):
-        status = 0
         try:
             await app.publish_mqtt_event(resp_topic, json.dumps(resp_data))
-        except Exception:
-            status = -1
-        return status
+        except Exception as ex:
+            logger.error(self.__get_error_message_from(ex))
 
     def __get_error_message_from(self, ex: Exception):
         return f"Exception details: {ex}"

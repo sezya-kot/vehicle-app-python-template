@@ -23,25 +23,25 @@ Troubleshooting:
 - 02_configure-k3d.sh
     - Script will create a k3d cluster; local registry;
     - It will initialize environment with: Dapr, Mosquitto; Redis
-- 03_deploy-k3d.sh
+- 03_deployprerequisites.sh
+  - Prior to run a script, login to ghcr.io with your github token: ```docker login ghcr.io```
+  - It will pull and install vehicle-data-broker and seatservice applications into k3d cluster
+- 04_deploy-k3d.sh
   - It will build seatadjuster application and deploy it to the cluster. Personal token is required to be configured.
-  - Create /src/github_token.txt file with following contents:
-    ```
-    <username>:<token>
-    ```
-    token = GitHub PAT
-
-    username = GitHub User
-  - github_token.txt is part of .gitignore so it would not be checked in.
-
-- 04_installtooling.sh
+  - Ensure that the github_token.txt file is in its place with the correct content (Refer to the main README.md file for more details on how to create a github_token.txt)
+- 99_installtooling.sh
   - It will install: k8s dashboard with printing out credentials
 - Execute K9S and check that all containers are running
 
-## Connecting to MQTT broker within the k8s cluster
+## Connecting to MQTT broker within the k3d cluster
 - Seatadjuster app communicates over the mqtt broker outside of k8s cluster
 - MQTT Broker is exposed over the port: 31883
 - MQTT Broker can be found in vscode panel of extensions: symbol-cloud
 
-## Using k8s
+## Connecting to Vehicle-data-broker within the k3d cluster
+- Make sure that extension ```httpYac - Rest Client``` is installed
+- Open script ```/test/vdb_collector.http```
+- Change port to ```@port=30555```
+- After pressing connect button, results with ```Vehicle.Speed``` should be returned
+## Using k3d
 k9s and kubectl tool are installed to operate local k3d cluster.

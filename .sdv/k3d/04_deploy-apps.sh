@@ -1,9 +1,8 @@
 #!/bin/bash
 
-SITE_PACKAGES=$(python -m site --user-site)
 WORKING_DIR=$(pwd)
 
-if [ -f "./../../src/github_token.txt" ];
+if [ -f "./../../github_token.txt" ];
 then
     GITHUB_TOKEN="github_token,src=github_token.txt"
 else
@@ -12,18 +11,6 @@ fi
 
 if [ -n "$HTTP_PROXY" ]; then
     echo "Building image with proxy configuration"
-    # Build, push vehicleapi image
-    pip install -r ./../../src/requirements-sdv.txt
-    cd $SITE_PACKAGES/sdv/
-    docker build \
-    -f vehicle_api_mock/Dockerfile \
-    -t localhost:12345/vehicleapi:local \
-    --build-arg HTTP_PROXY="$HTTP_PROXY" \
-    --build-arg HTTPS_PROXY="$HTTPS_PROXY" \
-    --build-arg FTP_PROXY="$FTP_PROXY" \
-    --build-arg ALL_PROXY="$ALL_PROXY" \
-    --build-arg NO_PROXY="$NO_PROXY" . --no-cache
-     docker push localhost:12345/vehicleapi:local
 
     cd $WORKING_DIR/../../src
     DOCKER_BUILDKIT=1 docker build \
@@ -43,11 +30,7 @@ else
     # Build, push vehicleapi image - NO PROXY
     pip install -r ./../../src/requirements-sdv.txt
 
-    cd $SITE_PACKAGES/sdv/
-    docker build -f vehicle_api_mock/Dockerfile -t localhost:12345/vehicleapi:local . --no-cache
-    docker push localhost:12345/vehicleapi:local
-
-    cd $WORKING_DIR/../../src
+    cd $WORKING_DIR/../../
     DOCKER_BUILDKIT=1 docker build -f Dockerfile --progress=plain --secret id=$GITHUB_TOKEN -t localhost:12345/seatadjuster:local . --no-cache
     docker push localhost:12345/seatadjuster:local
 

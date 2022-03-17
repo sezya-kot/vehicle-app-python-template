@@ -16,6 +16,7 @@ export HTTPS_PROXY=${HTTPS_PROXY}
 export NO_PROXY=${NO_PROXY}
 
 chmod +x .devcontainer/sdv/*.sh
+sudo chown -R $(whoami) $HOME
 
 echo "#######################################################"
 echo "### Checking proxies                                ###"
@@ -25,17 +26,17 @@ echo "#######################################################"
 echo "#######################################################"
 echo "### Executing container-set.sh                      ###"
 echo "#######################################################"
-.devcontainer/sdv/container-set.sh 2>&1 | tee -a /usr/local/share/container-set.log
+.devcontainer/sdv/container-set.sh 2>&1 | tee -a $HOME/container-set.log
 
 echo "#######################################################"
 echo "### Executing add-python.sh                         ###"
 echo "#######################################################"
-.devcontainer/sdv/add-python.sh 2>&1 | tee -a /usr/local/share/add-python.log
+.devcontainer/sdv/add-python.sh 2>&1 | tee -a $HOME/add-python.log
 
 echo "#######################################################"
 echo "### Executing add-dapr.sh                           ###"
 echo "#######################################################"
-.devcontainer/sdv/add-dapr.sh 2>&1 | tee -a /usr/local/share/add-dapr.log
+.devcontainer/sdv/add-dapr.sh 2>&1 | tee -a $HOME/add-dapr.log
 
 echo "#######################################################"
 echo "### Initializing dapr                               ###"
@@ -55,5 +56,24 @@ pip3 install -U mypy
 echo "#######################################################"
 echo "### Install python requirements                     ###"
 echo "#######################################################"
-pip3 install -r ./src/requirements-dev.txt
-pip3 install -r ./src/requirements-sdv.txt
+REQUIREMENTS="./src/requirements-dev.txt"
+if [ -f $REQUIREMENTS ]; then
+    pip3 install -r $REQUIREMENTS
+fi
+REQUIREMENTS="./src/requirements-sdv.txt"
+if [ -f $REQUIREMENTS ]; then
+    pip3 install -r $REQUIREMENTS
+fi
+REQUIREMENTS="./src/requirements.txt"
+if [ -f $REQUIREMENTS ]; then
+    pip3 install -r $REQUIREMENTS
+fi
+REQUIREMENTS="./requirements.txt"
+if [ -f $REQUIREMENTS ]; then
+    pip3 install -r $REQUIREMENTS
+fi
+
+echo "#######################################################"
+echo "### Install Jq                                      ###"
+echo "#######################################################"
+sudo apt-get install -y jq

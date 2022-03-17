@@ -15,10 +15,13 @@ export HTTP_PROXY=${HTTP_PROXY}
 export HTTPS_PROXY=${HTTPS_PROXY}
 export NO_PROXY=${NO_PROXY}
 
+#Terminate existing running VAL services
+RUNNING_CONTAINER=$(docker ps | grep "eclipse-mosquitto" | awk '{ print $1 }')
+ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
+MOSQUITTO_VERSION=$(cat $ROOT_DIRECTORY/.devcontainer/sdv/settings.json | jq .mosquitto.version | tr -d '"')
 
-echo "#######################################################"
-echo "### Download and installing VAL services            ###"
-echo "#######################################################"
-./.devcontainer/sdv/run-mosquitto.sh
-./.devcontainer/sdv/run-databroker.sh "run-in-background"
-./.devcontainer/sdv/run-seatservice.sh "run-in-background"
+if [ -n "$RUNNING_CONTAINER" ];
+then
+    docker container stop $RUNNING_CONTAINER
+fi
+docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto:$MOSQUITTO_VERSION

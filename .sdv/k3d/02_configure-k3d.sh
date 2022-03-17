@@ -7,17 +7,19 @@ if [ -n "$HTTP_PROXY" ]; then
   k3d cluster create dev-cluster \
     --registry-use k3d-devregistry.localhost:12345 \
     -p "31883:31883" \
+    -p "30555:30555" \
+    -p "30051:30051" \
     -e "HTTP_PROXY=$HTTP_PROXY@server:0" \
     -e "HTTPS_PROXY=$HTTPS_PROXY@server:0" \
     -e "NO_PROXY=localhost@server:0"
 else
   echo "Creating cluster without proxy configuration"
-  k3d cluster create dev-cluster -p "31883:31883" \
+  k3d cluster create dev-cluster \
+    -p "30555:30555" \
+    -p "31883:31883" \
+    -p "30051:30051" \
     --registry-use k3d-devregistry.localhost:12345
 fi
-
-# Install Mosquitto
-kubectl apply -f ./mosquitto.yml
 
 # Deploy Zipkin
 kubectl create deployment zipkin --image openzipkin/zipkin
