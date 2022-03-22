@@ -352,9 +352,6 @@ MigrationBackup/
 # sdv temp folder
 .sdv/tmp/
 
-# github_token file
-github_token.txt
-
 # get_helm.sh script
 get_helm.sh
 

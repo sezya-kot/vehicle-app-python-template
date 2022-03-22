@@ -64,16 +64,7 @@ The first time you initialize the container it will take about 10 minutes to bui
 
 > When opening the DevContainer for the first time, the following steps are necessary
    - A manual reload of the dapr extension is required. (Note: the reload button appears next to Dapr extension in extension menue).
-   - A github_token txt file needs to be created. The procedure to create is as follows
-      - Create /github_token.txt file with following contents:
-         ```
-         <username>:<token>
-         ```
-         token = GitHub PAT
-
-         username = GitHub User
-      - github_token.txt is part of .gitignore so it would not be checked in. (This will be going away when we go open-source)
-   - To successfully pull seat-service and vehicle-data-broker github token needs to be available prior creation of devcontainer. Therefore after first run of devcontainer, create a github_token.txt and re-open devcontainer
+   - READ_ONLY github token is available in ```github_token.txt``` to pull vehicle-data-broker and seat-service applications from private repository
 
 > Running Vehicle Abstraction Layer services (seatservice and vehicle-data-broker) in devcontainer
    - When creating devcontainer, script will pull and install vehicle-data-broker and seatservice applications into devcontainer

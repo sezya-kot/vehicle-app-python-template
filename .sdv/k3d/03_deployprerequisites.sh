@@ -1,6 +1,9 @@
 ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
 VEHICLEDATABROKER_TAG=$(cat $ROOT_DIRECTORY/.devcontainer/sdv/settings.json | jq .databroker.version | tr -d '"')
 SEATSERVICE_TAG=$(cat $ROOT_DIRECTORY/.devcontainer/sdv/settings.json | jq .seatservice.version | tr -d '"')
+GITHUB_TOKEN="$ROOT_DIRECTORY/github_token.txt"
+cred=$(cat $GITHUB_TOKEN)
+echo $cred | cut -d':' -f2 | docker login ghcr.io -u USERNAME --password-stdin
 
 if grep -q ghcr.io /home/vscode/.docker/config.json; then
     docker pull ghcr.io/softwaredefinedvehicle/swdc-os-vehicleapi/databroker:$VEHICLEDATABROKER_TAG
