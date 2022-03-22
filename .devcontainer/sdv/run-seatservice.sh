@@ -15,10 +15,6 @@ echo "#######################################################"
 echo "### Running Seatservice                             ###"
 echo "#######################################################"
 
-export HTTP_PROXY=${HTTP_PROXY}
-export HTTPS_PROXY=${HTTPS_PROXY}
-export NO_PROXY=${NO_PROXY}
-
 ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
 GITHUB_TOKEN="$ROOT_DIRECTORY/github_token.txt"
 

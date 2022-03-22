@@ -11,7 +11,6 @@
 #* SPDX-License-Identifier: EPL-2.0
 #********************************************************************************/
 
-
 ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
 DATABROKER_VERSION=$(cat $ROOT_DIRECTORY/.devcontainer/sdv/settings.json | jq .databroker.version | tr -d '"')
 

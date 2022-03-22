@@ -14,9 +14,6 @@
 echo "#######################################################"
 echo "### Installing dapr                                 ###"
 echo "#######################################################"
-export HTTP_PROXY=${HTTP_PROXY}
-export HTTPS_PROXY=${HTTPS_PROXY}
-export NO_PROXY=${NO_PROXY}
 
 daprReleaseUrl="https://api.github.com/repos/dapr/cli/releases"
 latest_release=$(curl -s $daprReleaseUrl | grep \"tag_name\" | grep -v rc | awk 'NR==1{print $2}' |  sed -n 's/\"\(.*\)\",/\1/p')

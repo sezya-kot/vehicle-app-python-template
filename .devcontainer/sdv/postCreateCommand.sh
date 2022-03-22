@@ -11,17 +11,13 @@
 #* SPDX-License-Identifier: EPL-2.0
 #********************************************************************************/
 
-export HTTP_PROXY=${HTTP_PROXY}
-export HTTPS_PROXY=${HTTPS_PROXY}
-export NO_PROXY=${NO_PROXY}
-
 chmod +x .devcontainer/sdv/*.sh
 sudo chown -R $(whoami) $HOME
 
 echo "#######################################################"
 echo "### Checking proxies                                ###"
 echo "#######################################################"
-.devcontainer/sdv/configure-proxies.sh
+sudo .devcontainer/sdv/configure-proxies.sh | tee -a $HOME/configure-proxies.log
 
 echo "#######################################################"
 echo "### Executing container-set.sh                      ###"

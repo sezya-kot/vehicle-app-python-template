@@ -11,10 +11,6 @@
 #* SPDX-License-Identifier: EPL-2.0
 #********************************************************************************/
 
-export HTTP_PROXY=${HTTP_PROXY}
-export HTTPS_PROXY=${HTTPS_PROXY}
-export NO_PROXY=${NO_PROXY}
-
 echo "#######################################################"
 echo "### Installing OS updates                           ###"
 echo "#######################################################"
