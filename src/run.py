@@ -21,7 +21,7 @@ from sdv.util.log import get_default_date_format, get_default_log_format
 from sdv.vehicle_app import VehicleApp, subscribe_data_points, subscribe_topic
 
 from set_position_request_processor import SetPositionRequestProcessor
-from vdm.Vehicle import Vehicle
+from vdm.Vehicle import Vehicle, vehicle
 
 logging.basicConfig(format=get_default_log_format(), datefmt=get_default_date_format())
 logging.getLogger().setLevel("INFO")
@@ -90,7 +90,7 @@ class SeatAdjusterApp(VehicleApp):
 async def main():
     """Main function"""
     logger.info("Starting seat adjuster app...")
-    seat_adjuster_talent = SeatAdjusterApp(Vehicle())
+    seat_adjuster_talent = SeatAdjusterApp(vehicle)
     await seat_adjuster_talent.run()
 
 

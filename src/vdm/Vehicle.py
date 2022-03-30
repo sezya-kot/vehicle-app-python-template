@@ -27,3 +27,6 @@ class Vehicle(Model):
         self.Speed = DataPointFloat("Speed", self)
         self.Private = Private(self)
         self.Cabin = Cabin(self)
+
+
+vehicle = Vehicle()
