@@ -96,10 +96,11 @@ jobs:
           files: ./.sdv/tmp/UnitTest/junit.xml
 
       - name: Add code coverage comment to pr
-        uses: romeovs/lcov-reporter-action@v0.2.21
+        uses: romeovs/lcov-reporter-action@v0.3.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           lcov-file: .sdv/tmp/CodeCoverage/lcov.info
+          delete-old-comments: true
 
       - name: Package unit test files
         uses: ./.github/actions/package
