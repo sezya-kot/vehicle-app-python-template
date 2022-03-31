@@ -361,3 +361,6 @@ get_helm.sh
 
 # vehicleApp virtual environment
 vehicleApp/
+
+# Mac files
+.DS_Store

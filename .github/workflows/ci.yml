@@ -24,6 +24,34 @@ on:
       - main
 
 jobs:
+  check-licenses:
+    runs-on: ubuntu-latest
+    name: Check Software Licenses
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Clone License Check Repo
+        uses: actions/checkout@v2
+        with:
+          repository: SoftwareDefinedVehicle/license-check
+          ref: v1
+          ssh-key: ${{ secrets.LICENSE_CHECK_ACTION_PRIVATE_KEY }}
+          path: .github/actions/license-check
+
+      - id: run-license-checker
+        name: Run License Checker
+        uses: ./.github/actions/license-check
+        with:
+          requirements-file-path: ./src
+          included-requirement-files: requirements.txt, requirements-dev.txt
+          whitelist-file-path: ./whitelisted-licenses.txt
+          fail-on-violation: false
+          notice-file-name: 'LICENSE-NOTICE'
+
   unit-tests:
     runs-on: ubuntu-latest
     name: Run unit tests and linters
@@ -157,7 +185,7 @@ jobs:
   build-images:
       name: "Building image (${{ matrix.component.Name }})"
       runs-on: ubuntu-latest
-      needs: initialize-matrix
+      needs: [check-licenses, initialize-matrix]
       strategy:
         matrix:
           component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
