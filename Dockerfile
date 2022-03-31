@@ -16,7 +16,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 RUN --mount=type=secret,id=github_token credential=$(cat /run/secrets/github_token); apt-get install -y git \
     && /opt/venv/bin/python3 -m pip install --upgrade pip \
     && pip3 install --no-cache-dir -r requirements.txt \
-    && pip3 install --no-cache-dir git+https://${credential}@github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git@v0.3.0
+    && pip3 install --no-cache-dir git+https://${credential}@github.com/SoftwareDefinedVehicle/sdv-vehicle-app-python-sdk.git@v0.3.2
 
 RUN pip3 install pyinstaller && pip3 install staticx && pip3 install patchelf
 

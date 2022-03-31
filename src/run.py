@@ -72,7 +72,7 @@ class SeatAdjusterApp(VehicleApp):
 
     @subscribe_data_points("Vehicle.Cabin.Seat.Row1.Pos1.Position")
     async def on_vehicle_seat_change(self, data):
-        resp_data = data.fields["Vehicle.Cabin.Seat.Row1.Pos1.Position"].int32_value
+        resp_data = data.fields["Vehicle.Cabin.Seat.Row1.Pos1.Position"].uint32_value
         req_data = {"position": resp_data}
         logger.info("Current Position of the Vehicle Seat is: %s", req_data)
         try:

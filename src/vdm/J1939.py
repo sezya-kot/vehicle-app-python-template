@@ -17,7 +17,7 @@
 
 from sdv.model import (
     DataPointFloat,
-    DataPointSInt32,
+    DataPointInt32,
     DataPointUInt32,
     Dictionary,
     Model,
@@ -93,10 +93,10 @@ class PGN61440(Model):
     def __init__(self, parent: Model):
         super().__init__(parent)
 
-        self.ActualRetarderPercentTorque = DataPointSInt32(
+        self.ActualRetarderPercentTorque = DataPointInt32(
             "ActualRetarderPercentTorque", self
         )
-        self.DriversDemandRetarder = DataPointSInt32("DriversDemandRetarder", self)
+        self.DriversDemandRetarder = DataPointInt32("DriversDemandRetarder", self)
 
 
 class PGN57344Instances:
