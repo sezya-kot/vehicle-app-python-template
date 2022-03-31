@@ -357,7 +357,7 @@ MigrationBackup/
 get_helm.sh
 
 # Don't commit databroker releas
-.devcontainer/sdv/assets
+.vscode/scripts/assets
 
 # vehicleApp virtual environment
 vehicleApp/

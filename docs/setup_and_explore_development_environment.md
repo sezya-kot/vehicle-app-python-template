@@ -64,41 +64,29 @@ The first time you initialize the container it will take about 10 minutes to bui
 
 > When opening the DevContainer for the first time, the following steps are necessary
    - A manual reload of the dapr extension is required. (Note: the reload button appears next to Dapr extension in extension menue).
-   - READ_ONLY github token is available in ```github_token.txt``` to pull vehicle-data-broker and seat-service applications from private repository
 
-> Running Vehicle Abstraction Layer services (seatservice and vehicle-data-broker) in devcontainer
-   - When creating devcontainer, script will pull and install vehicle-data-broker and seatservice applications into devcontainer
-   - To pull a repositories, ```github_token.txt``` is required
-   - Once credentials are set, vehicle-data-broker and seatservice are installed and run as background processes
-   - To verify running VAL applications, ```tail``` or ```cat``` following log files:
-      - ```$HOME/databroker-dapr.log```
-      - ```$HOME/databroker-app.log```
-      - ```$HOME/seatservice-dapr.log```
-      - ```$HOME/seatservice-app.log```
-> Running Vehicle Abstraction Layer services (seatservice and vehicle-data-broker) as standalone application
-   - To run vehicle-data-broker or seatservice as standalone application, open following scripts in new terminal
-   - ```./.devcontainer/sdv/run-mosquitto.sh```
-   - ```./.devcontainer/sdv/run-databroker.sh```
-   - ```./.devcontainer/sdv/run-seatservice.sh```
-   - The script will automatically close previous instance and bootup new one
-> Testing integration of Vehicle Databroker
-   - Make sure that extension ```httpYac - Rest Client``` is installed
-   - Open script ```/test/vdb_collector.http```
-   - Change port to ```@port=55555```
-   - After pressing connect button, results with ```code:<value>``` should be returned
-> Testing integration of Seatservice
-   - Make sure that extension ```httpYac - Rest Client``` is installed
-   - Open script ```/test/seatservice.http```
-   - Change port to ```@port=50051```
-   - After pressing connect button, results with ```code:<value>``` should be returned
-> Using Vehicle Databroker CLI
-   - Databroker is up and running (see: *Running Vehicle Abstraction Layer services ...*)
-   - Execute: ```./.devcontainer/sdv/run-databroker-cli.sh```
-   - Follow documentation of Databroker-CLI
-> Using different version of VAL services
-   - Update ```./.devcontainer/sdv/settings.json```
-   - Follow steps above to download and re-run VAL services
-   - New version will be downloaded to ```./.devcontainer/sdv/assets/...```
+## Running VAL services
+The Vehicle Abstraction Layer (VAL) services are required to interact with vehicle data and methods.
+
+### Run VAL services as tasks in Visual Studio Code (recommended)
+The VAL services will start automatically when opening the folder in Visual Studio Code. The configuration for that can be found in ```./.vscode/tasks.json```. Each service is configured as one background task with the ```runOn```-property configured as ```folderOpen```.  When opening the workspace for the first time, Visual Studio Code asks if it should be allowed to run tasks on folderOpen. This approval can be also set by pressing F1 and typing *Manage Automatic tasks in folder* -> *Allow automatic tasks in folder*.
+
+More information about tasks in Visual Studio Code can be found [here](https://code.visualstudio.com/docs/editor/tasks).
+
+It's also possible to start/stop tasks manually by pressing F1 and typing *Run Task* or *Terminate Task* and select the respective task to run/stop.
+
+The running tasks are display in the Terminal-Window one-by-one. To reopen that view, you can press F1 and type *Show running tasks*. In that view, you can access the logs of the respective task.
+
+### Run VAL services manually
+To run the VAL services manually, it's possible to call a bash script that starts the service. The scripts are located in ```././vscode/sdv/run-*.sh```.
+
+### Using Vehicle Databroker CLI
+The interact with a running instance of the Vehicle Data Broker, a CLI tool is provided. It can be started by running the script ```./.vscode/scripts/run-vehicledatabroker-cli.sh```. To be able to use the tool, the *Vehicle Data Broker* needs to be running.
+
+### Using different version of VAL services
+   - Update ```./prerequisite_settings.json```
+   - Restart the tasks for the services
+
 
 ## Start and test VehicleApp
 Now that your DevContainer is up and running, it is time to take a look at what's inside:

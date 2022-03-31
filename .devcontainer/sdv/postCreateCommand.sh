@@ -30,17 +30,6 @@ echo "#######################################################"
 .devcontainer/sdv/add-python.sh 2>&1 | tee -a $HOME/add-python.log
 
 echo "#######################################################"
-echo "### Executing add-dapr.sh                           ###"
-echo "#######################################################"
-.devcontainer/sdv/add-dapr.sh 2>&1 | tee -a $HOME/add-dapr.log
-
-echo "#######################################################"
-echo "### Initializing dapr                               ###"
-echo "#######################################################"
-dapr uninstall --all
-dapr init
-
-echo "#######################################################"
 echo "### Install python testing tools                    ###"
 echo "#######################################################"
 pip3 install pytest pytest-cov coverage2clover

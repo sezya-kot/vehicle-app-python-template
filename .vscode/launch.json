@@ -25,8 +25,8 @@
             "name": "SeatAdjuster",
             "program": "${workspaceFolder}/src/run.py",
             "console": "integratedTerminal",
-            "preLaunchTask": "daprd-debug-SeatAdjuster-run",
-            "postDebugTask": "daprd-down-SeatAdjuster-run",
+            "preLaunchTask": "dapr-SeatAdjuster-run",
+            "postDebugTask": "dapr-SeatAdjuster-stop",
             "env": {
                 "DAPR_GRPC_PORT":"50001",
                 "SEATSERVICE_DAPR_APP_ID": "seatservice",

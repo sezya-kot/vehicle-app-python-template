@@ -69,8 +69,6 @@
 
 	// Ensure Dapr is running on opening the container
 	"postCreateCommand": "bash .devcontainer/sdv/postCreateCommand.sh",
-	// Don't terminate subprocesses: https://vscode-eastus.azurewebsites.net/remote/advancedcontainers/start-processes
-	"postStartCommand": "nohup bash -c '.devcontainer/sdv/postStartCommand.sh &' > /dev/null 2>&1",
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode"
 }

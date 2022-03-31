@@ -11,17 +11,18 @@
 #* SPDX-License-Identifier: EPL-2.0
 #********************************************************************************/
 
+
 ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
-DATABROKER_VERSION=$(cat $ROOT_DIRECTORY/.devcontainer/sdv/settings.json | jq .databroker.version | tr -d '"')
+DATABROKER_VERSION=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .databroker.version | tr -d '"')
 
 if [[ `uname -m` == 'aarch64' ]]; then
     echo "Detected ARM architecture"
     PROCESSOR="aarch64"
-    DATABROKER_EXEC_PATH="$ROOT_DIRECTORY/.devcontainer/sdv/assets/databroker/$DATABROKER_VERSION/$PROCESSOR/target/aarch64-unknown-linux-gnu/release"
+    DATABROKER_EXEC_PATH="$ROOT_DIRECTORY/.vscode/scripts/assets/databroker/$DATABROKER_VERSION/$PROCESSOR/target/aarch64-unknown-linux-gnu/release"
 else
     echo "Detected x86_64 architecture"
     PROCESSOR="x86_64"
-    DATABROKER_EXEC_PATH="$ROOT_DIRECTORY/.devcontainer/sdv/assets/databroker/$DATABROKER_VERSION/$PROCESSOR/target/release"
+    DATABROKER_EXEC_PATH="$ROOT_DIRECTORY/.vscode/scripts/assets/databroker/$DATABROKER_VERSION/$PROCESSOR/target/release"
 fi
 
 $DATABROKER_EXEC_PATH/vehicle-data-cli

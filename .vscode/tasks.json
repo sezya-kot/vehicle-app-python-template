@@ -10,30 +10,134 @@
 *
 * SPDX-License-Identifier: EPL-2.0
 ********************************************************************************/
-
 {
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "dapr-SeatAdjuster-run",
 			"appId": "seatadjuster",
 			"appPort": 50008,
 			"componentsPath": "./.dapr/components",
 			"config": "./.dapr/config.yaml",
 			"appProtocol": "grpc",
-			"metricsPort": 9091,
-			"label": "daprd-debug-SeatAdjuster-run",
-			"type": "daprd",
+			"type": "dapr",
 			"args": [
-                "-dapr-grpc-port",
-                "50001",
-				"-dapr-http-port",
+				"--dapr-grpc-port",
+				"50001",
+				"--dapr-http-port",
 				"3500"
-            ],
+			],
 		},
 		{
-			"appId": "client",
-			"label": "daprd-down-SeatAdjuster-run",
-			"type": "daprd-down"
+			"label": "dapr-SeatAdjuster-stop",
+			"type": "shell",
+			"command": [
+				"dapr stop --app-id seatadjuster"
+			],
+			"presentation": {
+				"close": true,
+				"reveal": "never"
+			},
+		},
+		{
+			"label": "ensure-dapr",
+			"type": "shell",
+			"command": "./.vscode/scripts/ensure-dapr.sh",
+			"group": "none",
+			"presentation": {
+				"close": true
+			}
+		},
+		{
+			"label": "mosquitto",
+			"type": "shell",
+			"command": "./.vscode/scripts/run-mosquitto.sh",
+			"group": "none",
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"isBackground": true,
+			"problemMatcher": {
+				"pattern": [
+					{
+						"regexp": ".",
+						"file": 1,
+						"location": 2,
+						"message": 3
+					}
+				],
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "^\\d{10}: mosquitto version \\d{1}\\.\\d{1}\\.\\d{1} starting$",
+					"endsPattern": "^\\d{10}: Opening ipv6 listen socket on port \\d{3,5}\\.$"
+				}
+			}
+		},
+		{
+			"label": "vehicle-data-broker",
+			"type": "shell",
+			"command": "./.vscode/scripts/run-vehicledatabroker.sh",
+			"group": "none",
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"isBackground": true,
+			"problemMatcher": {
+				"pattern": [
+					{
+						"regexp": ".",
+						"file": 1,
+						"location": 2,
+						"message": 3
+					}
+				],
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": ".",
+					"endsPattern": "You're up and running! Dapr logs will appear here."
+				}
+			}
+		},
+		{
+			"label": "seat-service",
+			"type": "shell",
+			"command": "./.vscode/scripts/run-seatservice.sh",
+			"group": "none",
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"isBackground": true,
+			"problemMatcher": {
+				"pattern": [
+					{
+						"regexp": ".",
+						"file": 1,
+						"location": 2,
+						"message": 3
+					}
+				],
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": ".",
+					"endsPattern": "You're up and running! Dapr logs will appear here."
+				}
+			}
+		},
+		{
+			"label": "Start VehicleApp runtime",
+			"dependsOn": [
+				"ensure-dapr",
+				"mosquitto",
+				"vehicle-data-broker",
+				"seat-service"
+			],
+			"dependsOrder": "sequence",
+			"runOptions": {
+				"runOn": "folderOpen"
+			},
 		}
 	]
 }
