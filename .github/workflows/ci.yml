@@ -34,7 +34,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Clone actions repository
+      - name: Clone Release Documentation Action repository
         uses: actions/checkout@v2
         with:
           repository: SoftwareDefinedVehicle/release-documentation-action
@@ -166,7 +166,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Clone actions repository
+      - name: Clone Release Documentation Action repository
         uses: actions/checkout@v2
         with:
           repository: SoftwareDefinedVehicle/release-documentation-action
@@ -290,15 +290,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-images
     steps:
+      - uses: actions/checkout@v2
+
+      - name: Clone Release Documentation Action repository
+        uses: actions/checkout@v2
+        with:
+          repository: SoftwareDefinedVehicle/release-documentation-action
+          ssh-key: ${{ secrets.RELEASE_DOC_ACTION_PRIVATE_KEY }}
+          path: "./.github/actions"
+
       - uses: fusion-engineering/setup-git-credentials@v2
         with:
           credentials: https://swd9be:${{ secrets.SDV_GITHUB_AUTOMATION_TOKEN }}@github.com/
-
-      - name: Setup git config
-        shell: bash
-        run: |
-          git config --global user.email "swdc-github-automation@users.noreply.github.com"
-          git config --global user.name "SwdC.Dev Github Automation"
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
@@ -307,23 +310,12 @@ jobs:
           username: "PAT"
           password: ${{ secrets.SDV_GITHUB_AUTOMATION_TOKEN }}
 
-      - uses: actions/checkout@v2
-
       - name: Install required packages
         shell: pwsh
         run: |
           pip install -r ./src/requirements.txt
           pip install -r ./src/requirements-sdv.txt
           pip install -r ./test/requirements.txt
-
-      - name: Check Docker version
-        run: docker --version
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
 
       - name: Install K3D and prerequisites
         working-directory: ./.sdv/k3d
@@ -365,3 +357,20 @@ jobs:
         if: always()
         with:
           files: ./.sdv/tmp/IntTest/junit.xml
+
+      - name: Package integration test result files
+        uses: ./.github/actions/package
+        with:
+          name: "IntegrationTest"
+          type: "UnitTest"
+          schema: "JUnit"
+          sourcePath: ./.sdv/tmp/IntTest/junit.xml
+          packagePath: ./.sdv/tmp/Documentation/renderer
+
+      - name: Upload integration test results as artifacts
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: 'test-results'
+          path: |
+            .sdv/tmp/Documentation/renderer/*
