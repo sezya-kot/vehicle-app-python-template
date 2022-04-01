@@ -37,7 +37,7 @@ else
     cd $WORKING_DIR
 fi
 
-helm uninstall sdv-chart --wait
+helm uninstall vapp-chart --wait
 
 # Deploy in Kubernetes
-helm install sdv-chart ./../../deploy/helm --values ./values.yml --wait --timeout 60s --debug
+helm install vapp-chart ./../../deploy/helm --values ./values.yml --wait --timeout 60s --debug

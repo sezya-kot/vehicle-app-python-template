@@ -77,8 +77,8 @@ jobs:
       - name: Setup git config
         shell: bash
         run: |
-          git config --global user.email "swdc-github-automation@users.noreply.github.com"
-          git config --global user.name "SwdC.Dev Github Automation"
+          git config --global user.email "github-automation@users.noreply.github.com"
+          git config --global user.name "Github Automation"
 
       - name: Install Dapr
         uses: dapr/setup-dapr@v1
@@ -114,21 +114,21 @@ jobs:
         run: |
           pip install pytest pytest-cov coverage2clover
           pip install coveragepy-lcov --no-warn-conflicts
-          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/UnitTest/junit.xml --cov ./src --cov-report=xml:.sdv/tmp/CodeCoverage/cobertura-coverage.xml --cov-branch ./src --cov-config=setup.cfg
-          coverage2clover -i .sdv/tmp/CodeCoverage/cobertura-coverage.xml -o .sdv/tmp/CodeCoverage/clover.xml
-          coveragepy-lcov --data_file_path ./.coverage --output_file_path .sdv/tmp/CodeCoverage/lcov.info
+          pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./results/UnitTest/junit.xml --cov ./src --cov-report=xml:results/CodeCoverage/cobertura-coverage.xml --cov-branch ./src --cov-config=setup.cfg
+          coverage2clover -i results/CodeCoverage/cobertura-coverage.xml -o results/CodeCoverage/clover.xml
+          coveragepy-lcov --data_file_path ./.coverage --output_file_path results/CodeCoverage/lcov.info
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: ./.sdv/tmp/UnitTest/junit.xml
+          files: ./results/UnitTest/junit.xml
 
       - name: Add code coverage comment to pr
         uses: romeovs/lcov-reporter-action@v0.3.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          lcov-file: .sdv/tmp/CodeCoverage/lcov.info
+          lcov-file: results/CodeCoverage/lcov.info
           delete-old-comments: true
 
       - name: Package unit test files
@@ -137,8 +137,8 @@ jobs:
           name: "UnitTest"
           type: "UnitTest"
           schema: "JUnit"
-          sourcePath: ./.sdv/tmp/UnitTest/junit.xml
-          packagePath: ./.sdv/tmp/Documentation/renderer
+          sourcePath: ./results/UnitTest/junit.xml
+          packagePath: ./results/Documentation/renderer
 
       - name: Package code coverage files
         uses: ./.github/actions/package
@@ -146,8 +146,8 @@ jobs:
           name: "CodeCoverage"
           type: "CodeCoverage"
           schema: "Cobertura"
-          sourcePath: .sdv/tmp/CodeCoverage
-          packagePath: .sdv/tmp/Documentation/renderer
+          sourcePath: results/CodeCoverage
+          packagePath: results/Documentation/renderer
 
       - name: Upload test results as artifacts
         uses: actions/upload-artifact@v2
@@ -155,14 +155,14 @@ jobs:
         with:
           name: 'test-results'
           path: |
-            .sdv/tmp/Documentation/renderer/*
+            results/Documentation/renderer/*
 
       - name: Checking unit test code coverage
         id: test-coverage
         uses: johanvanhelden/gha-clover-test-coverage-check@v1
         with:
           percentage: "20"
-          filename: ".sdv/tmp/CodeCoverage/clover.xml"
+          filename: "results/CodeCoverage/clover.xml"
 
   initialize-matrix:
       runs-on: ubuntu-latest
@@ -231,8 +231,8 @@ jobs:
       - name: Setup git config
         shell: bash
         run: |
-          git config --global user.email "swdc-github-automation@users.noreply.github.com"
-          git config --global user.name "SwdC.Dev Github Automation"
+          git config --global user.email "github-automation@users.noreply.github.com"
+          git config --global user.name "Github Automation"
 
       - name: Install sdv Package
         shell: bash
@@ -246,7 +246,7 @@ jobs:
           pull: true
           push: false
           outputs: |
-            type=oci,dest=./sdv-${{ matrix.component.Name }}.tar
+            type=oci,dest=./${{ matrix.component.Name }}.tar
           context: ${{ matrix.component.DockerFolder }}
           file: ${{ matrix.component.Folder }}/Dockerfile
           platforms: linux/amd64,linux/aarch64
@@ -257,19 +257,19 @@ jobs:
 
       - name: "${{ matrix.component.Name }} -- Inspect tar image with skopeo"
         run: |
-          skopeo inspect --raw oci-archive:sdv-${{ matrix.component.Name }}.tar | jq
-          skopeo inspect oci-archive:sdv-${{ matrix.component.Name }}.tar
-          skopeo copy oci-archive:sdv-${{ matrix.component.Name }}.tar docker-archive:sdv-${{ matrix.component.Name }}-arch.tar
+          skopeo inspect --raw oci-archive:${{ matrix.component.Name }}.tar | jq
+          skopeo inspect oci-archive:${{ matrix.component.Name }}.tar
+          skopeo copy oci-archive:${{ matrix.component.Name }}.tar docker-archive:${{ matrix.component.Name }}-arch.tar
 
       - name: "${{ matrix.component.Name }} -- Scan docker image for vulnerabilities"
         uses: aquasecurity/trivy-action@0.0.18
         with:
-          input: sdv-${{ matrix.component.Name }}-arch.tar
+          input: ${{ matrix.component.Name }}-arch.tar
           exit-code: '0'
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
           format: 'template'
-          template: '@.sdv/junit.tpl'
+          template: '@scripts/workflows/junit.tpl'
           output: 'junit.xml'
 
       - name: "${{ matrix.component.Name }} -- Show scan results"
@@ -283,7 +283,7 @@ jobs:
           type: "VulnerabilityScan"
           schema: "JUnit"
           sourcePath: ./junit.xml
-          packagePath: .sdv/Documentation/renderer
+          packagePath: results/Documentation/renderer
 
       - name: "${{ matrix.component.Name }} -- Upload trivy report as artifacts"
         if: ${{ always() && steps.image_build.outcome == 'success' }}
@@ -291,7 +291,7 @@ jobs:
         with:
           name: test-results
           path: |
-            .sdv/Documentation/renderer/*
+            results/Documentation/renderer/*
 
       - name: "${{ matrix.component.Name }} -- Publish Trivy Scan Results"
         uses: EnricoMi/publish-unit-test-result-action@v1
@@ -310,7 +310,7 @@ jobs:
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
         shell: bash
         run: |
-          skopeo copy --all oci-archive:sdv-${{ matrix.component.Name }}.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION"
+          skopeo copy --all oci-archive:${{ matrix.component.Name }}.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION"
           skopeo inspect --raw "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" | jq
           skopeo inspect "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION"
 
@@ -347,15 +347,15 @@ jobs:
           pip install -r ./test/requirements.txt
 
       - name: Install K3D and prerequisites
-        working-directory: ./.sdv/k3d
+        working-directory: ./scripts/k3d
         run: ./01_install-k3d.sh
 
       - name: Configure K3D cluster
-        working-directory: ./.sdv/k3d
+        working-directory: ./scripts/k3d
         run: ./02_configure-k3d.sh
 
       - name: Install prerequisite containers in K3D cluster
-        working-directory: ./.sdv/k3d
+        working-directory: ./scripts/k3d
         run: ./03_deployprerequisites.sh
 
       - id: github-repository-name-case-adjusted
@@ -368,7 +368,7 @@ jobs:
         env:
           REPO_NAME: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
           SHA: ${{ github.sha }}
-        working-directory: ./.sdv/k3d
+        working-directory: ./scripts/k3d
         run: ./deploy_imagefromghcr.sh
 
       - name: Run Python integration tests
@@ -379,13 +379,13 @@ jobs:
         run: |
           pip install pytest pytest-ordering pytest-asyncio
           pip install -r test/requirements.txt
-          pytest ./test --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/IntTest/junit.xml
+          pytest ./test --override-ini junit_family=xunit1 --junit-xml=./results/IntTest/junit.xml
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: ./.sdv/tmp/IntTest/junit.xml
+          files: ./results/IntTest/junit.xml
 
       - name: Package integration test result files
         uses: ./.github/actions/package
@@ -393,8 +393,8 @@ jobs:
           name: "IntegrationTest"
           type: "UnitTest"
           schema: "JUnit"
-          sourcePath: ./.sdv/tmp/IntTest/junit.xml
-          packagePath: ./.sdv/tmp/Documentation/renderer
+          sourcePath: ./results/IntTest/junit.xml
+          packagePath: ./results/Documentation/renderer
 
       - name: Upload integration test results as artifacts
         uses: actions/upload-artifact@v2
@@ -402,4 +402,4 @@ jobs:
         with:
           name: 'test-results'
           path: |
-            .sdv/tmp/Documentation/renderer/*
+            results/Documentation/renderer/*

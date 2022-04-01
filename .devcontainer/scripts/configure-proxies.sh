@@ -95,7 +95,7 @@ if [ "${USE_PROXIES}" = "true" ]; then
         git config --global https.proxy ${HTTPS_PROXY}
     fi
 
-    echo "# BOSCH proxy settings" >> /etc/wgetrc
+    echo "# Proxy settings" >> /etc/wgetrc
     echo "http_proxy=${HTTP_PROXY}" >> /etc/wgetrc
     echo "https_proxy=${HTTPS_PROXY}" >> /etc/wgetrc
     echo "ftp_proxy=${FTP_PROXY}" >> /etc/wgetrc

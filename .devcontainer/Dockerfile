@@ -30,9 +30,5 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ENV DOCKER_BUILDKIT=1
 
-COPY sdv/ /tmp/sdv/
-
-RUN /bin/bash /tmp/sdv/container-create.sh 2>&1 | tee -a /usr/local/share/container-create.log
-
 # Add daprd to the path for the VS Code Dapr extension.
 ENV PATH=$PATH:/home/vscode/.dapr/bin

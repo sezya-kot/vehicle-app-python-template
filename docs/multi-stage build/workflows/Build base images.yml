@@ -78,7 +78,7 @@ jobs:
           pull: true
           push: false
           outputs: |
-            type=oci,dest=./sdv-${{ matrix.component.Name }}-base.tar
+            type=oci,dest=./${{ matrix.component.Name }}-base.tar
           context: ${{ matrix.component.DockerFolder }}
           file: ${{ matrix.component.Folder }}/Dockerfile.base
           platforms: linux/amd64,linux/aarch64
@@ -87,19 +87,19 @@ jobs:
 
       - name: "${{ matrix.component.Name }} -- Inspect tar image with skopeo"
         run: |
-          skopeo inspect --raw oci-archive:sdv-${{ matrix.component.Name }}-base.tar | jq
-          skopeo inspect oci-archive:sdv-${{ matrix.component.Name }}-base.tar
-          skopeo copy oci-archive:sdv-${{ matrix.component.Name }}-base.tar docker-archive:sdv-${{ matrix.component.Name }}-base-arch.tar
+          skopeo inspect --raw oci-archive:${{ matrix.component.Name }}-base.tar | jq
+          skopeo inspect oci-archive:${{ matrix.component.Name }}-base.tar
+          skopeo copy oci-archive:${{ matrix.component.Name }}-base.tar docker-archive:${{ matrix.component.Name }}-base-arch.tar
 
       - name: "${{ matrix.component.Name }} -- Scan base docker image for vulnerabilities"
         uses: aquasecurity/trivy-action@0.0.18
         with:
-          input: sdv-${{ matrix.component.Name }}-base-arch.tar
+          input: ${{ matrix.component.Name }}-base-arch.tar
           exit-code: '1'
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
           format: 'template'
-          template: '@.sdv/junit.tpl'
+          template: '@scripts/workflows/junit.tpl'
           output: 'junit.xml'
 
       - name: "${{ matrix.component.Name }} -- Show base image scan results"
@@ -112,7 +112,7 @@ jobs:
         with:
           name: test-results
           path: |
-            .sdv/Documentation/renderer/*
+            results/Documentation/renderer/*
 
       - name: "${{ matrix.component.Name }} -- Publish base image trivy scan results"
         uses: EnricoMi/publish-unit-test-result-action@v1
@@ -130,6 +130,6 @@ jobs:
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
         shell: bash
         run: |
-          skopeo copy --all oci-archive:sdv-${{ matrix.component.Name }}-base.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:latest"
+          skopeo copy --all oci-archive:${{ matrix.component.Name }}-base.tar "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:latest"
           skopeo inspect --raw "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION" | jq
           skopeo inspect "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$VAPP_VERSION"

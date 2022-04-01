@@ -78,7 +78,7 @@ It's also possible to start/stop tasks manually by pressing F1 and typing *Run T
 The running tasks are display in the Terminal-Window one-by-one. To reopen that view, you can press F1 and type *Show running tasks*. In that view, you can access the logs of the respective task.
 
 ### Run VAL services manually
-To run the VAL services manually, it's possible to call a bash script that starts the service. The scripts are located in ```././vscode/sdv/run-*.sh```.
+To run the VAL services manually, it's possible to call a bash script that starts the service. The scripts are located in ```./.vscode/scripts/run-*.sh```.
 
 ### Using Vehicle Databroker CLI
 The interact with a running instance of the Vehicle Data Broker, a CLI tool is provided. It can be started by running the script ```./.vscode/scripts/run-vehicledatabroker-cli.sh```. To be able to use the tool, the *Vehicle Data Broker* needs to be running.
@@ -101,7 +101,7 @@ There are many more tools coming with the DevContainer and you can learn more ab
 Open a terminal session and start the VehicleApi mock that comes with the devContainer. Once the process is running in the background, you will be able to interact with the Vehicle API from this sample app later.
 
 ```bash
-.sdv/run-vehicleapi.sh
+scripts/run-vehicleapi.sh
 ```
 
 You should see a new dapr-process and the VehicleApi running.
@@ -190,9 +190,9 @@ Now that the `CI Workflow` was successful, you are ready to build your first rel
 ### Release the vehicleApp to push it to the container registry
 * In order to deploy the vehicleApp you need to set the secrets on repository
   * Open `Settings`, go to `Secrets`, click on `Manage your environments and add repository secrets` and add the following secrets (button `Add Secret`):
-    * EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT
-    * EXTERNAL_OPS_DEFAULT_VCSS_ACR_USER
-    * EXTERNAL_OPS_DEFAULT_VCSS_ACR_PASSWORD
+    * CONTAINER_REGISTRY_ENDPOINT
+    * CONTAINER_REGISTRY_USER
+    * CONTAINER_REGISTRY_PASSWORD
 * Open the `Code` page of your repository on gitHub.com and click on `Create a new release` in the Releases section on the right side
 * Enter a version and click on `Publish release`
   * Note: you can start the verion with a `v` which will be removed though, e.g. "v1.0.0" will result in a "1.0.0" (see [vesion-without-v](https://github.com/battila7/get-version-action)).
@@ -201,6 +201,6 @@ Now that the `CI Workflow` was successful, you are ready to build your first rel
 
 ## Next steps
 
-* [Run the application in a Kubernetes-Cluster within the DevContainer](.sdv/k3d/README-k3d.md)
+* [Run the application in a Kubernetes-Cluster within the DevContainer](scripts/k3d/README-k3d.md)
 * [Building multi-stage image](multi-stage%20build/README.md)
 * [Learn more about the DevContainer internals and tools that come with it](dev_further_topics.md)

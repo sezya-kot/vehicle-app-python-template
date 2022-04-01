@@ -350,8 +350,8 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-# sdv temp folder
-.sdv/tmp/
+# build results temp folder
+results/
 
 # get_helm.sh script
 get_helm.sh

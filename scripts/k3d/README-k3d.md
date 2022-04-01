@@ -3,7 +3,7 @@ Devcontainer does not come with all the prerequisites installation required to r
 Therefore for the user who has these needs to run demo-app within the local kubernetes cluster, we prepared the solution for that.
 
 ## Installation and run:
-- cd .sdv/k3d/
+- cd scripts/k3d/
     - It is important for the scripts to be started from this directory
 - 01_install-k3d.sh
     - Script will install k3d; helm; kubectl; k9s

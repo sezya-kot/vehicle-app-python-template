@@ -1,7 +1,7 @@
 # VehicleApp build and release process
 
 ## Overview
-The release of a VehicleApp through the GitHub actions workflows provided by the SWdC template repositories (ci.yml, release.yml) is a two-step process:
+The release of a VehicleApp through the GitHub actions workflows provided by the VehicleApp template repositories (ci.yml, release.yml) is a two-step process:
 
 - **Build**
   - The VehicleApp container image is built by the `CI workflow` for every new commit on the `main` branch.

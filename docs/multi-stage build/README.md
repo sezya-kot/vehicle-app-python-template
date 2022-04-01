@@ -91,4 +91,4 @@ In case of building multi-stage images locally, Docker and Git needs to be confi
 * Once token is issued, click: ```Configure SSO -> Authorize -> Software Defined Vehicle```
 * In console type: ```docker login ghcr.io```
 * Use generated token to authenticate
-* To build file locally, find commands in: ```.sdv/k3d/03_deploy.k3d.sh```
+* To build file locally, find commands in: ```scripts/k3d/03_deploy.k3d.sh```

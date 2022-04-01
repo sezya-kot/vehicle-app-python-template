@@ -52,7 +52,7 @@ jobs:
         env:
           OTA_SYSTEM_CREDENTIALS:  ${{ secrets.OTA_SYSTEM_CREDENTIALS }}
         run: |
-          ./.sdv/parse-secret.sh
+          ./scripts/workflows/parse-secret.sh
 
       - id: get_version
         uses: battila7/get-version-action@v2
@@ -85,7 +85,7 @@ jobs:
           COMMIT: ${{ github.sha }}
           VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
           GIT_HUB_REPOSITORY_NAME_LOWER_CASE: ${{ steps.github-repository-name-case-adjusted.outputs.lowercase }}
-          TARGET_REPOSITORY: ${{ secrets.EXTERNAL_OPS_DEFAULT_VCSS_ACR_ENDPOINT }}
+          TARGET_REPOSITORY: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}
         run: |
           echo "Copy vApp image 'docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$COMMIT' to 'docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION'"
           skopeo copy --all  "docker://ghcr.io/$GIT_HUB_REPOSITORY_NAME_LOWER_CASE/$VAPP_NAME:$COMMIT" "docker://$TARGET_REPOSITORY/$VAPP_NAME:$VAPP_VERSION"
@@ -245,7 +245,7 @@ jobs:
         env:
           OTA_SYSTEM_CREDENTIALS:  ${{ secrets.OTA_SYSTEM_CREDENTIALS }}
         run: |
-          ./.sdv/parse-secret.sh
+          ./scripts/workflows/parse-secret.sh
 
       - id: get_version
         uses: battila7/get-version-action@v2
