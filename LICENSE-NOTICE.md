@@ -18,7 +18,7 @@
 |cfgv|3.3.1|MIT|
 |charset-normalizer|2.0.12|MIT|
 |charset-normalizer|2.0.12|MIT|
-|click|8.1.1|New BSD|
+|click|8.1.2|New BSD|
 |cloudevents|1.2.0|Apache 2.0|
 |cloudevents|1.2.0|Apache 2.0|
 |dapr|1.5.0|Apache 2.0|

@@ -5,7 +5,7 @@ GITHUB_TOKEN="$ROOT_DIRECTORY/github_token.txt"
 cred=$(cat $GITHUB_TOKEN)
 echo $cred | cut -d':' -f2 | docker login ghcr.io -u USERNAME --password-stdin
 
-if grep -q ghcr.io /home/vscode/.docker/config.json; then
+if grep -q ghcr.io $HOME/.docker/config.json; then
     docker pull ghcr.io/softwaredefinedvehicle/swdc-os-vehicleapi/databroker:$VEHICLEDATABROKER_TAG
     docker tag ghcr.io/softwaredefinedvehicle/swdc-os-vehicleapi/databroker:$VEHICLEDATABROKER_TAG localhost:12345/vehicledatabroker:$VEHICLEDATABROKER_TAG
     docker push localhost:12345/vehicledatabroker:$VEHICLEDATABROKER_TAG
@@ -21,3 +21,6 @@ if grep -q ghcr.io /home/vscode/.docker/config.json; then
 else
     tput setaf 1; echo "ERROR: Please run 'docker login ghcr.io' and rerun the script"
 fi
+
+kubectl get svc --all-namespaces
+kubectl get pods

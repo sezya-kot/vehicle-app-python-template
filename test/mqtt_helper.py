@@ -6,14 +6,36 @@ from typing import Optional
 import paho.mqtt.client as mqtt
 
 
-class MessageCallback:
-    """This class is a wrapper for the on_message callback of the MQTT broker."""
+class SingleMessageCallback:
+    """This class is a wrapper for the on_message callback of the MQTT broker.
+    It waits for the first message to arrive."""
 
     def __init__(self):
-        self.message = None
+        self.message: str = ""
+
+    def __call__(self, client: mqtt.Client, userdata, message):
+        self.message = str(message.payload.decode("utf-8"))
+
+
+class PropertyWatcherCallback:
+    """This class monitors a topic for incoming message and checks, if a specific property
+    has the correct value"""
+
+    def __init__(self, path, value):
+        self.__path = path
+        self.__value = value
+        self.message: str = ""
 
     def __call__(self, client, userdata, message):
-        self.message = message
+        payload_str = str(message.payload.decode("utf-8"))
+        payload = json.loads(payload_str)
+
+        value = payload
+        for part in self.__path:
+            value = value[part]
+            if value == self.__value:
+                self.message = payload_str
+                break
 
 
 class MqttClient:
@@ -32,32 +54,60 @@ class MqttClient:
         self._port = port
         self._hostname = "localhost"
 
-        self._client = mqtt.Client()
-        self._callback = MessageCallback()
-        self._client.on_message = self._callback
-
-    def connect(self):
-        self._client.connect(self._hostname, self._port)
+    def create_and_connect_mqtt_client(self, callback) -> mqtt.Client:
+        client = mqtt.Client()
+        client.on_message = callback
+        client.connect(self._hostname, self._port)
+        return client
 
     def publish_and_wait_for_response(
         self, request_topic: str, response_topic: str, payload, timeout: int = 20000
     ) -> str:
-        if not self._client.is_connected():
-            self.connect()
+        callback = SingleMessageCallback()
+        client = self.create_and_connect_mqtt_client(callback)
 
         counter = 0
         interval = 100
 
-        self._client.subscribe(response_topic)
+        client.subscribe(response_topic)
 
-        self._client.loop_start()
+        client.loop_start()
 
-        self._client.publish(request_topic, json.dumps(payload))
+        client.publish(request_topic, json.dumps(payload))
 
-        while self._callback.message is None and counter < timeout:
+        while callback.message == "" and counter < timeout:
             counter += interval
             time.sleep(interval / 1000)
 
-        self._client.loop_stop()
+        client.loop_stop()
 
-        return self._callback.message
+        return callback.message
+
+    def publish_and_wait_for_property(  # pylint: disable=R0913
+        self,
+        request_topic: str,
+        response_topic: str,
+        payload,
+        path,
+        value,
+        timeout: int = 20000,
+    ) -> str:
+        callback = PropertyWatcherCallback(path, value)
+        client = self.create_and_connect_mqtt_client(callback)
+
+        counter = 0
+        interval = 100
+
+        client.subscribe(response_topic)
+
+        client.loop_start()
+
+        client.publish(request_topic, json.dumps(payload))
+
+        while callback.message == "" and counter < timeout:
+            counter += interval
+            time.sleep(interval / 1000)
+
+        client.loop_stop()
+
+        return callback.message

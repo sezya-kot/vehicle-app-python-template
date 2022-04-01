@@ -1,4 +1,5 @@
 import json
+from asyncio import sleep
 
 import pytest
 from mqtt_helper import MqttClient
@@ -27,8 +28,10 @@ async def test_set_position_not_allowed():
     request_id = "abc"
 
     payload = {"position": 300, "requestId": request_id}
-
-    response = await inttesthelper.set_float_datapoint(name="Vehicle.Speed", value=50)
+    speed_value = 50
+    response = await inttesthelper.set_float_datapoint(
+        name="Vehicle.Speed", value=speed_value
+    )
 
     assert len(response.errors) == 0
 
@@ -38,12 +41,17 @@ async def test_set_position_not_allowed():
         payload=payload,
     )
 
-    assert response is not None
+    assert response != ""
 
-    body = json.loads(str(response.payload.decode("utf-8")))
-
+    body = json.loads(response)
+    error_msg = f"""Not allowed to move seat because vehicle speed
+                is {float(speed_value)} and not 0"""
     assert body["requestId"] == request_id
     assert body["status"] == 1
+    assert body["message"] == error_msg
+
+
+# add message to get it assert
 
 
 @pytest.mark.asyncio
@@ -52,7 +60,7 @@ async def test_set_position_allowed():
     inttesthelper = IntTestHelper(pytest.inttesthelper_port)
     request_id = "abc"
 
-    payload = {"position": 300, "requestId": request_id}
+    payload = {"position": 0, "requestId": request_id}
 
     response = await inttesthelper.set_float_datapoint(name="Vehicle.Speed", value=0)
 
@@ -64,12 +72,26 @@ async def test_set_position_allowed():
         payload=payload,
     )
 
-    assert response is not None
-
-    body = json.loads(str(response.payload.decode("utf-8")))
-
-    assert body["requestId"] == request_id
+    body = json.loads(response)
     assert body["result"]["status"] == 0
+
+    await sleep(1)
+
+    position = 200
+    payload = {"position": position, "requestId": request_id}
+
+    response = mqtt_client.publish_and_wait_for_property(
+        request_topic=pytest.request_topic,
+        response_topic="seatadjuster/currentPosition",
+        payload=payload,
+        path=["position"],
+        value=position,
+    )
+
+    assert response != ""
+
+    body = json.loads(response)
+    assert body["position"] == position
 
 
 @pytest.mark.asyncio
@@ -77,8 +99,8 @@ async def test_set_position_lt_0():
     mqtt_client = MqttClient(pytest.mqtt_port)
     inttesthelper = IntTestHelper(pytest.inttesthelper_port)
     request_id = "abc"
-
-    payload = {"position": -1, "requestId": request_id}
+    seat_position = -1
+    payload = {"position": seat_position, "requestId": request_id}
 
     response = await inttesthelper.set_float_datapoint(name="Vehicle.Speed", value=0)
 
@@ -90,12 +112,14 @@ async def test_set_position_lt_0():
         payload=payload,
     )
 
-    assert response is not None
+    assert response != ""
 
-    body = json.loads(str(response.payload.decode("utf-8")))
-
+    body = json.loads(response)
+    error_msg = f"""Provided position '{seat_position}'  \
+                    should be in between (0-1000)"""
     assert body["requestId"] == request_id
     assert body["result"]["status"] == 1
+    assert body["result"]["message"] == error_msg
 
 
 @pytest.mark.asyncio
@@ -103,8 +127,8 @@ async def test_set_position__gt_1000():
     mqtt_client = MqttClient(pytest.mqtt_port)
     inttesthelper = IntTestHelper(pytest.inttesthelper_port)
     request_id = "abc"
-
-    payload = {"position": 1001, "requestId": request_id}
+    seat_position = 1001
+    payload = {"position": seat_position, "requestId": request_id}
 
     response = await inttesthelper.set_float_datapoint(name="Vehicle.Speed", value=0)
 
@@ -116,9 +140,11 @@ async def test_set_position__gt_1000():
         payload=payload,
     )
 
-    assert response is not None
+    assert response != ""
 
-    body = json.loads(str(response.payload.decode("utf-8")))
-
+    body = json.loads(response)
+    error_msg = f"""Provided position '{seat_position}'  \
+                    should be in between (0-1000)"""
     assert body["requestId"] == request_id
     assert body["result"]["status"] == 1
+    assert body["result"]["message"] == error_msg

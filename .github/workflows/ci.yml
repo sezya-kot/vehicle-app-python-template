@@ -45,6 +45,7 @@ jobs:
       - id: run-license-checker
         name: Run License Checker
         uses: ./.github/actions/license-check
+        continue-on-error: true
         with:
           requirements-file-path: ./src
           included-requirement-files: requirements.txt, requirements-dev.txt
@@ -185,7 +186,7 @@ jobs:
   build-images:
       name: "Building image (${{ matrix.component.Name }})"
       runs-on: ubuntu-latest
-      needs: [check-licenses, initialize-matrix]
+      needs: [initialize-matrix]
       strategy:
         matrix:
           component: ${{ fromJson(needs.initialize-matrix.outputs.deployment-matrix) }}
@@ -376,7 +377,7 @@ jobs:
           VDB_PORT: 30555
           MQTT_PORT: 31883
         run: |
-          pip install pytest
+          pip install pytest pytest-ordering pytest-asyncio
           pip install -r test/requirements.txt
           pytest ./test --override-ini junit_family=xunit1 --junit-xml=./.sdv/tmp/IntTest/junit.xml
 

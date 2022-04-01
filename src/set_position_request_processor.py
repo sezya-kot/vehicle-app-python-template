@@ -16,6 +16,7 @@
 import json
 import logging
 
+import grpc
 from sdv.vehicle_app import VehicleApp
 
 from vdm.proto.seats_pb2 import BASE, SeatLocation
@@ -42,12 +43,26 @@ class SetPositionRequestProcessor:
                 location, BASE, data["position"]  # type: ignore
             )
             resp_data = {"requestId": data["requestId"], "result": {"status": 0}}
-        except Exception as ex:
+            return resp_data
+        except grpc.RpcError as rpcerror:
+            if (
+                rpcerror.code()  # pylint: disable=E1101
+                == grpc.StatusCode.INVALID_ARGUMENT
+            ):
+                error_msg = f"""Provided position '{data["position"]}'  \
+                    should be in between (0-1000)"""
+                resp_data = {
+                    "requestId": data["requestId"],
+                    "result": {"status": 1, "message": error_msg},
+                }
+                return resp_data
+            error_msg = f"Received unknown RPC error: code={rpcerror.code()}\
+                    message={rpcerror.details()}"  # pylint: disable=E1101
             resp_data = {
                 "requestId": data["requestId"],
-                "result": {"status": 1, "message": self.__get_error_message_from(ex)},
+                "result": {"status": 1, "message": error_msg},
             }
-        return resp_data
+            return resp_data
 
     async def __publish_data_to_topic(
         self, resp_data: dict, resp_topic: str, app: VehicleApp
@@ -55,7 +70,5 @@ class SetPositionRequestProcessor:
         try:
             await app.publish_mqtt_event(resp_topic, json.dumps(resp_data))
         except Exception as ex:
-            logger.error(self.__get_error_message_from(ex))
-
-    def __get_error_message_from(self, ex: Exception):
-        return f"Exception details: {ex}"
+            error_msg = f"Exception details: {ex}"
+            logger.error(error_msg)
