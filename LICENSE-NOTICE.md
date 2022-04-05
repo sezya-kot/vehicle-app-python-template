@@ -66,7 +66,7 @@
 |pbr|5.8.1|Apache 2.0|
 |platformdirs|2.5.1|MIT|
 |pluggy|1.0.0|MIT|
-|pre-commit|2.17.0|MIT|
+|pre-commit|2.18.1|MIT|
 |protobuf|3.19.3|unknown|
 |protobuf|3.19.3|unknown|
 |py|1.11.0|MIT|
@@ -94,7 +94,7 @@
 |typing-extensions|4.1.1|Python Software Foundation License|
 |urllib3|1.26.9|MIT|
 |virtualenv|20.14.0|MIT|
-|Werkzeug|2.1.0|New BSD|
+|Werkzeug|2.1.1|New BSD|
 |wheel|0.37.1|MIT|
 |wrapt|1.14.0|BSD|
 |yarl|1.7.2|Apache 2.0|
