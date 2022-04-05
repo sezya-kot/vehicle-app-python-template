@@ -11,17 +11,24 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
+"""Cabin Model"""
+
 # pylint: disable=C0103
 
-from sdv.model import Model
+from sdv.model import Model, ModelCollection, NamedRange
 
-from vdm.J1939 import J1939
+from vehicle_model.Seat import Seat
+from vehicle_model.SeatService import SeatService
 
 
-class Private(Model):
-    """Private model"""
+class Cabin(Model):
+    """Cabin model"""
 
     def __init__(self, parent: Model):
         super().__init__(parent)
 
-        self.J1939 = J1939(self)
+        self.SeatService = SeatService()
+
+        self.Seat = ModelCollection[Seat](
+            [NamedRange("Row", 1, 2), NamedRange("Pos", 1, 3)], Seat(self)
+        )

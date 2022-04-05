@@ -15,7 +15,7 @@
 
 from sdv.model import Service
 
-from vdm.proto.seats_pb2 import (
+from vehicle_model.proto.seats_pb2 import (
     CurrentPositionRequest,
     MoveComponentRequest,
     MoveRequest,
@@ -23,7 +23,7 @@ from vdm.proto.seats_pb2 import (
     SeatComponent,
     SeatLocation,
 )
-from vdm.proto.seats_pb2_grpc import SeatsStub
+from vehicle_model.proto.seats_pb2_grpc import SeatsStub
 
 
 class SeatService(Service):

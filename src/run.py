@@ -21,7 +21,7 @@ from sdv.util.log import get_default_date_format, get_default_log_format
 from sdv.vehicle_app import VehicleApp, subscribe_data_points, subscribe_topic
 
 from set_position_request_processor import SetPositionRequestProcessor
-from vdm.Vehicle import Vehicle, vehicle
+from vehicle_model.Vehicle import Vehicle, vehicle
 
 logging.basicConfig(format=get_default_log_format(), datefmt=get_default_date_format())
 logging.getLogger().setLevel("INFO")

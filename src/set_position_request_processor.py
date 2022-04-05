@@ -19,8 +19,8 @@ import logging
 import grpc
 from sdv.vehicle_app import VehicleApp
 
-from vdm.proto.seats_pb2 import BASE, SeatLocation
-from vdm.Vehicle import Vehicle
+from vehicle_model.proto.seats_pb2 import BASE, SeatLocation
+from vehicle_model.Vehicle import Vehicle
 
 logger = logging.getLogger(__name__)
 

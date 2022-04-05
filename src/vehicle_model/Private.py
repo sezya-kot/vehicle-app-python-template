@@ -13,20 +13,15 @@
 
 # pylint: disable=C0103
 
-from sdv.model import DataPointFloat, Model
+from sdv.model import Model
 
-from vdm.Cabin import Cabin
-from vdm.Private import Private
-
-
-class Vehicle(Model):
-    """Vehicle model"""
-
-    def __init__(self):
-        super().__init__()
-        self.Speed = DataPointFloat("Speed", self)
-        self.Private = Private(self)
-        self.Cabin = Cabin(self)
+from vehicle_model.J1939 import J1939
 
 
-vehicle = Vehicle()
+class Private(Model):
+    """Private model"""
+
+    def __init__(self, parent: Model):
+        super().__init__(parent)
+
+        self.J1939 = J1939(self)

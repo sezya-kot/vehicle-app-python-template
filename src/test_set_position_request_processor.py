@@ -18,8 +18,8 @@ from unittest import mock
 import pytest
 from sdv.vehicle_app import VehicleApp
 
-from vdm.proto.seats_pb2 import BASE, SeatLocation
-from vdm.SeatService import SeatService
+from vehicle_model.proto.seats_pb2 import BASE, SeatLocation
+from vehicle_model.SeatService import SeatService
 
 
 @pytest.mark.asyncio

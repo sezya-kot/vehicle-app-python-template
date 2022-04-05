@@ -11,24 +11,22 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-"""Cabin Model"""
-
 # pylint: disable=C0103
 
-from sdv.model import Model, ModelCollection, NamedRange
+from sdv.model import DataPointFloat, Model
 
-from vdm.Seat import Seat
-from vdm.SeatService import SeatService
+from vehicle_model.Cabin import Cabin
+from vehicle_model.Private import Private
 
 
-class Cabin(Model):
-    """Cabin model"""
+class Vehicle(Model):
+    """Vehicle model"""
 
-    def __init__(self, parent: Model):
-        super().__init__(parent)
+    def __init__(self):
+        super().__init__()
+        self.Speed = DataPointFloat("Speed", self)
+        self.Private = Private(self)
+        self.Cabin = Cabin(self)
 
-        self.SeatService = SeatService()
 
-        self.Seat = ModelCollection[Seat](
-            [NamedRange("Row", 1, 2), NamedRange("Pos", 1, 3)], Seat(self)
-        )
+vehicle = Vehicle()
