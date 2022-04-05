@@ -20,6 +20,11 @@ echo "#######################################################"
 sudo .devcontainer/scripts/configure-proxies.sh | tee -a $HOME/configure-proxies.log
 
 echo "#######################################################"
+echo "### Install Jq                                      ###"
+echo "#######################################################"
+apt-get install -y jq
+
+echo "#######################################################"
 echo "### Executing container-set.sh                      ###"
 echo "#######################################################"
 .devcontainer/scripts/container-set.sh 2>&1 | tee -a $HOME/container-set.log
@@ -57,8 +62,3 @@ REQUIREMENTS="./requirements.txt"
 if [ -f $REQUIREMENTS ]; then
     pip3 install -r $REQUIREMENTS
 fi
-
-echo "#######################################################"
-echo "### Install Jq                                      ###"
-echo "#######################################################"
-sudo apt-get install -y jq

@@ -21,9 +21,16 @@ sudo apt-get install -y wget ca-certificates
 echo "#######################################################"
 echo "### Installing python version 3                     ###"
 echo "#######################################################"
-sudo apt-get install -y python3
-sudo apt-get install -y python3-pip
-sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
+PYTHON_VERSION=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .python.version | tr -d '"')
+
+sudo apt-get install -y python3-distutils
+sudo apt-get install -y python$PYTHON_VERSION
+curl -fsSL https://bootstrap.pypa.io/get-pip.py | sudo python$PYTHON_VERSION
+
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python$PYTHON_VERSION 10
+sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python$PYTHON_VERSION 10
+
 pip3 install pytest pytest-cov coverage2clover
 pip3 install pytest-asyncio
 pip3 install -U flake8

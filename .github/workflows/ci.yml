@@ -339,6 +339,10 @@ jobs:
           username: "PAT"
           password: ${{ secrets.SDV_GITHUB_AUTOMATION_TOKEN }}
 
+      - name: Update preinstalled Python version
+        working-directory: .
+        run: ./.devcontainer/scripts/add-python.sh
+
       - name: Install required packages
         shell: pwsh
         run: |
