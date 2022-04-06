@@ -234,11 +234,6 @@ jobs:
           git config --global user.email "github-automation@users.noreply.github.com"
           git config --global user.name "Github Automation"
 
-      - name: Install sdv Package
-        shell: bash
-        run: |
-          pip install -r src/requirements-sdv.txt
-
       - name: "${{ matrix.component.Name }} -- Build multi-arch image"
         id: image_build
         uses: docker/build-push-action@v2

@@ -91,52 +91,33 @@ The interact with a running instance of the Vehicle Data Broker, a CLI tool is p
 ## Start and test VehicleApp
 Now that your DevContainer is up and running, it is time to take a look at what's inside:
 
-* VehicleApi Mock - The API offers the endpoints of the vehicle, for development data points are mocked.
-* VehicleApp - This sample app is a basic blueprint and illustrates how to interact with the VehicleApi and the VehicleApp SDK.
+
+* VehicleApp - This sample app is a basic blueprint and illustrates how to interact with the VAL Services and the VehicleApp SDK.
 * Mosquitto MQTT Broker - The broker allows for interaction with other vehicleApps or the cloud and is used by the VehicleApp. The MQTT broker is running inside a docker image which is started automatically after starting the DevContainer.
 
 There are many more tools coming with the DevContainer and you can learn more about them in the [extended Developer Documentation](dev_further_topics.md).
 
-### Start VehicleApi Mock
-Open a terminal session and start the VehicleApi mock that comes with the devContainer. Once the process is running in the background, you will be able to interact with the Vehicle API from this sample app later.
-
-```bash
-scripts/run-vehicleapi.sh
-```
-
-You should see a new dapr-process and the VehicleApi running.
-![](assets/vehicleapi-start.png)
-
-> You can ignore the "method not found!" errors.
 
 ### Start and check VehicleApp
 
-Now that the VehicleAPI is running, let's start the sample vehicleApp to verify that you receive actual data from the API.
+Let's start the sample vehicleApp to verify that you receive actual data from the API.
 
 Open a new terminal and start the vehicleApp with the following command:
 ```bash
 dapr run --app-id seatadjuster --app-protocol grpc --app-port 50008 --config ./.dapr/config.yaml --components-path ./.dapr/components  python3 ./src/run.py
 ```
-Once the vehicleApp is started, you can expect to receive the current vehicle's speed, which should be reported as 0 because the vehicle has stopped.
+Once the vehicleApp is started, you can expect to receive the Current Position of the Vehicle Seat, which should be reported as 420.
 
 You will see messages such as
 ```
-== APP == datapoints {
-== APP ==   id: 1
-== APP ==   timestamp {
-== APP ==     seconds: 1643793214
-== APP ==     nanos: 24609000
-== APP ==   }
-== APP ==   int32_value: 0
-== APP == }
-== APP ==
+== APP == 04/06/2022 07:31:58 AM - __main__ - INFO - Current Position of the Vehicle Seat is: {'position': 420}
 ```
 
 To stop the vehicleApp instance: close the terminal window by hitting <kbd>Ctrl + C</kbd>.
 
 ### Debug VehicleApp
 
-After VehicleApi and vehicleApp are running successfully, let's start a debug session for the vehicleApp as next step.
+After VAL Services and vehicleApp are running successfully, let's start a debug session for the vehicleApp as next step.
 
 * Press <kbd>F5</kbd> to start the vehicleApp to start a debug session and see the log output on the `DEBUG CONSOLE`
 * Open the main python file `src/run.py` file and set a breakpoint in `line 39`
