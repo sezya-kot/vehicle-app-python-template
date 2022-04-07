@@ -9,22 +9,14 @@ from sdv.test.inttesthelper import IntTestHelper
 @pytest.mark.asyncio
 @pytest.fixture(scope="session", autouse=True)
 def pytest_configure():
-    # # Use these for local execution
-    # pytest.mqtt_port = 1883
-    # pytest.inttesthelper_port = 55555
-
-    # Use these for cluster execution
-    pytest.mqtt_port = 31883
-    pytest.inttesthelper_port = 30555
-
     pytest.request_topic = "seatadjuster/setPosition/request"
     pytest.response_topic = "seatadjuster/setPosition/response"
 
 
 @pytest.mark.asyncio
 async def test_set_position_not_allowed():
-    mqtt_client = MqttClient(pytest.mqtt_port)
-    inttesthelper = IntTestHelper(pytest.inttesthelper_port)
+    mqtt_client = MqttClient()
+    inttesthelper = IntTestHelper()
     request_id = "abc"
 
     payload = {"position": 300, "requestId": request_id}
@@ -56,8 +48,8 @@ async def test_set_position_not_allowed():
 
 @pytest.mark.asyncio
 async def test_set_position_allowed():
-    mqtt_client = MqttClient(pytest.mqtt_port)
-    inttesthelper = IntTestHelper(pytest.inttesthelper_port)
+    mqtt_client = MqttClient()
+    inttesthelper = IntTestHelper()
     request_id = "abc"
 
     payload = {"position": 0, "requestId": request_id}
@@ -96,8 +88,8 @@ async def test_set_position_allowed():
 
 @pytest.mark.asyncio
 async def test_set_position_lt_0():
-    mqtt_client = MqttClient(pytest.mqtt_port)
-    inttesthelper = IntTestHelper(pytest.inttesthelper_port)
+    mqtt_client = MqttClient()
+    inttesthelper = IntTestHelper()
     request_id = "abc"
     seat_position = -1
     payload = {"position": seat_position, "requestId": request_id}
@@ -124,8 +116,8 @@ async def test_set_position_lt_0():
 
 @pytest.mark.asyncio
 async def test_set_position__gt_1000():
-    mqtt_client = MqttClient(pytest.mqtt_port)
-    inttesthelper = IntTestHelper(pytest.inttesthelper_port)
+    mqtt_client = MqttClient()
+    inttesthelper = IntTestHelper()
     request_id = "abc"
     seat_position = 1001
     payload = {"position": seat_position, "requestId": request_id}

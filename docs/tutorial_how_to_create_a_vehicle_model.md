@@ -86,13 +86,13 @@ Now it is time to add some vehicle models to the Python package. At the end of t
 1. Install the Python Vehicle App SDK:
 
     ```bash
-    pip3 install git+https://github.com/SoftwareDefinedVehicle/vehicle-app-python-sdk.git@v0.4.0
+    pip3 install git+https://github.com/SoftwareDefinedVehicle/vehicle-app-python-sdk.git@v0.4.1
     ```
 
     The output of the above command should end with:
 
     ```bash
-    Successfully installed sdv-0.4.0
+    Successfully installed sdv-0.4.1
     ```
 2. Create a new file `Seat.py` under `my_vehicle_model/my_vehicle_model`:
     ```python

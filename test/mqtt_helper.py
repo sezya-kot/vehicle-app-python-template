@@ -43,10 +43,10 @@ class MqttClient:
 
     def __init__(self, port: Optional[int] = None):
         if port is None:
-            value = str(os.getenv("MQTT_PORT"))
+            value = os.getenv("MQTT_PORT")
 
             if value is not None:
-                port = int(value)
+                port = int(str(value))
 
         if port is None:
             port = 1883  # default port of MQTT Broker when running locally
