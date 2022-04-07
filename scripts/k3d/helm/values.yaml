@@ -27,5 +27,13 @@ imageMosquitto:
   nodePort: 31883
   websocketPort: 9001
 
+imageFeederCan:
+  name: feedercan
+  repository: k3d-devregistry.localhost:12345/feedercan
+  pullPolicy: Always
+  daprAppid: feedercan
+  daprLogLevel: debug
+  tag: latest
+
 nameOverride: ""
 fullnameOverride: ""

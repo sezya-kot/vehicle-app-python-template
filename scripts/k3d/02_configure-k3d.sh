@@ -11,6 +11,7 @@ if [ -n "$HTTP_PROXY" ]; then
     -p "30051:30051" \
     -e "HTTP_PROXY=$HTTP_PROXY@server:0" \
     -e "HTTPS_PROXY=$HTTPS_PROXY@server:0" \
+    --volume $(pwd)/volume:/mnt/data@server:0 \
     -e "NO_PROXY=localhost@server:0"
 else
   echo "Creating cluster without proxy configuration"
@@ -18,6 +19,7 @@ else
     -p "30555:30555" \
     -p "31883:31883" \
     -p "30051:30051" \
+    --volume $(pwd)/volume:/mnt/data@server:0 \
     --registry-use k3d-devregistry.localhost:12345
 fi
 

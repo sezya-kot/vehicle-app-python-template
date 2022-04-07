@@ -130,12 +130,39 @@
 			}
 		},
 		{
+			"label": "feeder-can",
+			"type": "shell",
+			"command": "./.vscode/scripts/run-feedercan.sh",
+			"group": "none",
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"isBackground": true,
+			"problemMatcher": {
+				"pattern": [
+					{
+						"regexp": ".",
+						"file": 1,
+						"location": 2,
+						"message": 3
+					}
+				],
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": ".",
+					"endsPattern": "You're up and running! Dapr logs will appear here."
+				}
+			}
+		},
+		{
 			"label": "Start VehicleApp runtime",
 			"dependsOn": [
 				"ensure-dapr",
 				"mosquitto",
 				"vehicle-data-broker",
-				"seat-service"
+				"seat-service",
+				"feeder-can"
 			],
 			"dependsOrder": "sequence",
 			"runOptions": {
