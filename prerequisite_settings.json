@@ -1,14 +1,14 @@
 {
     "mosquitto": {
-        "version": "1.6.9"
+        "version": "2.0.14"
     },
     "databroker": {
         "version": "v0.12.0"
     },
-    "seatservice":{
+    "seatservice": {
         "version": "v0.12.0"
     },
-    "python":{
-        "version":"3.9"
+    "python": {
+        "version": "3.9"
     }
 }

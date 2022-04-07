@@ -19,9 +19,10 @@ export NO_PROXY=${NO_PROXY}
 RUNNING_CONTAINER=$(docker ps | grep "eclipse-mosquitto" | awk '{ print $1 }')
 ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
 MOSQUITTO_VERSION=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .mosquitto.version | tr -d '"')
+SCRIPT_DIRECTORY=$ROOT_DIRECTORY/.vscode/scripts
 
 if [ -n "$RUNNING_CONTAINER" ];
 then
     docker container stop $RUNNING_CONTAINER
 fi
-docker run -p 1883:1883 -p 9001:9001 eclipse-mosquitto:$MOSQUITTO_VERSION
+docker run -p 1883:1883 -p 9001:9001 eclipse-mosquitto:$MOSQUITTO_VERSION mosquitto -c /mosquitto-no-auth.conf
