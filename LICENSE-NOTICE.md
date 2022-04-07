@@ -73,7 +73,7 @@
 |pyasn1|0.4.8|BSD|
 |pyasn1-modules|0.2.8|Simplified BSD|
 |pydocstyle|6.1.1|MIT|
-|pylint|2.13.4|GNU General Public License v2 (GPLv2)|
+|pylint|2.13.5|GNU General Public License v2 (GPLv2)|
 |pyparsing|3.0.7|MIT|
 |pyparsing|3.0.7|MIT|
 |pytest|7.1.1|MIT|

@@ -10,7 +10,7 @@ This repository provides you with a complete development environment for your ow
 ## Quickstart Tutorials
 1. [Setup and Explore Development Enviroment](docs/setup_and_explore_development_environment.md)
 2. [Develop your own Python SDK](docs/)
-3. [Develop your own Python VehicleApp](docs/)
+3. [Develop your own Python Vehicle App](docs/developers_guide.md)
 
 ## Contribution
 - [GitHub Issues]()
