@@ -18,6 +18,7 @@ spec:
         - name: mqtt
           image: {{.Values.imageMosquitto.repository}}:{{.Values.imageMosquitto.tag}}
           imagePullPolicy: {{.Values.imageMosquitto.pullPolicy}}
+          args: {{.Values.imageMosquitto.args}}
           ports:
             - name: default
               containerPort: {{.Values.imageMosquitto.port}}
