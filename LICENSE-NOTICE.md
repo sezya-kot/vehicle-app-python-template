@@ -34,7 +34,7 @@
 |gitdb|4.0.9|BSD|
 |GitPython|3.1.27|BSD|
 |google-api-core|2.7.1|Apache 2.0|
-|google-auth|2.6.2|Apache 2.0|
+|google-auth|2.6.3|Apache 2.0|
 |googleapis-common-protos|1.56.0|Apache 2.0|
 |grpc-stubs|1.24.8|MIT|
 |grpcio|1.44.0|Apache 2.0|
