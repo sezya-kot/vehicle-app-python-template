@@ -22,7 +22,10 @@ imageMosquitto:
   name: mqtt-broker
   repository: eclipse-mosquitto
   pullPolicy: IfNotPresent
-  args: ["mosquitto", "-c", "/mosquitto-no-auth.conf"]
+  args:
+    - mosquitto
+    - -c
+    - /mosquitto-no-auth.conf
   tag: 2.0.14
   port: 1883
   nodePort: 31883
