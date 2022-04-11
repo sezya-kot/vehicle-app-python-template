@@ -36,7 +36,7 @@
 |google-api-core|2.7.1|Apache 2.0|
 |google-auth|2.6.3|Apache 2.0|
 |googleapis-common-protos|1.56.0|Apache 2.0|
-|grpc-stubs|1.24.8|MIT|
+|grpc-stubs|1.24.9|MIT|
 |grpcio|1.44.0|Apache 2.0|
 |grpcio|1.44.0|Apache 2.0|
 |grpcio-tools|1.44.0|Apache 2.0|
@@ -74,8 +74,8 @@
 |pyasn1-modules|0.2.8|Simplified BSD|
 |pydocstyle|6.1.1|MIT|
 |pylint|2.13.5|GNU General Public License v2 (GPLv2)|
-|pyparsing|3.0.7|MIT|
-|pyparsing|3.0.7|MIT|
+|pyparsing|3.0.8|MIT|
+|pyparsing|3.0.8|MIT|
 |pytest|7.1.1|MIT|
 |python-dateutil|2.8.2|Apache 2.0<br/>BSD|
 |python-dateutil|2.8.2|Apache 2.0<br/>BSD|
