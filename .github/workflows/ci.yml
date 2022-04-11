@@ -22,6 +22,8 @@ on:
   pull_request:
     branches:
       - main
+    paths-ignore:
+    - "**/*.md"
 
 jobs:
   check-licenses:
@@ -130,6 +132,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           lcov-file: results/CodeCoverage/lcov.info
           delete-old-comments: true
+        if: github.event_name == 'pull_request'
 
       - name: Package unit test files
         uses: ./.github/actions/package

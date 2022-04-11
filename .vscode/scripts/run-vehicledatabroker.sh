@@ -15,10 +15,6 @@ echo "#######################################################"
 echo "### Running Databroker                              ###"
 echo "#######################################################"
 
-export HTTP_PROXY=${HTTP_PROXY}
-export HTTPS_PROXY=${HTTPS_PROXY}
-export NO_PROXY=${NO_PROXY}
-
 ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
 GITHUB_TOKEN="$ROOT_DIRECTORY/github_token.txt"
 
@@ -30,7 +26,6 @@ sudo chown $(whoami) $HOME
 # Function will kill only VAL services and coressponding dapr isntances
 function kill_service_by_port(){
   SERVICE="$(ps -p $1 -o command)"
-  string='My long string'
   if [[ $SERVICE == *"dapr"* || $SERVICE == *"vehicle-data-broker"* ]] ; then
     kill $1
   fi
@@ -67,7 +62,7 @@ then
 fi
 
 export DAPR_GRPC_PORT=$DATABROKER_GRPC_PORT
-
+#export RUST_LOG="info,databroker=debug,vehicle_data_broker=debug"
 dapr run \
   --app-id vehicledatabroker \
   --app-protocol grpc \

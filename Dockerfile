@@ -17,7 +17,7 @@ RUN pip3 install wheel && pip3 install scons && pip3 install pyinstaller && pip3
 
 RUN --mount=type=secret,id=github_token credential=$(cat /run/secrets/github_token); apt-get install -y git \
     && pip3 install --no-cache-dir -r requirements.txt \
-    && pip3 install --no-cache-dir git+https://${credential}@github.com/SoftwareDefinedVehicle/vehicle-app-python-sdk.git@v0.4.0
+    && pip3 install --no-cache-dir git+https://${credential}@github.com/SoftwareDefinedVehicle/vehicle-app-python-sdk.git@v0.4.1
 
 RUN pyinstaller --clean -F -s run.py
 

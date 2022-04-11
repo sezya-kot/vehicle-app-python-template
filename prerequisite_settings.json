@@ -8,7 +8,10 @@
     "seatservice": {
         "version": "v0.12.0"
     },
-    "python": {
-        "version": "3.9"
+    "feedercan":{
+        "version": "v0.15.0"
+    },
+    "python":{
+        "version":"3.9"
     }
 }
