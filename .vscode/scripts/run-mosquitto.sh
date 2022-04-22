@@ -15,7 +15,6 @@
 RUNNING_CONTAINER=$(docker ps | grep "eclipse-mosquitto" | awk '{ print $1 }')
 ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
 MOSQUITTO_VERSION=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .mosquitto.version | tr -d '"')
-SCRIPT_DIRECTORY=$ROOT_DIRECTORY/.vscode/scripts
 
 if [ -n "$RUNNING_CONTAINER" ];
 then
