@@ -6,7 +6,7 @@
 |aiohttp|3.8.1|Apache 2.0|
 |aiosignal|1.2.0|Apache 2.0|
 |aiosignal|1.2.0|Apache 2.0|
-|astroid|2.11.2|GNU Lesser General Public License v2 (LGPLv2)|
+|astroid|2.11.3|GNU Lesser General Public License v2 (LGPLv2)|
 |async-timeout|4.0.2|Apache 2.0|
 |async-timeout|4.0.2|Apache 2.0|
 |attrs|21.4.0|MIT|
@@ -33,10 +33,10 @@
 |frozenlist|1.3.0|Apache 2.0|
 |gitdb|4.0.9|BSD|
 |GitPython|3.1.27|BSD|
-|google-api-core|2.7.1|Apache 2.0|
-|google-auth|2.6.3|Apache 2.0|
+|google-api-core|2.7.2|Apache 2.0|
+|google-auth|2.6.6|Apache 2.0|
 |googleapis-common-protos|1.56.0|Apache 2.0|
-|grpc-stubs|1.24.9|MIT|
+|grpc-stubs|1.24.10|MIT|
 |grpcio|1.44.0|Apache 2.0|
 |grpcio|1.44.0|Apache 2.0|
 |grpcio-tools|1.44.0|Apache 2.0|
@@ -64,7 +64,7 @@
 |paho-mqtt|1.6.1|OSI Approved|
 |pathspec|0.9.0|Mozilla Public License 2.0 (MPL 2.0)|
 |pbr|5.8.1|Apache 2.0|
-|platformdirs|2.5.1|MIT|
+|platformdirs|2.5.2|MIT|
 |pluggy|1.0.0|MIT|
 |pre-commit|2.18.1|MIT|
 |protobuf|3.19.3|unknown|
@@ -73,7 +73,7 @@
 |pyasn1|0.4.8|BSD|
 |pyasn1-modules|0.2.8|Simplified BSD|
 |pydocstyle|6.1.1|MIT|
-|pylint|2.13.5|GNU General Public License v2 (GPLv2)|
+|pylint|2.13.7|GNU General Public License v2 (GPLv2)|
 |pyparsing|3.0.8|MIT|
 |pyparsing|3.0.8|MIT|
 |pytest|7.1.1|MIT|
@@ -90,10 +90,10 @@
 |stevedore|3.5.0|Apache 2.0|
 |toml|0.10.2|MIT|
 |tomli|2.0.1|MIT|
-|types-protobuf|3.19.15|Apache 2.0|
-|typing-extensions|4.1.1|Python Software Foundation License|
+|types-protobuf|3.19.18|Apache 2.0|
+|typing-extensions|4.2.0|Python Software Foundation License|
 |urllib3|1.26.9|MIT|
-|virtualenv|20.14.0|MIT|
+|virtualenv|20.14.1|MIT|
 |Werkzeug|2.1.1|New BSD|
 |wheel|0.37.1|MIT|
 |wrapt|1.14.0|BSD|
