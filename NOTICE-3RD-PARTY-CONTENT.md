@@ -1,15 +1,12 @@
 # Licenses Notice
+*Note*: This file is auto-generated. Do not modify it manually.
 ## Python
 | Dependency | Version | License |
 |:-----------|:-------:|--------:|
 |aiohttp|3.8.1|Apache 2.0|
-|aiohttp|3.8.1|Apache 2.0|
 |aiosignal|1.2.0|Apache 2.0|
-|aiosignal|1.2.0|Apache 2.0|
-|astroid|2.11.2|GNU Lesser General Public License v2 (LGPLv2)|
+|astroid|2.11.3|GNU Lesser General Public License v2 (LGPLv2)|
 |async-timeout|4.0.2|Apache 2.0|
-|async-timeout|4.0.2|Apache 2.0|
-|attrs|21.4.0|MIT|
 |attrs|21.4.0|MIT|
 |bandit|1.7.4|Apache 2.0|
 |black|22.3.0|MIT|
@@ -17,31 +14,24 @@
 |certifi|2021.10.8|Mozilla Public License 2.0|
 |cfgv|3.3.1|MIT|
 |charset-normalizer|2.0.12|MIT|
-|charset-normalizer|2.0.12|MIT|
 |click|8.1.2|New BSD|
 |cloudevents|1.2.0|Apache 2.0|
-|cloudevents|1.2.0|Apache 2.0|
 |dapr|1.5.0|Apache 2.0|
-|dapr|1.5.0|Apache 2.0|
-|deprecation|2.1.0|Apache 2.0|
 |deprecation|2.1.0|Apache 2.0|
 |dill|0.3.4|New BSD|
 |distlib|0.3.4|Python Software Foundation License|
 |filelock|3.6.0|Public Domain|
 |Flask|2.0.2|New BSD|
 |frozenlist|1.3.0|Apache 2.0|
-|frozenlist|1.3.0|Apache 2.0|
 |gitdb|4.0.9|BSD|
 |GitPython|3.1.27|BSD|
-|google-api-core|2.7.1|Apache 2.0|
-|google-auth|2.6.3|Apache 2.0|
+|google-api-core|2.7.2|Apache 2.0|
+|google-auth|2.6.6|Apache 2.0|
 |googleapis-common-protos|1.56.0|Apache 2.0|
-|grpc-stubs|1.24.8|MIT|
-|grpcio|1.44.0|Apache 2.0|
+|grpc-stubs|1.24.10|MIT|
 |grpcio|1.44.0|Apache 2.0|
 |grpcio-tools|1.44.0|Apache 2.0|
 |identify|2.4.12|MIT|
-|idna|3.3|New BSD|
 |idna|3.3|New BSD|
 |iniconfig|1.1.1|MIT|
 |isort|5.10.1|MIT|
@@ -51,7 +41,6 @@
 |MarkupSafe|2.1.1|New BSD|
 |mccabe|0.7.0|MIT|
 |multidict|6.0.2|Apache 2.0|
-|multidict|6.0.2|Apache 2.0|
 |mypy|0.942|MIT|
 |mypy-extensions|0.4.3|MIT|
 |mypy-protobuf|3.2.0|Apache 2.0|
@@ -60,44 +49,38 @@
 |opencensus-context|0.1.2|Apache 2.0|
 |opencensus-ext-grpc|0.7.2|Apache 2.0|
 |packaging|21.3|Apache 2.0<br/>Simplified BSD|
-|packaging|21.3|Apache 2.0<br/>Simplified BSD|
 |paho-mqtt|1.6.1|OSI Approved|
 |pathspec|0.9.0|Mozilla Public License 2.0 (MPL 2.0)|
 |pbr|5.8.1|Apache 2.0|
-|platformdirs|2.5.1|MIT|
+|platformdirs|2.5.2|MIT|
 |pluggy|1.0.0|MIT|
 |pre-commit|2.18.1|MIT|
-|protobuf|3.19.3|unknown|
 |protobuf|3.19.3|unknown|
 |py|1.11.0|MIT|
 |pyasn1|0.4.8|BSD|
 |pyasn1-modules|0.2.8|Simplified BSD|
 |pydocstyle|6.1.1|MIT|
-|pylint|2.13.5|GNU General Public License v2 (GPLv2)|
-|pyparsing|3.0.7|MIT|
-|pyparsing|3.0.7|MIT|
+|pylint|2.13.7|GNU General Public License v2 (GPLv2)|
+|pyparsing|3.0.8|MIT|
 |pytest|7.1.1|MIT|
 |python-dateutil|2.8.2|Apache 2.0<br/>BSD|
-|python-dateutil|2.8.2|Apache 2.0<br/>BSD|
-|PyYAML|6.0|MIT|
+|PyYAML|5.4.1|MIT|
 |requests|2.27.1|Apache 2.0|
 |rsa|4.8|Apache 2.0|
 |setuptools|58.1.0|MIT|
-|six|1.16.0|MIT|
 |six|1.16.0|MIT|
 |smmap|5.0.0|BSD|
 |snowballstemmer|2.2.0|New BSD|
 |stevedore|3.5.0|Apache 2.0|
 |toml|0.10.2|MIT|
 |tomli|2.0.1|MIT|
-|types-protobuf|3.19.15|Apache 2.0|
-|typing-extensions|4.1.1|Python Software Foundation License|
+|types-protobuf|3.19.18|Apache 2.0|
+|typing-extensions|4.2.0|Python Software Foundation License|
 |urllib3|1.26.9|MIT|
-|virtualenv|20.14.0|MIT|
+|virtualenv|20.14.1|MIT|
 |Werkzeug|2.1.1|New BSD|
 |wheel|0.37.1|MIT|
 |wrapt|1.14.0|BSD|
-|yarl|1.7.2|Apache 2.0|
 |yarl|1.7.2|Apache 2.0|
 ## Workflows
 | Dependency | Version | License |
