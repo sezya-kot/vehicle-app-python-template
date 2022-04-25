@@ -46,7 +46,7 @@ pip3 install -U mypy
 echo "#######################################################"
 echo "### Install python requirements                     ###"
 echo "#######################################################"
-REQUIREMENTS="./src/requirements-dev.txt"
+REQUIREMENTS="./requirements.txt"
 if [ -f $REQUIREMENTS ]; then
     pip3 install -r $REQUIREMENTS
 fi
@@ -55,10 +55,6 @@ if [ -f $REQUIREMENTS ]; then
     pip3 install -r $REQUIREMENTS
 fi
 REQUIREMENTS="./src/requirements.txt"
-if [ -f $REQUIREMENTS ]; then
-    pip3 install -r $REQUIREMENTS
-fi
-REQUIREMENTS="./requirements.txt"
 if [ -f $REQUIREMENTS ]; then
     pip3 install -r $REQUIREMENTS
 fi
