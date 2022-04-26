@@ -1,8 +1,9 @@
 echo "#######################################################"
-echo "### Running FeederCan                             ###"
+echo "### Running FeederCan                               ###"
 echo "#######################################################"
 
 ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
+source $ROOT_DIRECTORY/.vscode/scripts/exec-check.sh "$@" $(basename $BASH_SOURCE .sh)
 GITHUB_TOKEN="$ROOT_DIRECTORY/github_token.txt"
 
 FEEDERCAN_VERSION=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .feedercan.version | tr -d '"')

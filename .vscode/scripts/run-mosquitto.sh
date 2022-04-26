@@ -10,10 +10,15 @@
 #*
 #* SPDX-License-Identifier: EPL-2.0
 #********************************************************************************/
+echo "#######################################################"
+echo "### Running Mosquitto                               ###"
+echo "#######################################################"
+
+ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
+source $ROOT_DIRECTORY/.vscode/scripts/exec-check.sh "$@" $(basename $BASH_SOURCE .sh)
 
 #Terminate existing running VAL services
 RUNNING_CONTAINER=$(docker ps | grep "eclipse-mosquitto" | awk '{ print $1 }')
-ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
 MOSQUITTO_VERSION=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .mosquitto.version | tr -d '"')
 
 if [ -n "$RUNNING_CONTAINER" ];

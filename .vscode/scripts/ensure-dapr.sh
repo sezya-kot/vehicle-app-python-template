@@ -12,8 +12,11 @@
 #********************************************************************************/
 
 echo "#######################################################"
-echo "### Installing dapr                                 ###"
+echo "### Ensure dapr                                     ###"
 echo "#######################################################"
+
+ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
+source $ROOT_DIRECTORY/.vscode/scripts/exec-check.sh "$@" $(basename $BASH_SOURCE .sh)
 
 version=$(dapr --version | grep "Runtime version: " | sed 's/^.*: //')
 
