@@ -62,7 +62,7 @@
 |pydocstyle|6.1.1|MIT|
 |pylint|2.13.7|GNU General Public License v2 (GPLv2)|
 |pyparsing|3.0.8|MIT|
-|pytest|7.1.1|MIT|
+|pytest|7.1.2|MIT|
 |python-dateutil|2.8.2|Apache 2.0<br/>BSD|
 |PyYAML|5.4.1|MIT|
 |requests|2.27.1|Apache 2.0|
