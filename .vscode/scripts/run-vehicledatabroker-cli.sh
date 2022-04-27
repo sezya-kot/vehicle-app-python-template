@@ -10,9 +10,12 @@
 #*
 #* SPDX-License-Identifier: EPL-2.0
 #********************************************************************************/
-
+echo "#######################################################"
+echo "### Running VehicleDataBroke CLI                    ###"
+echo "#######################################################"
 
 ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
+source $ROOT_DIRECTORY/.vscode/scripts/exec-check.sh "$@" $(basename $BASH_SOURCE .sh)
 DATABROKER_VERSION=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .databroker.version | tr -d '"')
 
 if [[ `uname -m` == 'aarch64' ]]; then
