@@ -36,6 +36,15 @@ https://www.eclipse.org/projects/handbook/#resources-commit
 * Make sure you use the `-s` flag when committing as explained above.
 * Push your changes to your branch in your forked repository.
 
+## Update Python dependencies
+
+Please use [pip-tools](https://github.com/jazzband/pip-tools) to keep the pip-based packages up to date. The following requirements input files are avaialble:
+- Development requirements [requirements.in](./requirements.in) file in the root directory.
+- Runtime Requirements [src/requirements.in](./src/requirements.in).
+- Test Requirements [test/requirements.in](./test/requirements.in).
+
+`Please don't try to update the dependencies manually.`
+
 ## License Header
 
 Please make sure any file you newly create contains a proper license header like this:
