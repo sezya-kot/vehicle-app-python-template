@@ -16,12 +16,17 @@
 |charset-normalizer|2.0.12|MIT|
 |click|8.1.2|New BSD|
 |cloudevents|1.2.0|Apache 2.0|
-|dapr|1.5.0|Apache 2.0|
+|coverage|6.3.2|Apache 2.0|
+|coverage2clover|3.3.0|unknown|
+|coveragepy-lcov|0.1.2|unknown|
+|dapr|1.6.0|Apache 2.0|
 |deprecation|2.1.0|Apache 2.0|
 |dill|0.3.4|New BSD|
 |distlib|0.3.4|Python Software Foundation License|
+|docopt|0.6.2|MIT|
 |filelock|3.6.0|Public Domain|
-|Flask|2.0.2|New BSD|
+|flake8|4.0.1|MIT|
+|Flask|2.1.1|New BSD|
 |frozenlist|1.3.0|Apache 2.0|
 |gitdb|4.0.9|BSD|
 |GitPython|3.1.27|BSD|
@@ -33,38 +38,50 @@
 |grpcio-tools|1.44.0|Apache 2.0|
 |identify|2.4.12|MIT|
 |idna|3.3|New BSD|
+|importlib-metadata|4.11.3|Apache 2.0|
 |iniconfig|1.1.1|MIT|
 |isort|5.10.1|MIT|
 |itsdangerous|2.1.2|New BSD|
 |Jinja2|3.1.1|New BSD|
 |lazy-object-proxy|1.7.1|Simplified BSD|
 |MarkupSafe|2.1.1|New BSD|
-|mccabe|0.7.0|MIT|
+|mccabe|0.6.1|MIT|
 |multidict|6.0.2|Apache 2.0|
 |mypy|0.942|MIT|
 |mypy-extensions|0.4.3|MIT|
 |mypy-protobuf|3.2.0|Apache 2.0|
 |nodeenv|1.6.0|BSD|
-|opencensus|0.8.0|Apache 2.0|
+|opencensus|0.9.0|Apache 2.0|
 |opencensus-context|0.1.2|Apache 2.0|
 |opencensus-ext-grpc|0.7.2|Apache 2.0|
 |packaging|21.3|Apache 2.0<br/>Simplified BSD|
 |paho-mqtt|1.6.1|OSI Approved|
 |pathspec|0.9.0|Mozilla Public License 2.0 (MPL 2.0)|
 |pbr|5.8.1|Apache 2.0|
+|pep517|0.12.0|MIT|
+|pip|22.0.4|MIT|
+|pip-tools|6.6.0|BSD|
+|pipreqs|0.4.11|Apache 2.0|
 |platformdirs|2.5.2|MIT|
 |pluggy|1.0.0|MIT|
 |pre-commit|2.18.1|MIT|
-|protobuf|3.19.3|unknown|
+|protobuf|3.19.4|unknown|
 |py|1.11.0|MIT|
 |pyasn1|0.4.8|BSD|
 |pyasn1-modules|0.2.8|Simplified BSD|
+|pycodestyle|2.8.0|MIT|
 |pydocstyle|6.1.1|MIT|
+|pyflakes|2.4.0|MIT|
+|Pygments|2.12.0|BSD|
+|pygount|1.2.4|BSD|
 |pylint|2.13.7|GNU General Public License v2 (GPLv2)|
 |pyparsing|3.0.8|MIT|
 |pytest|7.1.2|MIT|
+|pytest-asyncio|0.18.3|Apache 2.0|
+|pytest-cov|3.0.0|MIT|
+|pytest-ordering|0.6|MIT|
 |python-dateutil|2.8.2|Apache 2.0<br/>BSD|
-|PyYAML|5.4.1|MIT|
+|PyYAML|6.0|MIT|
 |requests|2.27.1|Apache 2.0|
 |rsa|4.8|Apache 2.0|
 |setuptools|58.1.0|MIT|
@@ -81,7 +98,9 @@
 |Werkzeug|2.1.1|New BSD|
 |wheel|0.37.1|MIT|
 |wrapt|1.14.0|BSD|
+|yarg|0.1.9|MIT|
 |yarl|1.7.2|Apache 2.0|
+|zipp|3.8.0|MIT|
 ## Workflows
 | Dependency | Version | License |
 |:-----------|:-------:|--------:|
