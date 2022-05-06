@@ -35,18 +35,9 @@ echo "#######################################################"
 .devcontainer/scripts/add-python.sh 2>&1 | tee -a $HOME/add-python.log
 
 echo "#######################################################"
-echo "### Install python testing tools                    ###"
-echo "#######################################################"
-pip3 install pytest pytest-cov coverage2clover
-pip3 install pytest-asyncio
-pip3 install -U flake8
-pip3 install -U pylint
-pip3 install -U mypy
-
-echo "#######################################################"
 echo "### Install python requirements                     ###"
 echo "#######################################################"
-REQUIREMENTS="./requirements.txt"
+REQUIREMENTS="./requirements-dev.txt"
 if [ -f $REQUIREMENTS ]; then
     pip3 install -r $REQUIREMENTS
 fi

@@ -5,7 +5,7 @@
 |:-----------|:-------:|--------:|
 |aiohttp|3.8.1|Apache 2.0|
 |aiosignal|1.2.0|Apache 2.0|
-|astroid|2.11.3|GNU Lesser General Public License v2 (LGPLv2)|
+|astroid|2.11.4|GNU Lesser General Public License v2 (LGPLv2)|
 |async-timeout|4.0.2|Apache 2.0|
 |attrs|21.4.0|MIT|
 |bandit|1.7.4|Apache 2.0|
@@ -14,7 +14,7 @@
 |certifi|2021.10.8|Mozilla Public License 2.0|
 |cfgv|3.3.1|MIT|
 |charset-normalizer|2.0.12|MIT|
-|click|8.1.2|New BSD|
+|click|8.1.3|New BSD|
 |cloudevents|1.2.0|Apache 2.0|
 |coverage|6.3.2|Apache 2.0|
 |coverage2clover|3.3.0|unknown|
@@ -26,28 +26,28 @@
 |docopt|0.6.2|MIT|
 |filelock|3.6.0|Public Domain|
 |flake8|4.0.1|MIT|
-|Flask|2.1.1|New BSD|
+|Flask|2.1.2|New BSD|
 |frozenlist|1.3.0|Apache 2.0|
 |gitdb|4.0.9|BSD|
 |GitPython|3.1.27|BSD|
-|google-api-core|2.7.2|Apache 2.0|
+|google-api-core|2.7.3|Apache 2.0|
 |google-auth|2.6.6|Apache 2.0|
 |googleapis-common-protos|1.56.0|Apache 2.0|
 |grpc-stubs|1.24.10|MIT|
 |grpcio|1.44.0|Apache 2.0|
 |grpcio-tools|1.44.0|Apache 2.0|
-|identify|2.4.12|MIT|
+|identify|2.5.0|MIT|
 |idna|3.3|New BSD|
 |importlib-metadata|4.11.3|Apache 2.0|
 |iniconfig|1.1.1|MIT|
 |isort|5.10.1|MIT|
 |itsdangerous|2.1.2|New BSD|
-|Jinja2|3.1.1|New BSD|
+|Jinja2|3.1.2|New BSD|
 |lazy-object-proxy|1.7.1|Simplified BSD|
 |MarkupSafe|2.1.1|New BSD|
 |mccabe|0.6.1|MIT|
 |multidict|6.0.2|Apache 2.0|
-|mypy|0.942|MIT|
+|mypy|0.950|MIT|
 |mypy-extensions|0.4.3|MIT|
 |mypy-protobuf|3.2.0|Apache 2.0|
 |nodeenv|1.6.0|BSD|
@@ -95,9 +95,9 @@
 |typing-extensions|4.2.0|Python Software Foundation License|
 |urllib3|1.26.9|MIT|
 |virtualenv|20.14.1|MIT|
-|Werkzeug|2.1.1|New BSD|
+|Werkzeug|2.1.2|New BSD|
 |wheel|0.37.1|MIT|
-|wrapt|1.14.0|BSD|
+|wrapt|1.14.1|BSD|
 |yarg|0.1.9|MIT|
 |yarl|1.7.2|Apache 2.0|
 |zipp|3.8.0|MIT|

@@ -12,9 +12,9 @@ fi
 if [ -n "$HTTP_PROXY" ]; then
     echo "Building image with proxy configuration"
 
-    cd $WORKING_DIR/../../src
+    cd $WORKING_DIR/../../
     DOCKER_BUILDKIT=1 docker build \
-    -f Dockerfile \
+    -f src/SeatAdjusterApp/Dockerfile \
     --progress=plain --secret id=$GITHUB_TOKEN \
     -t localhost:12345/seatadjuster:local \
     --build-arg HTTP_PROXY="$HTTP_PROXY" \
@@ -28,10 +28,9 @@ if [ -n "$HTTP_PROXY" ]; then
 else
     echo "Building image without proxy configuration"
     # Build, push vehicleapi image - NO PROXY
-    pip install -r ./../../src/requirements-sdv.txt
 
     cd $WORKING_DIR/../../
-    DOCKER_BUILDKIT=1 docker build -f Dockerfile --progress=plain --secret id=$GITHUB_TOKEN -t localhost:12345/seatadjuster:local . --no-cache
+    DOCKER_BUILDKIT=1 docker build -f src/SeatAdjusterApp/Dockerfile --progress=plain --secret id=$GITHUB_TOKEN -t localhost:12345/seatadjuster:local . --no-cache
     docker push localhost:12345/seatadjuster:local
 
     cd $WORKING_DIR
@@ -40,4 +39,4 @@ fi
 helm uninstall vapp-chart --wait
 
 # Deploy in Kubernetes
-helm install vapp-chart ./../../deploy/helm --values ./values.yml --wait --timeout 60s --debug
+helm install vapp-chart ./helm --values ../runtime/k3d/values.yml --wait --timeout 60s --debug

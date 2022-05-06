@@ -11,8 +11,26 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-grpcio
-protobuf
-dapr
-cloudevents
--e file:src/vehicle_model
+# pylint: disable=C0103
+
+from sdv.model import Model
+
+from vehicle_model.J1939 import J1939
+
+
+class Private(Model):
+    """
+    A class used to represent Private model
+
+    ...
+
+    Attributes
+    ----------
+    J1939 : J1939
+        an object instantiation of J1939 class
+    """
+
+    def __init__(self, parent: Model):
+        super().__init__(parent)
+
+        self.J1939 = J1939(self)

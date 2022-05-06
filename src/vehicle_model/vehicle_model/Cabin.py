@@ -22,7 +22,19 @@ from vehicle_model.SeatService import SeatService
 
 
 class Cabin(Model):
-    """Cabin model"""
+    """
+    A class used to represent Cabin model
+
+    ...
+
+    Attributes
+    ----------
+    1) SeatService : SeatService
+        an object instantiation of SeatService class
+
+    2) name : ModelCollection[Seat]
+        a modelcollection of Seat objects
+    """
 
     def __init__(self, parent: Model):
         super().__init__(parent)

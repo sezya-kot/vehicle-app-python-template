@@ -30,8 +30,3 @@ curl -fsSL https://bootstrap.pypa.io/get-pip.py | sudo python$PYTHON_VERSION
 
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python$PYTHON_VERSION 10
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python$PYTHON_VERSION 10
-
-echo "#######################################################"
-echo "### Install python requirements                     ###"
-echo "#######################################################"
-pip3 install -r $ROOT_DIRECTORY/requirements.txt

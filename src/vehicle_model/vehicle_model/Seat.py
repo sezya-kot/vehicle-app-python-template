@@ -17,7 +17,16 @@ from sdv.model import DataPointBool, Model
 
 
 class Seat(Model):
-    """Seat Class"""
+    """
+    A class used to represent Seat model
+
+    ...
+
+    Attributes
+    ----------
+    Position : DataPointBool
+        an object instantiation of DataPointBool class
+    """
 
     def __init__(self, parent):
         super().__init__(parent)

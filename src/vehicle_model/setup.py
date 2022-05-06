@@ -11,17 +11,15 @@
 # * SPDX-License-Identifier: EPL-2.0
 # ********************************************************************************/
 
-# pylint: disable=C0103
+from setuptools import setup  # type: ignore
 
-from sdv.model import Model
-
-from vehicle_model.J1939 import J1939
-
-
-class Private(Model):
-    """Private model"""
-
-    def __init__(self, parent: Model):
-        super().__init__(parent)
-
-        self.J1939 = J1939(self)
+setup(
+    name="vehicle_model",
+    version="0.1",
+    description="Vehicle Model",
+    packages=[
+        "vehicle_model",
+        "vehicle_model.proto",
+    ],
+    zip_safe=False,
+)

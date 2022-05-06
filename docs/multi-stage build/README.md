@@ -23,10 +23,10 @@ There might be a need from developer to use multi-stage build. Using such an app
 
         ADD ./* $HOME/src/
         WORKDIR /src
-        RUN pip3 install -r requirements.txt
+        RUN pip3 install -r requirements-dev.txt
 
         ENTRYPOINT ["python"]
-        CMD ["run.py"]
+        CMD ["seatadjuster.py"]
 
   </details>
   <details>
@@ -55,12 +55,12 @@ There might be a need from developer to use multi-stage build. Using such an app
 
         ADD ./* $HOME/src/
         WORKDIR /src
-        RUN pip3 install -r requirements.txt
+        RUN pip3 install -r requirements-dev.txt
 
         EXPOSE 50051
 
         ENTRYPOINT ["python"]
-        CMD ["run.py"]
+        CMD ["seatadjuster.py"]
 
 
   </details>

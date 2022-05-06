@@ -39,7 +39,7 @@ https://www.eclipse.org/projects/handbook/#resources-commit
 ## Update Python dependencies
 
 Please use [pip-tools](https://github.com/jazzband/pip-tools) to keep the pip-based packages up to date. The following requirements input files are avaialble:
-- Development requirements [requirements.in](./requirements.in) file in the root directory.
+- Development requirements [requirements-dev.in](./requirements-dev.in) file in the root directory.
 - Runtime Requirements [src/requirements.in](./src/requirements.in).
 - Test Requirements [test/requirements.in](./test/requirements.in).
 

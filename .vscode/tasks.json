@@ -179,7 +179,7 @@
 				"--app-port 50008",
 				"--config ./.dapr/config.yaml",
 				"--components-path ./.dapr/components",
-				"python3 ./src/run.py"
+				"python3 ./src/SeatAdjusterApp/seatadjuster.py"
 			],
 			"group": "none",
 			"isBackground": true,

@@ -23,7 +23,7 @@
             "justMyCode": false,
             "request": "launch",
             "name": "SeatAdjuster",
-            "program": "${workspaceFolder}/src/run.py",
+            "program": "${workspaceFolder}/src/SeatAdjusterApp/seatadjuster.py",
             "console": "integratedTerminal",
             "preLaunchTask": "dapr-SeatAdjuster-run",
             "postDebugTask": "dapr-SeatAdjuster-stop",

@@ -99,7 +99,7 @@ jobs:
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
           format: 'template'
-          template: '@scripts/workflows/junit.tpl'
+          template: '@.github/scripts/junit.tpl'
           output: 'junit.xml'
 
       - name: "${{ matrix.component.Name }} -- Show base image scan results"

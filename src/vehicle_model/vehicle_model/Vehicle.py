@@ -20,7 +20,22 @@ from vehicle_model.Private import Private
 
 
 class Vehicle(Model):
-    """Vehicle model"""
+    """
+    A class used to represent Vehicle model
+
+    ...
+
+    Attributes
+    ----------
+    Speed : DataPointFloat
+        an object instantiation of DataPointFloat class
+
+    Private : Private
+        an object instantiation of Private class
+
+    Cabin : Cabin
+        an object instantiation of Cabin class
+    """
 
     def __init__(self):
         super().__init__()

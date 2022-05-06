@@ -21,7 +21,8 @@
     "python.linting.flake8Args": ["--ignore=E121,E402,F481,E501,F841"],
     "python.linting.enabled": true,
     "python.analysis.extraPaths": [
-        "./proto"
+        "./proto",
+        "./src/vehicle_model"
     ],
     "vsmqtt.brokerProfiles": [
         {

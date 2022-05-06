@@ -20,8 +20,8 @@ if grep -q ghcr.io $HOME/.docker/config.json; then
     docker push localhost:12345/feedercan:$FEEDERCAN_TAG
 
     # We set the tag to the version from the variables above in the script. This overwrites the default values in the values-file.
-    helm uninstall vehicleapppre --wait
-    helm install vehicleapppre ./helm --values ./helm/values.yaml --set imageSeatService.tag=$SEATSERVICE_TAG --set imageVehicleDataBroker.tag=$VEHICLEDATABROKER_TAG --set imageFeederCan.tag=$FEEDERCAN_TAG --wait --timeout 60s --debug
+    helm uninstall vehicleappruntime --wait
+    helm install vehicleappruntime ./helm --values ./helm/values.yaml --set imageSeatService.tag=$SEATSERVICE_TAG --set imageVehicleDataBroker.tag=$VEHICLEDATABROKER_TAG --set imageFeederCan.tag=$FEEDERCAN_TAG --wait --timeout 60s --debug
 
 else
     tput setaf 1; echo "ERROR: Please run 'docker login ghcr.io' and rerun the script"

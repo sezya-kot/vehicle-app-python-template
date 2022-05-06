@@ -1,10 +1,10 @@
 [
     {
         "Name": "seatadjuster",
-        "Folder": ".",
-        "StartProgram": "run.py",
+        "ContextFolder": ".",
+        "StartProgram": "seatadjuster.py",
         "Port": 50008,
         "IsPublisher": 1,
-        "DockerFolder": "."
+        "DockerFolder": "./src/SeatAdjusterApp"
     }
 ]
