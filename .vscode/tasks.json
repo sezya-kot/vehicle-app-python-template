@@ -152,10 +152,7 @@
 				"run-seatservice",
 				"run-feedercan"
 			],
-			"dependsOrder": "sequence",
-			"runOptions": {
-				"runOn": "folderOpen"
-			},
+			"dependsOrder": "sequence"
 		},
 		{
 			"label": "SeatAdjuster (Dapr run)",
