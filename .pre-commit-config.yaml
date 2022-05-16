@@ -1,15 +1,29 @@
+# Copyright (c) 2022 Robert Bosch GmbH and Microsoft Corporation
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License, Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 ---
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.2.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
         args: [--allow-multiple-documents]
-        exclude: ^deploy/helm/templates/|^scripts/k3d/helm/templates
+        exclude: ^deploy/SeatAdjusterApp/helm/templates/|^deploy/runtime/k3d/helm/templates/
       - id: check-toml
       - id: check-added-large-files
       - id: check-merge-conflict
@@ -79,3 +93,28 @@ repos:
     rev: v0.0.9
     hooks:
       - id: helmlint
+
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.1.13
+    hooks:
+    -   id: insert-license
+        files: '.*\.(py|pyi|yaml|yml|sh|helmignore|dockerignore|gitignore)$'
+        args:
+        - --license-filepath
+        - license_header.txt
+        - --comment-style
+        - '#'
+    -   id: insert-license
+        files: '.*\.(proto)$'
+        args:
+        - --license-filepath
+        - license_header.txt
+        - --comment-style
+        - //
+    -   id: insert-license
+        files: 'Dockerfile.*'
+        args:
+        - --license-filepath
+        - license_header.txt
+        - --comment-style
+        - '#'

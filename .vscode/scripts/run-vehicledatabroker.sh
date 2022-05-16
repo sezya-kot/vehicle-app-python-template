@@ -1,40 +1,30 @@
-#********************************************************************************
-#* Copyright (c) 2021 Contributors to the Eclipse Foundation
-#*
-#* See the NOTICE file(s) distributed with this work for additional
-#* information regarding copyright ownership.
-#*
-#* This program and the accompanying materials are made available under the
-#* terms of the Eclipse Public License 2.0 which is available at
-#* http://www.eclipse.org/legal/epl-2.0
-#*
-#* SPDX-License-Identifier: EPL-2.0
-#********************************************************************************/
+
+# Copyright (c) 2022 Robert Bosch GmbH and Microsoft Corporation
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License, Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
 
 echo "#######################################################"
 echo "### Running Databroker                              ###"
 echo "#######################################################"
 
 ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
+source $ROOT_DIRECTORY/.vscode/scripts/exec-check.sh "$@" $(basename $BASH_SOURCE .sh)
 GITHUB_TOKEN="$ROOT_DIRECTORY/github_token.txt"
 
 DATABROKER_VERSION=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .databroker.version | tr -d '"')
 DATABROKER_PORT='55555'
 DATABROKER_GRPC_PORT='52001'
 sudo chown $(whoami) $HOME
-
-# Function will kill only VAL services and coressponding dapr isntances
-function kill_service_by_port(){
-  SERVICE="$(ps -p $1 -o command)"
-  if [[ $SERVICE == *"dapr"* || $SERVICE == *"vehicle-data-broker"* ]] ; then
-    kill $1
-  fi
-}
-export -f kill_service_by_port
-
-#Terminate existing running VAL services
-lsof -ti tcp:$DATABROKER_PORT | xargs -I{}  bash -c "kill_service_by_port {}"
-lsof -ti tcp:$DATABROKER_GRPC_PORT | xargs -I{}  bash -c "kill_service_by_port {}"
 
 #Detect host environment (distinguish for Mac M1 processor)
 if [[ `uname -m` == 'aarch64' || `uname -m` == 'arm64' ]]; then

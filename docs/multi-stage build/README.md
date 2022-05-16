@@ -23,10 +23,10 @@ There might be a need from developer to use multi-stage build. Using such an app
 
         ADD ./* $HOME/src/
         WORKDIR /src
-        RUN pip3 install -r requirements.txt
+        RUN pip3 install -r requirements-dev.txt
 
         ENTRYPOINT ["python"]
-        CMD ["run.py"]
+        CMD ["seatadjuster.py"]
 
   </details>
   <details>
@@ -55,12 +55,12 @@ There might be a need from developer to use multi-stage build. Using such an app
 
         ADD ./* $HOME/src/
         WORKDIR /src
-        RUN pip3 install -r requirements.txt
+        RUN pip3 install -r requirements-dev.txt
 
         EXPOSE 50051
 
         ENTRYPOINT ["python"]
-        CMD ["run.py"]
+        CMD ["seatadjuster.py"]
 
 
   </details>
@@ -92,3 +92,17 @@ In case of building multi-stage images locally, Docker and Git needs to be confi
 * In console type: ```docker login ghcr.io```
 * Use generated token to authenticate
 * To build file locally, find commands in: ```scripts/k3d/03_deploy.k3d.sh```
+
+## Advanced Topics
+
+### Building staticx for ARM64
+
+Currently, the official distribution of [staticx](https://pypi.org/project/staticx/) does not include wheels for the ARM64 platform. To decrease the workload of the workflow, we can provide a precompiled wheel for ARM64 to the CI build.
+
+To build this wheel, one has to clone the staticx project from https://github.com/JonathonReinhart/staticx set up the project and run
+
+```Python
+python3 setup.py bdist_wheel
+```
+
+This will produce the wheel in the `dist` directory. **However** this file cannot be used directly. By default staticx uses `manylinux1` as part of its wheel's filename (this is hardcoded in its setup.py). Python merely checks the filename to figure out if the wheel is suitable for the system it is installed to. `manylinux1` is not supported anymore and does not fit the linux version we are using in our container. To use the wheel, we have to rename the file to read `manylinux2010` instead of `manylinux1` since our linux distrubtion in the container is part of the manylinux2010 group.

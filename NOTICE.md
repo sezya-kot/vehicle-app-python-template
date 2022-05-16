@@ -67,5 +67,5 @@ SPDX-License-Identifier: EPL-2.0
 |  Thread  | https://github.com/loretoparisi/python-threading/blob/master/LICENSE |
 |   GRPC   |           https://github.com/grpc/grpc/blob/master/LICENSE           |
 
-### Further licenses used in project
-[License Notice](./LICENSE-NOTICE.md)
+### Further 3rd party licenses used in project
+[Auto-generated 3rd party licenses](./NOTICE-3RD-PARTY-CONTENT.md)

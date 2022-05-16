@@ -1,15 +1,3 @@
-/********************************************************************************
-* Copyright (c) 2021 Contributors to the Eclipse Foundation
-*
-* See the NOTICE file(s) distributed with this work for additional
-* information regarding copyright ownership.
-*
-* This program and the accompanying materials are made available under the
-* terms of the Eclipse Public License 2.0 which is available at
-* http://www.eclipse.org/legal/epl-2.0
-*
-* SPDX-License-Identifier: EPL-2.0
-********************************************************************************/
 {
 	"version": "2.0.0",
 	"tasks": [
@@ -38,16 +26,16 @@
 		{
 			"label": "ensure-dapr",
 			"type": "shell",
-			"command": "./.vscode/scripts/ensure-dapr.sh",
+			"command": "./.vscode/scripts/ensure-dapr.sh --task",
 			"group": "none",
 			"presentation": {
 				"close": true
 			}
 		},
 		{
-			"label": "mosquitto",
+			"label": "run-mosquitto",
 			"type": "shell",
-			"command": "./.vscode/scripts/run-mosquitto.sh",
+			"command": "./.vscode/scripts/run-mosquitto.sh --task",
 			"group": "none",
 			"presentation": {
 				"reveal": "always",
@@ -60,7 +48,7 @@
 						"regexp": ".",
 						"file": 1,
 						"location": 2,
-						"message": 3
+						"message": 4
 					}
 				],
 				"background": {
@@ -71,9 +59,9 @@
 			}
 		},
 		{
-			"label": "vehicle-data-broker",
+			"label": "run-vehicledatabroker",
 			"type": "shell",
-			"command": "./.vscode/scripts/run-vehicledatabroker.sh",
+			"command": "./.vscode/scripts/run-vehicledatabroker.sh --task",
 			"group": "none",
 			"presentation": {
 				"reveal": "always",
@@ -91,22 +79,22 @@
 				],
 				"background": {
 					"activeOnStart": true,
-					"beginsPattern": ".",
-					"endsPattern": "You're up and running! Dapr logs will appear here."
+					"beginsPattern": "^You're up and running! Dapr logs will appear here.",
+					"endsPattern": "."
 				}
 			}
 		},
 		{
-			"label": "vehicle-data-broker-cli",
+			"label": "run-vehicledatabroker-cli",
 			"type":"shell",
-			"command": "./.vscode/scripts/run-vehicledatabroker-cli.sh",
+			"command": "./.vscode/scripts/run-vehicledatabroker-cli.sh --task",
 			"group": "none",
 			"isBackground": false,
 		},
 		{
-			"label": "seat-service",
+			"label": "run-seatservice",
 			"type": "shell",
-			"command": "./.vscode/scripts/run-seatservice.sh",
+			"command": "./.vscode/scripts/run-seatservice.sh --task",
 			"group": "none",
 			"presentation": {
 				"reveal": "always",
@@ -124,15 +112,15 @@
 				],
 				"background": {
 					"activeOnStart": true,
-					"beginsPattern": ".",
-					"endsPattern": "You're up and running! Dapr logs will appear here."
+					"beginsPattern": "^You're up and running! Dapr logs will appear here.",
+					"endsPattern": "."
 				}
 			}
 		},
 		{
-			"label": "feeder-can",
+			"label": "run-feedercan",
 			"type": "shell",
-			"command": "./.vscode/scripts/run-feedercan.sh",
+			"command": "./.vscode/scripts/run-feedercan.sh --task",
 			"group": "none",
 			"presentation": {
 				"reveal": "always",
@@ -150,8 +138,8 @@
 				],
 				"background": {
 					"activeOnStart": true,
-					"beginsPattern": ".",
-					"endsPattern": "You're up and running! Dapr logs will appear here."
+					"beginsPattern": "^You're up and running! Dapr logs will appear here.",
+					"endsPattern": "."
 				}
 			}
 		},
@@ -159,15 +147,12 @@
 			"label": "Start VehicleApp runtime",
 			"dependsOn": [
 				"ensure-dapr",
-				"mosquitto",
-				"vehicle-data-broker",
-				"seat-service",
-				"feeder-can"
+				"run-mosquitto",
+				"run-vehicledatabroker",
+				"run-seatservice",
+				"run-feedercan"
 			],
-			"dependsOrder": "sequence",
-			"runOptions": {
-				"runOn": "folderOpen"
-			},
+			"dependsOrder": "sequence"
 		},
 		{
 			"label": "SeatAdjuster (Dapr run)",
@@ -179,7 +164,7 @@
 				"--app-port 50008",
 				"--config ./.dapr/config.yaml",
 				"--components-path ./.dapr/components",
-				"python3 ./src/run.py"
+				"python3 ./src/SeatAdjusterApp/seatadjuster.py"
 			],
 			"group": "none",
 			"isBackground": true,
@@ -194,8 +179,8 @@
 				],
 				"background": {
 					"activeOnStart": true,
-					"beginsPattern": ".",
-					"endsPattern": "You're up and running! Both Dapr and your app logs will appear here."
+					"beginsPattern": "^You're up and running! Both Dapr and your app logs will appear here.",
+					"endsPattern": "."
 				}
 			}
 		}

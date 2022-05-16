@@ -1,15 +1,16 @@
-#********************************************************************************
-#* Copyright (c) 2021 Contributors to the Eclipse Foundation
-#*
-#* See the NOTICE file(s) distributed with this work for additional
-#* information regarding copyright ownership.
-#*
-#* This program and the accompanying materials are made available under the
-#* terms of the Eclipse Public License 2.0 which is available at
-#* http://www.eclipse.org/legal/epl-2.0
-#*
-#* SPDX-License-Identifier: EPL-2.0
-#********************************************************************************/
+# Copyright (c) 2022 Robert Bosch GmbH and Microsoft Corporation
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License, Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
 
 echo "#######################################################"
 echo "### Installing OS updates                           ###"
@@ -30,9 +31,3 @@ curl -fsSL https://bootstrap.pypa.io/get-pip.py | sudo python$PYTHON_VERSION
 
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python$PYTHON_VERSION 10
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python$PYTHON_VERSION 10
-
-pip3 install pytest pytest-cov coverage2clover
-pip3 install pytest-asyncio
-pip3 install -U flake8
-pip3 install -U pylint
-pip3 install -U mypy
