@@ -52,6 +52,7 @@ jobs:
       - name: Parse OTA System credentials
         env:
           OTA_SYSTEM_CREDENTIALS:  ${{ secrets.OTA_SYSTEM_CREDENTIALS }}
+        working-directory: ./.github/scripts
         run: |
           ./parse-secret.sh
 
