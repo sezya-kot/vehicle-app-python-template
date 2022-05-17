@@ -6,14 +6,15 @@
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
-		"python.pythonPath": "/usr/bin/python",
+		"python.pythonPath": "/usr/bin/python3",
+		"python.defaultInterpreterPath": "/usr/bin/python3",
 		"python.linting.enabled": true,
 		"python.linting.pylintEnabled": true,
 		"python.linting.pylintPath": "/usr/local/bin/pylint",
 		"python.formatting.provider": "black",
 		"python.linting.banditEnabled": true,
-		"python.linting.flake8Enabled": true
-
+		"python.linting.flake8Enabled": true,
+		"python.disableInstallationCheck": true
 	},
 
 	"features": {
@@ -54,7 +55,7 @@
 	// "forwardPorts": [],
 
 	// Ensure Dapr is running on opening the container
-	"postCreateCommand": "bash .devcontainer/scripts/postCreateCommand.sh",
+	"onCreateCommand": "bash .devcontainer/scripts/postCreateCommand.sh",
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode"
 }

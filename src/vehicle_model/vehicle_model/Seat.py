@@ -14,7 +14,7 @@
 
 # pylint: disable=C0103
 
-from sdv.model import DataPointBool, Model
+from sdv.model import DataPointBoolean, Model
 
 
 class Seat(Model):
@@ -25,10 +25,10 @@ class Seat(Model):
 
     Attributes
     ----------
-    Position : DataPointBool
-        an object instantiation of DataPointBool class
+    Position : DataPointBoolean
+        an object instantiation of DataPointBoolean class
     """
 
     def __init__(self, parent):
         super().__init__(parent)
-        self.Position = DataPointBool("Position", self)
+        self.Position = DataPointBoolean("Position", self)
