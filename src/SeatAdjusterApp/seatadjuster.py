@@ -51,12 +51,13 @@ class SeatAdjusterApp(VehicleApp):
     async def on_start(self):
         """Run when the vehicle app starts"""
 
-        ################################################################################################
-        # ### Subscribe for -> Vehicle.Cabin.Seat.Row1.Pos1.Position and/join Vehicle.Speed value change
-        # REMARK: Subscribing to multipe data points is not possible now due to dapr issue. Therefore,
-        # joining multiple data points is used.
+        ###############################################################################
+        # Subscribe for -> Vehicle.Cabin.Seat.Row1.Pos1.Position and/join
+        # Vehicle.Speed value change
+        # REMARK: Subscribing to multipe data points is not possible now due to dapr
+        # issue. Therefore, joining multiple data points is used here.
         # DAPR ISSUE: https://github.com/dapr/dapr/issues/4537
-        #################################################################################################
+        ###############################################################################
         logger.info("Subscribe for Datapoints!")
         await self.vehicle_client.Cabin.Seat.element_at(1, 1).Position.join(
             self.vehicle_client.Speed
