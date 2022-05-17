@@ -23,7 +23,7 @@ import signal
 
 import grpc
 from sdv.util.log import get_default_date_format, get_default_log_format
-from sdv.vehicle_app import VehicleApp, subscribe_data_points, subscribe_topic
+from sdv.vehicle_app import VehicleApp, subscribe_topic
 
 from vehicle_model.proto.seats_pb2 import BASE, SeatLocation
 from vehicle_model.Vehicle import Vehicle, vehicle
@@ -48,19 +48,33 @@ class SeatAdjusterApp(VehicleApp):
         self.vehicle_client = vehicle_client
         self.vehicle_speed = 0
 
+    async def on_start(self):
+        """Run when the vehicle app starts"""
+
+        ################################################################################################
+        # ### Subscribe for -> Vehicle.Cabin.Seat.Row1.Pos1.Position and/join Vehicle.Speed value change
+        # REMARK: Subscribing to multipe data points is not possible now due to dapr issue. Therefore,
+        # joining multiple data points is used.
+        # DAPR ISSUE: https://github.com/dapr/dapr/issues/4537
+        #################################################################################################
+        logger.info("Subscribe for Datapoints!")
+        await self.vehicle_client.Cabin.Seat.element_at(1, 1).Position.join(
+            self.vehicle_client.Speed
+        ).subscribe(self.on_vehicle_seat_change)
+
     @subscribe_topic("seatadjuster/setPosition/request")
     async def on_set_position_request_received(self, data: str) -> None:
         """Handle set position request from GUI app from MQTT topic"""
         data = json.loads(data)
         logger.info("Set Position Request received: data=%s", data)  # noqa: E501
         resp_topic = "seatadjuster/setPosition/response"
-        vehicle_speed = self.vehicle_speed
-        if vehicle_speed == 0:
+        logger.info("Current vehicle speed is: %s", self.vehicle_speed)
+        if self.vehicle_speed == 0:
             resp_data = await self.__get_processed_response(data)
             await self.__publish_data_to_topic(resp_data, resp_topic, self)
         else:
             error_msg = f"""Not allowed to move seat because vehicle speed
-                is {vehicle_speed} and not 0"""
+                is {self.vehicle_speed} and not 0"""
             logger.warning(error_msg)
             resp_data = {
                 "requestId": data["requestId"],  # type: ignore
@@ -103,12 +117,15 @@ class SeatAdjusterApp(VehicleApp):
             error_msg = f"Exception details: {ex}"
             logger.error(error_msg)
 
-    @subscribe_data_points("Vehicle.Cabin.Seat.Row1.Pos1.Position,Vehicle.Speed")
     async def on_vehicle_seat_change(self, data):
         self.vehicle_speed = data.fields["Vehicle.Speed"].float_value
         resp_data = data.fields["Vehicle.Cabin.Seat.Row1.Pos1.Position"].uint32_value
         req_data = {"position": resp_data}
-        logger.info("Current Position of the Vehicle Seat is: %s", req_data)
+        logger.info(
+            "On Vehicle Data changed (Vehicle Speed : %s, Seate Position: %s)",
+            self.vehicle_speed,
+            req_data,
+        )
         try:
             await self.publish_mqtt_event(
                 "seatadjuster/currentPosition", json.dumps(req_data)
