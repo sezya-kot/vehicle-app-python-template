@@ -19,7 +19,7 @@
 from sdv.model import (
     DataPointFloat,
     DataPointInt32,
-    DataPointUInt32,
+    DataPointUint32,
     Dictionary,
     Model,
     ModelCollection,
@@ -48,16 +48,16 @@ class PGN61443(Model):
     def __init__(self, parent: Model):
         super().__init__(parent)
 
-        self.VehicleAccelerationRateLimitStatus = DataPointUInt32(
+        self.VehicleAccelerationRateLimitStatus = DataPointUint32(
             "VehicleAccelerationRateLimitStatus", self
         )
-        self.DPFThermalManagementActive = DataPointUInt32(
+        self.DPFThermalManagementActive = DataPointUint32(
             "DPFThermalManagementActive", self
         )
-        self.AcceleratorPedalPosition1 = DataPointUInt32(
+        self.AcceleratorPedalPosition1 = DataPointUint32(
             "AcceleratorPedalPosition1", self
         )
-        self.EnginePercentLoadAtCurrentSpeed = DataPointUInt32(
+        self.EnginePercentLoadAtCurrentSpeed = DataPointUint32(
             "EnginePercentLoadAtCurrentSpeed", self
         )
         self.RemoteAcceleratorPedalPosition = DataPointFloat(
@@ -77,7 +77,7 @@ class PGN61441(Model):
     def __init__(self, parent: Model):
         super().__init__(parent)
 
-        self.RemoteAcceleratorEnableSwitch = DataPointUInt32(
+        self.RemoteAcceleratorEnableSwitch = DataPointUint32(
             "RemoteAcceleratorEnableSwitch", self
         )
 
@@ -113,7 +113,7 @@ class PGN57344(Model):
     def __init__(self, parent: Model):
         super().__init__(parent)
 
-        self.AftertreatmentRegenerationInhibitSwitch = DataPointUInt32(
+        self.AftertreatmentRegenerationInhibitSwitch = DataPointUint32(
             "AftertreatmentRegenerationInhibitSwitch", self
         )
 
@@ -167,11 +167,11 @@ class PGN65226(Model):
     def __init__(self, parent: Model):
         super().__init__(parent)
 
-        self.LampStatus = DataPointUInt32("LampStatus", self)
-        self.SPN = DataPointUInt32("SPN", self)
-        self.FMI = DataPointUInt32("FMI", self)
-        self.SPNConversion = DataPointUInt32("SPNConversion", self)
-        self.OccurenceCount = DataPointUInt32("OccurenceCount", self)
+        self.LampStatus = DataPointUint32("LampStatus", self)
+        self.SPN = DataPointUint32("SPN", self)
+        self.FMI = DataPointUint32("FMI", self)
+        self.SPNConversion = DataPointUint32("SPNConversion", self)
+        self.OccurenceCount = DataPointUint32("OccurenceCount", self)
 
 
 class J1939(Model):

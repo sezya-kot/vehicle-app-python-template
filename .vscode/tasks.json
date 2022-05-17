@@ -11,6 +11,10 @@
 			"grpcPort": 50001,
 			"httpPort": 3500,
 			"type": "dapr",
+			"presentation": {
+				"close": true,
+				"reveal": "never"
+			},
 		},
 		{
 			"label": "dapr-SeatAdjuster-stop",
