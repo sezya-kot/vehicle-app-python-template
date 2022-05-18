@@ -1,4 +1,4 @@
-# How to Contribute to Eclipse Velocitas
+# How to Contribute to Eclipse Velocitas Vehicle App Python Template
 
 First of all, thanks for considering to contribute to Eclipse Velocitas. We really
 appreciate the time and effort you want to spend helping to improve things around here.
@@ -21,15 +21,33 @@ Contributor Agreement (ECA) on file.
 For more information, please see the Eclipse Committer Handbook:
 https://www.eclipse.org/projects/handbook/#resources-commit
 
+## Code Style Guide
+* Use [Black](https://black.readthedocs.io/) to format your code.
+* Use [isort](https://isort.readthedocs.io/) to sort imports.
+* Use [pydocstyle](https://pydocstyle.readthedocs.io/) to check for PEP-8 style issues.
+* Use [mypy](https://mypy.readthedocs.io/) to check for type errors.
+* Use [flake8](https://flake8.readthedocs.io/) to check for style issues.
+* Use [pylint](https://pylint.readthedocs.io/) to check for code quality issues.
+* Above and other tools will run automatically if you install
+ [pre-commit](https://pre-commit.com/) using the instructions below.
+
 ## Making Your Changes
 
 * Fork the repository on GitHub.
 * Create a new branch for your changes.
+* Install dependencies:
+
+   ```bash
+   pip3 install -r requirements-dev.txt
+   ```
 * Make your changes following the code style guide (see Code Style Guide section above).
 * When you create new files make sure you include a proper license header at the top of the file (see License Header section below).
-* Make sure you include test cases for non-trivial features.
-* Make sure test cases provide sufficient code coverage (see GitHub actions for minimal accepted coverage).
-* Make sure the test suite passes after your changes.
+* Install and run [pre-commit](https://pre-commit.com/) to automatically check for style guide issues.
+    ```bash
+    pre-commit install
+    pre-commit run --all-files
+    ```
+* Make sure the unit and integration test suites passes after your changes.
 * Commit your changes into that branch.
 * Use descriptive and meaningful commit messages. Start the first line of the commit message with the issue number and title e.g. `[#9865] Add token based authentication`.
 * Squash multiple commits that are related to each other semantically into a single one.
@@ -38,12 +56,8 @@ https://www.eclipse.org/projects/handbook/#resources-commit
 
 ## Update Python dependencies
 
-Please use [pip-tools](https://github.com/jazzband/pip-tools) to keep the pip-based packages up to date. The following requirements input files are avaialble:
-- Development requirements [requirements-dev.in](./requirements-dev.in) file in the root directory.
-- Runtime Requirements [src/requirements.in](./src/requirements.in).
-- Test Requirements [test/requirements.in](./test/requirements.in).
-
-`Please don't try to update the dependencies manually.`
+Please use [pip-tools](https://github.com/jazzband/pip-tools) to update pip-based packages up to date. Any additional devlopment dependencies needs to be added to the [requirements.in](./requirements.in) file in the root directory.
+* `Please don't try to update the dependencies manually.`
 
 ## License Header
 
@@ -56,10 +70,10 @@ Please make sure any file you newly create contains a proper license header like
 # information regarding copyright ownership.
 #
 # This program and the accompanying materials are made available under the
-# terms of the Eclipse Public License 2.0 which is available at
-# http://www.eclipse.org/legal/epl-2.0
+# terms of the Apache License 2.0 which is available at
+# http://www.apache.org/licenses/LICENSE-2.0
 #
-# SPDX-License-Identifier: EPL-2.0
+# SPDX-License-Identifier: Apache-2.0
 ```
 Please adjusted the comment character to the specific file format.
 
