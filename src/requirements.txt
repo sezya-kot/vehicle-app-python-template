@@ -4,8 +4,6 @@
 #
 #    pip-compile src/requirements.in
 #
--e file:src/vehicle_model
-    # via -r src/requirements.in
 aiohttp==3.8.1
     # via dapr
 aiosignal==1.2.0
