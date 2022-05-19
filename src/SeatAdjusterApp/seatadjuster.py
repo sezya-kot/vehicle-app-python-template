@@ -31,6 +31,15 @@ logging.basicConfig(format=get_default_log_format(), datefmt=get_default_date_fo
 logging.getLogger().setLevel("INFO")
 logger = logging.getLogger(__name__)
 
+###############################################################################
+# REMARK: Subscribing to multipe data points is not possible due to dapr
+# issue. Therefore, seat position and speed are subscribed in a single rule
+# DAPR ISSUE: htps:t//github.com/dapr/dapr/issues/4537
+#
+# After this is fixed, the sample app is supposed to be refactored, so that
+# Vehicle.Speed is retrieved with a get() call instead.
+###############################################################################
+
 
 class SeatAdjusterApp(VehicleApp):
     """
@@ -50,13 +59,6 @@ class SeatAdjusterApp(VehicleApp):
     async def on_start(self):
         """Run when the vehicle app starts"""
 
-        ###############################################################################
-        # Subscribe for -> Vehicle.Cabin.Seat.Row1.Pos1.Position and/join
-        # Vehicle.Speed value change
-        # REMARK: Subscribing to multipe data points is not possible now due to dapr
-        # issue. Therefore, joining multiple data points is used here.
-        # DAPR ISSUE: https://github.com/dapr/dapr/issues/4537
-        ###############################################################################
         logger.info("Subscribe for Datapoints!")
         await self.vehicle_client.Cabin.Seat.element_at(1, 1).Position.join(
             self.vehicle_client.Speed
