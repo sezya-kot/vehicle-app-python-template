@@ -13,6 +13,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 name: CI workflow
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
 
 on:
   workflow_dispatch:
@@ -33,6 +36,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
+          token: ${{ secrets.SDV_GITHUB_AUTOMATION_TOKEN }}
           ref: ${{ github.head_ref }}
 
       - name: Clone Release Documentation Action repository
@@ -46,11 +50,18 @@ jobs:
         with:
           credentials: https://swd9be:${{ secrets.SDV_GITHUB_AUTOMATION_TOKEN }}@github.com/
 
-      - name: Setup git config
-        shell: bash
+      - name: Install required packages
+        shell: pwsh
         run: |
-          git config --global user.email "github-automation@users.noreply.github.com"
-          git config --global user.name "Github Automation"
+          pip install -r requirements-dev.txt
+          pip install -r src/requirements-sdv.txt
+          pip install -r src/requirements.txt
+          pip install -r test/requirements.txt
+
+      - name: Run Linters
+        uses: pre-commit/action@v2.0.3
+        with:
+          token: ${{ secrets.SDV_GITHUB_AUTOMATION_TOKEN }}
 
       - name: Install Dapr
         uses: dapr/setup-dapr@v1
@@ -65,22 +76,9 @@ jobs:
           Write-Output "::endgroup::"
           dapr --version
 
-      - name: Install required packages
-        shell: pwsh
-        run: |
-          pip install -r requirements-dev.txt
-          pip install -r src/requirements-sdv.txt
-          pip install -r src/requirements.txt
-          pip install -r test/requirements.txt
-
       - name: Start mqtt
         shell: bash
         run: docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto:1.6.9
-
-      - name: Run Linters
-        uses: pre-commit/action@v2.0.3
-        with:
-          token: ${{ secrets.SDV_GITHUB_AUTOMATION_TOKEN }}
 
       - name: unit test
         shell: bash

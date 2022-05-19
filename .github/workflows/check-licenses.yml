@@ -34,6 +34,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
+          token: ${{ secrets.SDV_GITHUB_AUTOMATION_TOKEN }}
           ref: ${{ github.head_ref }}
 
       - name: Clone License Check Repo
