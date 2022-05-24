@@ -1,4 +1,4 @@
-
+#!/bin/bash
 # Copyright (c) 2022 Robert Bosch GmbH and Microsoft Corporation
 #
 # This program and the accompanying materials are made available under the
@@ -17,7 +17,7 @@ echo "#######################################################"
 echo "### Running Seatservice                             ###"
 echo "#######################################################"
 
-ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
+ROOT_DIRECTORY=$( realpath "$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../.." )
 source $ROOT_DIRECTORY/.vscode/scripts/exec-check.sh "$@" $(basename $BASH_SOURCE .sh)
 GITHUB_TOKEN="$ROOT_DIRECTORY/github_token.txt"
 

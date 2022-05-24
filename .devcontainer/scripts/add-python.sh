@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 2022 Robert Bosch GmbH and Microsoft Corporation
 #
 # This program and the accompanying materials are made available under the
@@ -22,7 +23,7 @@ sudo apt-get install -y wget ca-certificates
 echo "#######################################################"
 echo "### Installing python version 3                     ###"
 echo "#######################################################"
-ROOT_DIRECTORY=$(git rev-parse --show-toplevel)
+ROOT_DIRECTORY=$( realpath "$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../.." )
 PYTHON_VERSION=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .python.version | tr -d '"')
 
 sudo apt-get install -y python3-distutils

@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 2022 Robert Bosch GmbH and Microsoft Corporation
 #
 # This program and the accompanying materials are made available under the
@@ -12,7 +13,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-chmod +x .devcontainer/scripts/*.sh
+sudo chmod +x .devcontainer/scripts/*.sh
 sudo chown -R $(whoami) $HOME
 
 echo "#######################################################"
@@ -23,7 +24,7 @@ sudo .devcontainer/scripts/configure-proxies.sh | tee -a $HOME/configure-proxies
 echo "#######################################################"
 echo "### Install Jq                                      ###"
 echo "#######################################################"
-apt-get install -y jq
+sudo apt-get install -y jq
 
 echo "#######################################################"
 echo "### Executing container-set.sh                      ###"
