@@ -17,8 +17,8 @@
 |click|8.1.3|New BSD|
 |cloudevents|1.2.0|Apache 2.0|
 |coverage|6.3.2|Apache 2.0|
-|coverage2clover|3.3.0|unknown|
-|coveragepy-lcov|0.1.2|unknown|
+|coverage2clover|3.3.0|THE BEERWARE LICENSE|
+|coveragepy-lcov|0.1.2|Apache 2.0|
 |dapr|1.6.0|Apache 2.0|
 |deprecation|2.1.0|Apache 2.0|
 |dill|0.3.4|New BSD|
@@ -65,7 +65,7 @@
 |platformdirs|2.5.2|MIT|
 |pluggy|1.0.0|MIT|
 |pre-commit|2.18.1|MIT|
-|protobuf|3.19.4|unknown|
+|protobuf|3.19.4|Google License|
 |py|1.11.0|MIT|
 |pyasn1|0.4.8|BSD|
 |pyasn1-modules|0.2.8|Simplified BSD|
