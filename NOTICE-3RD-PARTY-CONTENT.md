@@ -107,7 +107,7 @@
 |actions/checkout|v2|MIT License|
 |actions/setup-node|v1|MIT License|
 |actions/upload-artifact|v2|MIT License|
-|aquasecurity/trivy-action|0.0.18|Apache License 2.0|
+|aquasecurity/trivy-action|0.3.0|Apache License 2.0|
 |ASzc/change-string-case-action|v1|ISC License|
 |battila7/get-version-action|v2|MIT License|
 |dapr/setup-dapr|v1|Apache License 2.0|
