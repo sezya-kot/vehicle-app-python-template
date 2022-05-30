@@ -100,7 +100,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Clone actions repository
+      - name: Clone Release Documentation Action repository
         uses: actions/checkout@v2
         with:
           repository: SoftwareDefinedVehicle/release-documentation-action
@@ -246,6 +246,7 @@ jobs:
       - name: Parse OTA System credentials
         env:
           OTA_SYSTEM_CREDENTIALS:  ${{ secrets.OTA_SYSTEM_CREDENTIALS }}
+        working-directory: ./.github/scripts
         run: |
           ./parse-secret.sh
 
@@ -255,7 +256,7 @@ jobs:
       - name: Update vehicleapi tag value in the related HelmChart values.yaml
         uses: fjogeleit/yaml-update-action@master
         with:
-          valueFile: 'deploy/helm/values.yaml'
+          valueFile: 'deploy/SeatAdjusterApp/helm/values.yaml'
           propertyPath: 'imageSeatAdjusterApp.tag'
           value: ${{ steps.get_version.outputs.version-without-v }}
           commitChange: false
@@ -266,9 +267,9 @@ jobs:
           VAPP_VERSION: ${{ steps.get_version.outputs.version-without-v }}
           COMMIT: ${{ github.sha }}
         run: |
-          cp -a ./.dapr/config.yaml ./deploy/helm/
+          cp -a ./.dapr/config.yaml ./deploy/SeatAdjusterApp/helm/
           export HELM_EXPERIMENTAL_OCI=1
-          helm package deploy/helm --version $VAPP_VERSION --app-version $COMMIT
+          helm package deploy/SeatAdjusterApp/helm --version $VAPP_VERSION --app-version $COMMIT
 
       - name: Login to helm registry
         env:

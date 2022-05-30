@@ -111,7 +111,7 @@ jobs:
         skopeo copy oci-archive:${{ matrix.component.Name }}.tar docker-archive:${{ matrix.component.Name }}-arch.tar
 
     - name: "${{ matrix.component.Name }} -- Scan docker image for vulnerabilities"
-      uses: aquasecurity/trivy-action@0.0.18
+      uses: aquasecurity/trivy-action@0.3.0
       with:
         input: ${{ matrix.component.Name }}-arch.tar
         exit-code: '0'
