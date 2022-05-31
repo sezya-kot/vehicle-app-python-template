@@ -19,8 +19,8 @@ from unittest import mock
 
 import pytest
 from sdv.vehicle_app import VehicleApp
-from vehicle_model.Cabin.SeatService import SeatService  # type: ignore
-from vehicle_model.proto.seats_pb2 import BASE, SeatLocation  # type: ignore
+from sdv_model.Cabin.SeatService import SeatService  # type: ignore
+from sdv_model.proto.seats_pb2 import BASE, SeatLocation  # type: ignore
 
 
 @pytest.mark.asyncio

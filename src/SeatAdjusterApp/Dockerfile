@@ -37,7 +37,7 @@ RUN --mount=type=secret,id=github_token credential=$(cat /run/secrets/github_tok
     && pip3 install --no-cache-dir staticx \
     && pip3 install --no-cache-dir -r src/requirements.txt \
     && pip3 install --no-cache-dir https://${credential}@api.github.com/repos/SoftwareDefinedVehicle/vehicle-app-python-sdk/tarball/v0.4.3 \
-    && pip3 install --no-cache-dir https://${credential}@api.github.com/repos/SoftwareDefinedVehicle/vehicle-model-generator/tarball
+    && pip3 install --no-cache-dir https://${credential}@api.github.com/repos/SoftwareDefinedVehicle/vehicle-model-python/tarball
 
 WORKDIR /src
 

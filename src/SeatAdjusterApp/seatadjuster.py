@@ -24,8 +24,8 @@ import signal
 import grpc
 from sdv.util.log import get_default_date_format, get_default_log_format
 from sdv.vehicle_app import VehicleApp, subscribe_topic
-from vehicle_model import Vehicle, vehicle  # type: ignore
-from vehicle_model.proto.seats_pb2 import BASE, SeatLocation  # type: ignore
+from sdv_model import Vehicle, vehicle  # type: ignore
+from sdv_model.proto.seats_pb2 import BASE, SeatLocation  # type: ignore
 
 logging.basicConfig(format=get_default_log_format(), datefmt=get_default_date_format())
 logging.getLogger().setLevel("INFO")
