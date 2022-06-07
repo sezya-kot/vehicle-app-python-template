@@ -18,7 +18,7 @@ VEHICLEDATABROKER_TAG=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .dat
 SEATSERVICE_TAG=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .seatservice.version | tr -d '"')
 FEEDERCAN_TAG=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .feedercan.version | tr -d '"')
 GITHUB_TOKEN="$ROOT_DIRECTORY/github_token.txt"
-cred=$(cat $GITHUB_TOKEN)
+cred=$(cat $GITHUB_TOKEN | base64 --decode)
 echo $cred | cut -d':' -f2 | docker login ghcr.io -u USERNAME --password-stdin
 
 if grep -q ghcr.io $HOME/.docker/config.json; then

@@ -31,7 +31,7 @@ RUN /bin/bash -c 'set -ex && \
     fi'
 
 
-RUN --mount=type=secret,id=github_token credential=$(cat /run/secrets/github_token) \
+RUN --mount=type=secret,id=github_token credential=$(cat /run/secrets/github_token | grep ghp_ || cat /run/secrets/github_token | base64 --decode) \
     && pip3 install --no-cache-dir pyinstaller \
     && pip3 install --no-cache-dir patchelf \
     && pip3 install --no-cache-dir staticx \

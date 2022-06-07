@@ -39,7 +39,7 @@ else
   SEATSERVICE_EXEC_PATH="$ROOT_DIRECTORY/.vscode/scripts/assets/seatservice/$SEATSERVICE_VERSION/$PROCESSOR/target/x86_64/release/install/bin"
 fi
 
-cred=$(cat $GITHUB_TOKEN)
+cred=$(cat $GITHUB_TOKEN | base64 --decode)
 API_URL=https://$cred@api.github.com/repos/SoftwareDefinedVehicle/swdc-os-vehicleapi
 
 if [[ ! -f "$SEATSERVICE_EXEC_PATH/val_start.sh" ]]

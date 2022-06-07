@@ -29,7 +29,7 @@ sudo chown $(whoami) $HOME
 FEEDERCAN_SOURCE="feedercan_source"
 FEEDERCAN_EXEC_PATH="$ROOT_DIRECTORY/.vscode/scripts/assets/feedercan/$FEEDERCAN_VERSION"
 
-cred=$(cat $GITHUB_TOKEN)
+cred=$(cat $GITHUB_TOKEN | base64 --decode)
 API_URL=https://$cred@github.com/SoftwareDefinedVehicle/swdc-os-vehicleapi/tarball/
 
 if [[ ! -f "$FEEDERCAN_EXEC_PATH/feeder_can/dbcfeeder.py" ]]
