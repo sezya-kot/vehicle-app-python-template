@@ -13,8 +13,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-if [[ "$#" -eq 1 ]]; then
-    tput setaf 1; echo "ERROR: To execute script, use VSCODE Tasks: [CTRL+SHIFT+P -> Tasks: Run Tasks -> $1]."
-    read -p "Press <Enter> to close this window"
-    exit 1
+if helm status vehicleappruntime &> /dev/null
+then
+    echo "Uninstalling runtime..."
+    helm uninstall vehicleappruntime --wait
+else
+    echo "Runtime is not installed."
 fi

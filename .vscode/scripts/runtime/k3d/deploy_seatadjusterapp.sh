@@ -12,13 +12,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-imageSeatAdjusterApp:
-  name: seatadjuster
-  repository: k3d-devregistry.localhost:12345/seatadjuster
-  pullPolicy: Always
-  tag: "local"
-  daprAppid: seatadjuster
-  daprPort: 50008
+ROOT_DIRECTORY=$( realpath "$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../../../.." )
 
-nameOverride: ""
-fullnameOverride: ""
+helm uninstall vapp-chart --wait
+
+# Deploy in K3D
+helm install vapp-chart $ROOT_DIRECTORY/deploy/SeatAdjusterApp/helm --values $ROOT_DIRECTORY/.vscode/scripts/runtime/k3d/seatadjusterapp_values.yml --wait --timeout 60s --debug
