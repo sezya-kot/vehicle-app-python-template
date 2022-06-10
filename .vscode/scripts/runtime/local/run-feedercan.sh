@@ -17,8 +17,7 @@ echo "#######################################################"
 echo "### Running FeederCan                               ###"
 echo "#######################################################"
 
-ROOT_DIRECTORY=$( realpath "$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../.." )
-source $ROOT_DIRECTORY/.vscode/scripts/exec-check.sh "$@" $(basename $BASH_SOURCE .sh)
+ROOT_DIRECTORY=$( realpath "$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../../../.." )
 GITHUB_TOKEN="$ROOT_DIRECTORY/github_token.txt"
 
 FEEDERCAN_VERSION=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .feedercan.version | tr -d '"')
@@ -29,7 +28,7 @@ sudo chown $(whoami) $HOME
 FEEDERCAN_SOURCE="feedercan_source"
 FEEDERCAN_EXEC_PATH="$ROOT_DIRECTORY/.vscode/scripts/assets/feedercan/$FEEDERCAN_VERSION"
 
-cred=$(cat $GITHUB_TOKEN)
+cred=$(cat $GITHUB_TOKEN | base64 --decode)
 API_URL=https://$cred@github.com/SoftwareDefinedVehicle/swdc-os-vehicleapi/tarball/
 
 if [[ ! -f "$FEEDERCAN_EXEC_PATH/feeder_can/dbcfeeder.py" ]]

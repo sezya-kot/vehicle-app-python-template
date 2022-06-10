@@ -14,7 +14,7 @@
 
 imageSeatService:
   name: seatservice
-  repository: k3d-devregistry.localhost:12345/seatservice
+  repository: k3d-registry.localhost:12345/seatservice
   pullPolicy: Always
   daprAppid: seatservice
   daprAppPort: 50051
@@ -24,7 +24,7 @@ imageSeatService:
 
 imageVehicleDataBroker:
   name: vehicledatabroker
-  repository: k3d-devregistry.localhost:12345/vehicledatabroker
+  repository: k3d-registry.localhost:12345/vehicledatabroker
   pullPolicy: Always
   daprAppid: vehicledatabroker
   daprAppPort: 55555
@@ -47,7 +47,7 @@ imageMosquitto:
 
 imageFeederCan:
   name: feedercan
-  repository: k3d-devregistry.localhost:12345/feedercan
+  repository: k3d-registry.localhost:12345/feedercan
   pullPolicy: Always
   daprAppid: feedercan
   daprLogLevel: debug

@@ -13,14 +13,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-SHA="70a5999c66ad6f9e5fc81023706e273d411c1c1f"
-REPO_NAME="softwaredefinedvehicle/vehicle-app-python-template"
+ROOT_DIRECTORY=$( realpath "$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../.." )
 
-jq -c '.[]' ./../../../vehicleApp.json | while read i; do
+jq -c '.[]' $ROOT_DIRECTORY/vehicleApp.json | while read i; do
     name=$(jq -r '.Name' <<< "$i")
 
-    pull_url="ghcr.io/$REPO_NAME/$name:$SHA"
-    local_tag="k3d-devregistry.localhost:12345/$name:local"
+    pull_url="ghcr.io/$REPO_NAME/$name:$SHA-amd64"
+    local_tag="k3d-registry.localhost:12345/$name:local"
 
     echo "Remote URL: $pull_url"
     echo "Local URL: $local_tag"
@@ -30,12 +29,12 @@ jq -c '.[]' ./../../../vehicleApp.json | while read i; do
     docker push $local_tag
 done
 
-helm install vapp-chart ./../../SeatAdjusterApp/helm/ --values ./values.yml --wait --timeout 60s --debug
+helm install vapp-chart $ROOT_DIRECTORY/deploy/SeatAdjusterApp/helm/ --values $ROOT_DIRECTORY/.vscode/scripts/runtime/k3d/seatadjusterapp_values.yml --wait --timeout 60s --debug
 
 kubectl get svc --all-namespaces
 kubectl get pods
 
-jq -c '.[]' ./../../../vehicleApp.json | while read i; do
+jq -c '.[]' $ROOT_DIRECTORY/vehicleApp.json | while read i; do
     name=$(jq -r '.Name' <<< "$i")
     podname=$(kubectl get pods -o name | grep $name)
     kubectl describe $podname

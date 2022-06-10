@@ -17,8 +17,7 @@ echo "#######################################################"
 echo "### Running Seatservice                             ###"
 echo "#######################################################"
 
-ROOT_DIRECTORY=$( realpath "$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../.." )
-source $ROOT_DIRECTORY/.vscode/scripts/exec-check.sh "$@" $(basename $BASH_SOURCE .sh)
+ROOT_DIRECTORY=$( realpath "$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../../../.." )
 GITHUB_TOKEN="$ROOT_DIRECTORY/github_token.txt"
 
 SEATSERVICE_VERSION=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .seatservice.version | tr -d '"')
@@ -39,7 +38,7 @@ else
   SEATSERVICE_EXEC_PATH="$ROOT_DIRECTORY/.vscode/scripts/assets/seatservice/$SEATSERVICE_VERSION/$PROCESSOR/target/x86_64/release/install/bin"
 fi
 
-cred=$(cat $GITHUB_TOKEN)
+cred=$(cat $GITHUB_TOKEN | base64 --decode)
 API_URL=https://$cred@api.github.com/repos/SoftwareDefinedVehicle/swdc-os-vehicleapi
 
 if [[ ! -f "$SEATSERVICE_EXEC_PATH/val_start.sh" ]]

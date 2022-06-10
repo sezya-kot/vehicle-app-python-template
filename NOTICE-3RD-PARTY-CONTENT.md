@@ -110,7 +110,6 @@
 |aquasecurity/trivy-action|0.3.0|Apache License 2.0|
 |ASzc/change-string-case-action|v1|ISC License|
 |battila7/get-version-action|v2|MIT License|
-|dapr/setup-dapr|v1|Apache License 2.0|
 |dawidd6/action-download-artifact|v2|MIT License|
 |docker/build-push-action|v2|Apache License 2.0|
 |docker/login-action|v1|Apache License 2.0|

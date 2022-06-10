@@ -12,11 +12,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-WORKING_DIR=$(pwd)
+ROOT_DIRECTORY=$( realpath "$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../../../.." )
 
-if [ -f "./../../github_token.txt" ];
+if [ -f "$ROOT_DIRECTORY/github_token.txt" ];
 then
-    GITHUB_TOKEN="github_token,src=github_token.txt"
+    GITHUB_TOKEN="github_token,src=$ROOT_DIRECTORY/github_token.txt"
 else
     GITHUB_TOKEN="github_token"
 fi
@@ -24,7 +24,7 @@ fi
 if [ -n "$HTTP_PROXY" ]; then
     echo "Building image with proxy configuration"
 
-    cd $WORKING_DIR/../../
+    cd $ROOT_DIRECTORY
     DOCKER_BUILDKIT=1 docker build \
     -f src/SeatAdjusterApp/Dockerfile \
     --progress=plain --secret id=$GITHUB_TOKEN \
@@ -36,19 +36,11 @@ if [ -n "$HTTP_PROXY" ]; then
     --build-arg NO_PROXY="$NO_PROXY" . --no-cache
     docker push localhost:12345/seatadjuster:local
 
-    cd $WORKING_DIR
 else
     echo "Building image without proxy configuration"
     # Build, push vehicleapi image - NO PROXY
 
-    cd $WORKING_DIR/../../
+    cd $ROOT_DIRECTORY
     DOCKER_BUILDKIT=1 docker build -f src/SeatAdjusterApp/Dockerfile --progress=plain --secret id=$GITHUB_TOKEN -t localhost:12345/seatadjuster:local . --no-cache
     docker push localhost:12345/seatadjuster:local
-
-    cd $WORKING_DIR
 fi
-
-helm uninstall vapp-chart --wait
-
-# Deploy in Kubernetes
-helm install vapp-chart ./helm --values ../runtime/k3d/values.yml --wait --timeout 60s --debug
