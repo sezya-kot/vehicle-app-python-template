@@ -16,7 +16,6 @@
 |cloudevents|1.2.0|Apache 2.0|
 |coverage|6.4.1|Apache 2.0|
 |dapr|1.6.1|Apache 2.0|
-|dapr|1.6.0|Apache 2.0|
 |deprecation|2.1.0|Apache 2.0|
 |dill|0.3.5.1|New BSD|
 |distlib|0.3.4|Python Software Foundation License|
@@ -26,7 +25,6 @@
 |gitdb|4.0.9|BSD|
 |GitPython|3.1.27|BSD|
 |grpc-stubs|1.24.10|MIT|
-|grpcio|1.44.0|Apache 2.0|
 |grpcio|1.46.3|Apache 2.0|
 |grpcio-tools|1.46.3|Apache 2.0|
 |identify|2.5.1|MIT|
@@ -54,8 +52,7 @@
 |pycodestyle|2.8.0|MIT|
 |pydocstyle|6.1.1|MIT|
 |pyflakes|2.4.0|MIT|
-|pylint|2.13.7|GNU General Public License v2 (GPLv2)|
-|pyparsing|3.0.8|MIT|
+|pylint|2.14.1|GNU General Public License v2 (GPLv2)|
 |pyparsing|3.0.9|MIT|
 |pytest|7.1.2|MIT|
 |pytest-asyncio|0.18.3|Apache 2.0|
