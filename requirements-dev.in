@@ -13,11 +13,13 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ##########################################
-# Runtime Packages
+# Import src and test requirements
 ##########################################
-# Include requirements from src/requirements and test/requirements
 -c src/requirements.txt
 -c test/requirements.txt
+##########################################
+# Runtime Packages
+##########################################
 grpcio-tools
 grpc-stubs
 mypy-protobuf
