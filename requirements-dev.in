@@ -15,10 +15,9 @@
 ##########################################
 # Runtime Packages
 ##########################################
-protobuf
-grpcio
-dapr
-cloudevents
+# Include requirements from src/requirements and test/requirements
+-c src/requirements.txt
+-c test/requirements.txt
 grpcio-tools
 grpc-stubs
 mypy-protobuf
