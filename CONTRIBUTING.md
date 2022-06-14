@@ -56,31 +56,30 @@ https://www.eclipse.org/projects/handbook/#resources-commit
 
 ## Python Dependency Management
 
-In this project, the [pip-tools](https://github.com/jazzband/pip-tools) are used to manage the python dependencies and to keep all packages up-to-date.
+In this project, the [pip-tools](https://github.com/jazzband/pip-tools) are used to manage the python dependencies and to keep all packages up-to-date. The required pip-based dependencies of this project are defined in multiple `requirement` input files.
 
-The required pip-based dependencies of this project are defined in multiple `requirement` input files.
 ### Vehicle app runtime dependencies
-* The [./src/requirements.in](./src/requirements.in) is the requirement input file that used to generate the Vehicle app runtime requirements file [./src/requirements.txt](./src/requirements.txt)
+* The [./src/requirements.in](./src/requirements.in) file is the requirement input file that used to generate the Vehicle app runtime requirements file [./src/requirements.txt](./src/requirements.txt)
 
 ### Unit and Integration testing dependencies
-* The [./test/requirements.in](./test/requirements.in)is the requirement input file that used to generate the testing requirements file [./test/requirements.txt](./test/requirements.txt). The test requirements file needs to be installed for the development container to execute the unit and integration tests as well as in the CI Workflow test execution.
+* The [./test/requirements.in](./test/requirements.in) file is the requirement input file that used to generate the testing requirements file [./test/requirements.txt](./test/requirements.txt). The test requirements file needs to be installed for the development container to execute the unit and integration tests as well as in the CI Workflow test execution.
 
 ### Development tools dependencies
-* The [./requirements-dev.in](./requirements-dev.in) is the requirement input file that used to generate requirements file [./requirements-dev.txt](./requirements-dev.txt) for the other development tools. The development requirements list includes all the necessary packages testing and development tools packages and need to be installed before start contributing to the project. The development requirements (i.e. [./requirements-dev.in](./requirements-dev.in) are also aligned with the testing and runtime requirements for better dependency conflict management with the specified constrains.
+* The [./requirements-dev.in](./requirements-dev.in) file is the requirement input file that used to generate requirements file [./requirements-dev.txt](./requirements-dev.txt) for the other development tools. The development requirements list includes all the necessary packages testing and development tools packages and need to be installed before start contributing to the project. The development requirements (i.e. [./requirements-dev.in](./requirements-dev.in) are also aligned with the testing and runtime requirements for better dependency conflict management with the specified constrains.
 
 The process to manage the dependencies of this project can be summarized as following:
-* The `pip-compile` tool will generate the corresponding `requirements`. By executing this tools for a specific requirements in put file, the `"requirements<<type>>.txt"` file will be updated with all underlying dependencies. The command below shall be executed every time a new python package is added to the project and/or to bump the package versions.
+* The `pip-compile` tool will generate the corresponding python `requirements`. When executing this tools for a specific requirements input file, the python `"requirements<<type>>.txt"` file will be updated with all underlying dependencies. The command below shall be executed every time a new python package is added to the project and/or to bump the package versions.
 
    ```bash
-   pip-compile <<requirements.in>>
+   pip-compile <<path-to-requirements.txt>>
    ```
 
 * Run `pip-sync` or `pip install` to install the required dependencies from all requirement files alternatively.
    ```bash
-   pip-sync <file name>.txt
+   pip-sync <<path-to-requirements.txt>>
    ```
    ```bash
-   pip3 install -r <file name>.txt
+   pip3 install -r <<path-to-requirements.txt>>
    ```
 * `Please don't try to update the dependencies manually. `
 
