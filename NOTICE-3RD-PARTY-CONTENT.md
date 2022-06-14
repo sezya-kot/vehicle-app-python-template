@@ -5,7 +5,7 @@
 |:-----------|:-------:|--------:|
 |aiohttp|3.8.1|Apache 2.0|
 |aiosignal|1.2.0|Apache 2.0|
-|astroid|2.11.5|GNU Lesser General Public License v2 (LGPLv2)|
+|astroid|2.11.6|GNU Lesser General Public License v2 (LGPLv2)|
 |async-timeout|4.0.2|Apache 2.0|
 |attrs|21.4.0|MIT|
 |bandit|1.7.4|Apache 2.0|
@@ -14,7 +14,6 @@
 |charset-normalizer|2.0.12|MIT|
 |click|8.1.3|New BSD|
 |cloudevents|1.2.0|Apache 2.0|
-|coverage|6.4.1|Apache 2.0|
 |dapr|1.6.1|Apache 2.0|
 |deprecation|2.1.0|Apache 2.0|
 |dill|0.3.5.1|New BSD|
@@ -29,7 +28,6 @@
 |grpcio-tools|1.46.3|Apache 2.0|
 |identify|2.5.1|MIT|
 |idna|3.3|New BSD|
-|iniconfig|1.1.1|MIT|
 |isort|5.10.1|MIT|
 |lazy-object-proxy|1.7.1|Simplified BSD|
 |mccabe|0.6.1|MIT|
@@ -45,18 +43,13 @@
 |pip|22.0.4|MIT|
 |pip-tools|6.6.2|BSD|
 |platformdirs|2.5.2|MIT|
-|pluggy|1.0.0|MIT|
 |pre-commit|2.19.0|MIT|
 |protobuf|3.19.4|Google License|
-|py|1.11.0|MIT|
 |pycodestyle|2.8.0|MIT|
 |pydocstyle|6.1.1|MIT|
 |pyflakes|2.4.0|MIT|
 |pylint|2.14.1|GNU General Public License v2 (GPLv2)|
 |pyparsing|3.0.9|MIT|
-|pytest|7.1.2|MIT|
-|pytest-asyncio|0.18.3|Apache 2.0|
-|pytest-cov|3.0.0|MIT|
 |python-dateutil|2.8.2|Apache 2.0<br/>BSD|
 |PyYAML|6.0|MIT|
 |setuptools|58.1.0|MIT|
@@ -67,8 +60,6 @@
 |toml|0.10.2|MIT|
 |tomli|2.0.1|MIT|
 |tomlkit|0.11.0|MIT|
-|tox|3.25.0|MIT|
-|types-mock|4.0.15|Apache 2.0|
 |types-protobuf|3.19.21|Apache 2.0|
 |typing-extensions|4.2.0|Python Software Foundation License|
 |virtualenv|20.14.1|MIT|
