@@ -24,14 +24,6 @@ grpcio-tools
 grpc-stubs
 mypy-protobuf
 ##########################################
-# Testing Packages
-##########################################
-pytest
-pytest-asyncio
-types-mock
-pytest-cov
-tox
-##########################################
 # Development Tools Packages
 ##########################################
 pre-commit

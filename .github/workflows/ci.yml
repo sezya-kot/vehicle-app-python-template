@@ -66,8 +66,7 @@ jobs:
       - name: unit test
         shell: bash
         run: |
-          pip install pytest pytest-cov coverage2clover
-          pip install coveragepy-lcov --no-warn-conflicts
+          pip install -r test/requirements.txt
           pytest --rootdir . --override-ini junit_family=xunit1 --junit-xml=./results/UnitTest/junit.xml --cov ./src --cov-report=xml:results/CodeCoverage/cobertura-coverage.xml --cov-branch ./src --cov-config=setup.cfg
           coverage2clover -i results/CodeCoverage/cobertura-coverage.xml -o results/CodeCoverage/clover.xml
           coveragepy-lcov --data_file_path ./.coverage --output_file_path results/CodeCoverage/lcov.info
@@ -221,7 +220,6 @@ jobs:
           VDB_PORT: 30555
           MQTT_PORT: 31883
         run: |
-          pip install pytest pytest-ordering pytest-asyncio
           pip install -r test/requirements.txt
           pytest ./test --override-ini junit_family=xunit1 --junit-xml=./results/IntTest/junit.xml
 
