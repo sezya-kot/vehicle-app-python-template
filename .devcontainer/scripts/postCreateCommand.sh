@@ -47,7 +47,11 @@ if [ -f $REQUIREMENTS ]; then
 fi
 REQUIREMENTS="./src/requirements-sdv.txt"
 if [ -f $REQUIREMENTS ]; then
-    pip3 install -r $REQUIREMENTS
+    #Install private repository using technical user
+    uri=$(cat ${REQUIREMENTS} )
+    user=$(cat github_token.txt  | base64 --decode | cut -d ":" -f 1)
+    pass=$(cat github_token.txt  | base64 --decode | cut -d ":" -f 2)
+    sed -e "s^//^//$user:$pass@^" <<<$uri | xargs -n 1 pip3 install
 fi
 REQUIREMENTS="./src/requirements.txt"
 if [ -f $REQUIREMENTS ]; then
