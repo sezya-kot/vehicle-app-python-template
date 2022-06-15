@@ -17,7 +17,7 @@ import os
 import time
 from typing import Optional
 
-import paho.mqtt.client as mqtt
+import paho.mqtt.client as mqtt  # type: ignore
 
 
 class SingleMessageCallback:
