@@ -56,7 +56,6 @@ jobs:
           pip install -r requirements-dev.txt
           pip install -r src/requirements-sdv.txt
           pip install -r src/requirements.txt
-          pip install -r test/requirements.txt
 
       - name: Run Linters
         uses: pre-commit/action@v2.0.3
@@ -188,7 +187,6 @@ jobs:
         run: |
           pip install -r ./src/requirements.txt
           pip install -r ./src/requirements-sdv.txt
-          pip install -r ./test/requirements.txt
 
       - name: Install K3D and prerequisites
         working-directory: ./.vscode/scripts/runtime/k3d
@@ -222,7 +220,6 @@ jobs:
           MQTT_PORT: 31883
         run: |
           pip install pytest pytest-ordering pytest-asyncio
-          pip install -r test/requirements.txt
           pytest ./test --override-ini junit_family=xunit1 --junit-xml=./results/IntTest/junit.xml
 
       - name: Publish Unit Test Results
