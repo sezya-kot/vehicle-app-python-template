@@ -20,6 +20,8 @@
 version: 2
 updates:
   - package-ecosystem: "pip"
-    directory: "/src/"
+    directory: "/"
     schedule:
       interval: "monthly"
+    # Disable dependencies version updates
+    open-pull-requests-limit: 0
