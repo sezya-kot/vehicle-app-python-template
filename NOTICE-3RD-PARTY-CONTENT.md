@@ -20,6 +20,7 @@
 |coverage2clover|3.3.0|THE BEERWARE LICENSE|
 |coveragepy-lcov|0.1.2|Apache 2.0|
 |dapr|1.6.0|Apache 2.0|
+|Deprecated|1.2.13|MIT|
 |deprecation|2.1.0|Apache 2.0|
 |dill|0.3.4|New BSD|
 |distlib|0.3.4|Python Software Foundation License|
@@ -54,6 +55,12 @@
 |opencensus|0.9.0|Apache 2.0|
 |opencensus-context|0.1.2|Apache 2.0|
 |opencensus-ext-grpc|0.7.2|Apache 2.0|
+|opentelemetry-api|1.12.0rc1|Apache 2.0|
+|opentelemetry-distro|0.31b0|Apache 2.0|
+|opentelemetry-instrumentation|0.31b0|Apache 2.0|
+|opentelemetry-instrumentation-logging|0.31b0|Apache 2.0|
+|opentelemetry-sdk|1.12.0rc1|Apache 2.0|
+|opentelemetry-semantic-conventions|0.31b0|Apache 2.0|
 |packaging|21.3|Apache 2.0<br/>Simplified BSD|
 |paho-mqtt|1.6.1|OSI Approved|
 |pathspec|0.9.0|Mozilla Public License 2.0 (MPL 2.0)|
