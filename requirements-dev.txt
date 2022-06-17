@@ -146,7 +146,7 @@ pbr==5.8.1
     # via stevedore
 pep517==0.12.0
     # via pip-tools
-pip-tools==6.6.0
+pip-tools==6.6.2
     # via -r requirements-dev.in
 pipreqs==0.4.11
     # via -r requirements-dev.in
