@@ -17,8 +17,8 @@ import json
 from asyncio import sleep
 
 import pytest
-from mqtt_helper import MqttClient
 from sdv.test.inttesthelper import IntTestHelper
+from sdv.test.mqtt_util import MqttClient
 
 REQUEST_TOPIC = "seatadjuster/setPosition/request"
 RESPONSE_TOPIC = "seatadjuster/setPosition/response"
