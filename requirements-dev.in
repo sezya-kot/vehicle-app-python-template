@@ -18,14 +18,11 @@
 -c src/requirements.txt
 -c test/requirements.txt
 ##########################################
-# Runtime Packages
+# Development Tools Packages
 ##########################################
 grpcio-tools
 grpc-stubs
 mypy-protobuf
-##########################################
-# Development Tools Packages
-##########################################
 pre-commit
 pydocstyle
 black
