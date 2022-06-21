@@ -12,19 +12,16 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+# pylint: disable=C0321
 import json
 from asyncio import sleep
 
 import pytest
-from mqtt_helper import MqttClient
 from sdv.test.inttesthelper import IntTestHelper
+from sdv.test.mqtt_util import MqttClient
 
-
-@pytest.mark.asyncio
-@pytest.fixture(scope="session", autouse=True)
-def pytest_configure():
-    pytest.request_topic = "seatadjuster/setPosition/request"
-    pytest.response_topic = "seatadjuster/setPosition/response"
+REQUEST_TOPIC = "seatadjuster/setPosition/request"
+RESPONSE_TOPIC = "seatadjuster/setPosition/response"
 
 
 @pytest.mark.asyncio
@@ -42,8 +39,8 @@ async def test_set_position_not_allowed():
     assert len(response.errors) == 0
 
     response = mqtt_client.publish_and_wait_for_response(
-        request_topic=pytest.request_topic,
-        response_topic=pytest.response_topic,
+        request_topic=REQUEST_TOPIC,
+        response_topic=RESPONSE_TOPIC,
         payload=payload,
     )
 
@@ -73,8 +70,8 @@ async def test_set_position_allowed():
     assert len(response.errors) == 0
 
     response = mqtt_client.publish_and_wait_for_response(
-        request_topic=pytest.request_topic,
-        response_topic=pytest.response_topic,
+        request_topic=REQUEST_TOPIC,
+        response_topic=RESPONSE_TOPIC,
         payload=payload,
     )
 
@@ -87,7 +84,7 @@ async def test_set_position_allowed():
     payload = {"position": position, "requestId": request_id}
 
     response = mqtt_client.publish_and_wait_for_property(
-        request_topic=pytest.request_topic,
+        request_topic=REQUEST_TOPIC,
         response_topic="seatadjuster/currentPosition",
         payload=payload,
         path=["position"],
@@ -113,8 +110,8 @@ async def test_set_position_lt_0():
     assert len(response.errors) == 0
 
     response = mqtt_client.publish_and_wait_for_response(
-        request_topic=pytest.request_topic,
-        response_topic=pytest.response_topic,
+        request_topic=REQUEST_TOPIC,
+        response_topic=RESPONSE_TOPIC,
         payload=payload,
     )
 
@@ -141,8 +138,8 @@ async def test_set_position__gt_1000():
     assert len(response.errors) == 0
 
     response = mqtt_client.publish_and_wait_for_response(
-        request_topic=pytest.request_topic,
-        response_topic=pytest.response_topic,
+        request_topic=REQUEST_TOPIC,
+        response_topic=RESPONSE_TOPIC,
         payload=payload,
     )
 

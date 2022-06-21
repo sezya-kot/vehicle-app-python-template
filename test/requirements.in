@@ -1,1 +1,8 @@
-paho-mqtt
+pytest
+pytest-ordering
+pytest-asyncio
+pytest-cov
+types-mock
+coverage2clover
+coveragepy-lcov
+tox

@@ -22,14 +22,26 @@ import logging
 import signal
 
 import grpc
-from sdv.util.log import get_default_date_format, get_default_log_format
+from sdv.util.log import (  # type: ignore
+    get_opentelemetry_log_factory,
+    get_opentelemetry_log_format,
+)
 from sdv.vehicle_app import VehicleApp, subscribe_topic
 from sdv_model import Vehicle, vehicle  # type: ignore
 from sdv_model.proto.seats_pb2 import BASE, SeatLocation  # type: ignore
 
-logging.basicConfig(format=get_default_log_format(), datefmt=get_default_date_format())
+##########################################
+# OpenTelmatry Log Config
+logging.setLogRecordFactory(get_opentelemetry_log_factory())
+logging.basicConfig(format=get_opentelemetry_log_format())
+
+##########################################
+# Default Log Application Config
+# logging.basicConfig(format=get_default_log_format(), datefmt=get_default_date_format())
+
 logging.getLogger().setLevel("INFO")
 logger = logging.getLogger(__name__)
+
 
 ###############################################################################
 # REMARK: Subscribing to multipe data points is not possible due to dapr
@@ -141,6 +153,7 @@ class SeatAdjusterApp(VehicleApp):
 
 
 async def main():
+
     """Main function"""
     logger.info("Starting seat adjuster app...")
     seat_adjuster_app = SeatAdjusterApp(vehicle)
