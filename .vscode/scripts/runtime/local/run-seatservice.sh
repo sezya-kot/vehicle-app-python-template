@@ -29,17 +29,16 @@ sudo chown $(whoami) $HOME
 if [[ `uname -m` == 'aarch64' || `uname -m` == 'arm64' ]]; then
   echo "Detected ARM architecture"
   PROCESSOR="aarch64"
-  SEATSERVICE_BINARY_NAME="bin_vservice_seat_release_aarch64.tar.gz"
+  SEATSERVICE_BINARY_NAME="bin_vservice-seat_aarch64_release.tar.gz"
   SEATSERVICE_EXEC_PATH="$ROOT_DIRECTORY/.vscode/scripts/assets/seatservice/$SEATSERVICE_VERSION/$PROCESSOR/target/aarch64/release/install/bin"
 else
   echo "Detected x86_64 architecture"
   PROCESSOR="x86_64"
-  SEATSERVICE_BINARY_NAME="bin_vservice_seat_release_x86_64.tar.gz"
+  SEATSERVICE_BINARY_NAME="bin_vservice-seat_x86_64_release.tar.gz"
   SEATSERVICE_EXEC_PATH="$ROOT_DIRECTORY/.vscode/scripts/assets/seatservice/$SEATSERVICE_VERSION/$PROCESSOR/target/x86_64/release/install/bin"
 fi
 
-cred=$(cat $GITHUB_TOKEN | base64 --decode)
-API_URL=https://$cred@api.github.com/repos/SoftwareDefinedVehicle/swdc-os-vehicleapi
+API_URL=https://api.github.com/repos/eclipse/kuksa.val.services
 
 if [[ ! -f "$SEATSERVICE_EXEC_PATH/val_start.sh" ]]
 then

@@ -17,7 +17,7 @@ if ! helm status vehicleappruntime &> /dev/null
 then
     ROOT_DIRECTORY=$( realpath "$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../../../.." )
 
-    VEHICLEDATABROKER_TAG=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .databroker.version | tr -d '"')
+    VEHICLEDATABROKER_TAG=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .databrokerimage.version | tr -d '"')
     SEATSERVICE_TAG=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .seatservice.version | tr -d '"')
     FEEDERCAN_TAG=$(cat $ROOT_DIRECTORY/prerequisite_settings.json | jq .feedercan.version | tr -d '"')
 
@@ -27,12 +27,12 @@ then
     echo $cred | cut -d':' -f2 | docker login ghcr.io -u USERNAME --password-stdin
 
     if grep -q ghcr.io $HOME/.docker/config.json; then
-        docker pull ghcr.io/softwaredefinedvehicle/swdc-os-vehicleapi/databroker:$VEHICLEDATABROKER_TAG
-        docker tag ghcr.io/softwaredefinedvehicle/swdc-os-vehicleapi/databroker:$VEHICLEDATABROKER_TAG localhost:12345/vehicledatabroker:$VEHICLEDATABROKER_TAG
+        docker pull ghcr.io/eclipse/kuksa.val/databroker:$VEHICLEDATABROKER_TAG
+        docker tag ghcr.io/eclipse/kuksa.val/databroker:$VEHICLEDATABROKER_TAG localhost:12345/vehicledatabroker:$VEHICLEDATABROKER_TAG
         docker push localhost:12345/vehicledatabroker:$VEHICLEDATABROKER_TAG
 
-        docker pull ghcr.io/softwaredefinedvehicle/swdc-os-vehicleapi/seat_service:$SEATSERVICE_TAG
-        docker tag ghcr.io/softwaredefinedvehicle/swdc-os-vehicleapi/seat_service:$SEATSERVICE_TAG localhost:12345/seatservice:$SEATSERVICE_TAG
+        docker pull ghcr.io/eclipse/kuksa.val.services/seat_service:$SEATSERVICE_TAG
+        docker tag ghcr.io/eclipse/kuksa.val.services/seat_service:$SEATSERVICE_TAG localhost:12345/seatservice:$SEATSERVICE_TAG
         docker push localhost:12345/seatservice:$SEATSERVICE_TAG
 
         docker pull ghcr.io/softwaredefinedvehicle/swdc-os-vehicleapi/feeder_can:$FEEDERCAN_TAG
