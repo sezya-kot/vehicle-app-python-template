@@ -53,7 +53,14 @@ if [ -f $REQUIREMENTS ]; then
     pass=$(cat github_token.txt  | base64 --decode | cut -d ":" -f 2)
     sed -e "s^//^//$user:$pass@^" <<<$uri | xargs -n 1 pip3 install
 fi
+# Dependencies for the app
 REQUIREMENTS="./src/requirements.txt"
+if [ -f $REQUIREMENTS ]; then
+    pip3 install -r $REQUIREMENTS
+fi
+
+# Dependencies for unit and integration tests
+REQUIREMENTS="./test/requirements.txt"
 if [ -f $REQUIREMENTS ]; then
     pip3 install -r $REQUIREMENTS
 fi
