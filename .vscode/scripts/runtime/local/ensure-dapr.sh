@@ -34,7 +34,7 @@ if ! [[ $version =~ ^([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2}) ]]; then
       fi
 
       dapr uninstall
-      dapr init
+      dapr init --runtime-version 1.8.0-rc.3
 else
       echo "Dapr is already installed and initialized, skipping setup."
 fi
