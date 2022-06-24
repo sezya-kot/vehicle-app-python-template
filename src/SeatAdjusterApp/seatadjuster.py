@@ -55,7 +55,6 @@ class SeatAdjusterApp(VehicleApp):
 
     async def on_start(self):
         """Run when the vehicle app starts"""
-        logger.info("Subscribe for Datapoints!")
         await self.Vehicle.Cabin.Seat.element_at(1, 1).Position.subscribe(
             self.on_seat_position_changed
         )
