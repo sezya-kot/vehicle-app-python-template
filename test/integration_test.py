@@ -50,8 +50,8 @@ async def test_set_position_not_allowed():
     error_msg = f"""Not allowed to move seat because vehicle speed
                 is {float(speed_value)} and not 0"""
     assert body["requestId"] == request_id
-    assert body["status"] == 1
-    assert body["message"] == error_msg
+    assert body["result"]["status"] == 1
+    assert body["result"]["message"] == error_msg
 
 
 # add message to get it assert
