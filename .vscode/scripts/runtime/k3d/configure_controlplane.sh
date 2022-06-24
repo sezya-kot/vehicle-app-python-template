@@ -62,7 +62,7 @@ fi
 if ! dapr status -k &> /dev/null
 then
   # Init Dapr in cluster
-  dapr init -k --wait --timeout 600 #--runtime-version=1.5.0 Use to select specific version
+  dapr init -k --wait --timeout 600 --runtime-version 1.8.0-rc.3
 
   # Apply Dapr config
   kubectl apply -f $ROOT_DIRECTORY/deploy/runtime/k3d/.dapr/config.yaml
