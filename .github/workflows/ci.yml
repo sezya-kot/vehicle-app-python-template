@@ -57,7 +57,7 @@ jobs:
           pip install -r test/requirements.txt
 
       - name: Run Linters
-        uses: pre-commit/action@v3.0.0
+        uses: actions/pre-commit-action@v1
 
       - name: unit test
         shell: bash
@@ -103,7 +103,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: 'test-results'
+          name: "test-results"
           path: |
             results/Documentation/renderer/*
 
@@ -115,12 +115,12 @@ jobs:
           filename: "results/CodeCoverage/clover.xml"
 
   initialize-matrix:
-      runs-on: ubuntu-latest
-      name: Setting up build matrix
-      outputs:
-        deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
+    runs-on: ubuntu-latest
+    name: Setting up build matrix
+    outputs:
+      deployment-matrix: ${{ steps.export-deployment-matrix.outputs.deployment-matrix }}
 
-      steps:
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -231,7 +231,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: 'test-results'
+          name: "test-results"
           path: |
             results/Documentation/renderer/*
 
