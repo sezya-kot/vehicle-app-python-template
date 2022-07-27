@@ -69,6 +69,7 @@
 ## Workflows
 | Dependency | Version | License |
 |:-----------|:-------:|--------:|
+|actions/checkout|v3|MIT License|
 |actions/checkout|v2|MIT License|
 |actions/setup-node|v1|MIT License|
 |actions/upload-artifact|v2|MIT License|
@@ -88,6 +89,5 @@
 |johanvanhelden/gha-clover-test-coverage-check|v1|MIT License|
 |peaceiris/actions-gh-pages|v3|MIT License|
 |peaceiris/actions-hugo|v2|MIT License|
-|pre-commit/action|v3.0.0|MIT License|
 |romeovs/lcov-reporter-action|v0.3.1|MIT License|
 |softprops/action-gh-release|v1|MIT License|
