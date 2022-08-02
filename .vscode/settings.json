@@ -1,11 +1,13 @@
 {
-    "python.linting.mypyEnabled" : false,
+    "python.linting.mypyEnabled": false,
     "python.linting.banditArgs": [
         "-c setup.cfg"
-      ],
+    ],
     "python.linting.pylintEnabled": true,
     "python.linting.flake8Enabled": true,
-    "python.linting.flake8Args": ["--ignore=E121,E402,F481,E501,F841"],
+    "python.linting.flake8Args": [
+        "--ignore=E121,E402,F481,E501,F841"
+    ],
     "python.linting.enabled": true,
     "python.analysis.extraPaths": [
         "./proto",
@@ -32,5 +34,6 @@
     ],
     "python.defaultInterpreterPath": "/usr/bin/python3",
     "python.disableInstallationCheck": true,
-    "mypy.runUsingActiveInterpreter": true
+    "mypy.runUsingActiveInterpreter": true,
+    "pre-commit-helper.runOnSave": "all hooks"
 }
