@@ -69,8 +69,8 @@
 ## Workflows
 | Dependency | Version | License |
 |:-----------|:-------:|--------:|
-|actions/checkout|v2|MIT License|
 |actions/checkout|v3|MIT License|
+|actions/checkout|v2|MIT License|
 |actions/setup-node|v1|MIT License|
 |actions/upload-artifact|v2|MIT License|
 |aquasecurity/trivy-action|0.3.0|Apache License 2.0|
