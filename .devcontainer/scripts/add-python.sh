@@ -14,26 +14,26 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-export HTTP_PROXY=${HTTP_PROXY}
-export HTTPS_PROXY=${HTTPS_PROXY}
-export NO_PROXY=${NO_PROXY}
+# export HTTP_PROXY=${HTTP_PROXY}
+# export HTTPS_PROXY=${HTTPS_PROXY}
+# export NO_PROXY=${NO_PROXY}
 
 echo "#######################################################"
 echo "### Installing OS updates                           ###"
 echo "#######################################################"
 sudo apt-get update
-sudo apt-get upgrade -y
-sudo apt-get install -y wget ca-certificates
+# sudo apt-get upgrade -y
+# sudo apt-get install -y wget ca-certificates
 
 echo "#######################################################"
 echo "### Installing python version 3                     ###"
 echo "#######################################################"
-ROOT_DIRECTORY=$( realpath "$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../.." )
-PYTHON_VERSION=$(cat $ROOT_DIRECTORY/AppManifest.json | jq .[].dependencies.python.version | tr -d '"')
+# ROOT_DIRECTORY=$( realpath "$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../.." )
+# PYTHON_VERSION=$(cat $ROOT_DIRECTORY/AppManifest.json | jq .[].dependencies.python.version | tr -d '"')
 
-sudo apt-get install -y python3-distutils
-sudo apt-get install -y python$PYTHON_VERSION
-curl -fsSL https://bootstrap.pypa.io/get-pip.py | sudo python$PYTHON_VERSION
+#sudo apt-get install -y python3-pip
+#sudo apt-get install -y python$PYTHON_VERSION
+curl -fsSL https://bootstrap.pypa.io/get-pip.py | sudo python3
 
-sudo update-alternatives --install /usr/bin/python python /usr/bin/python$PYTHON_VERSION 10
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python$PYTHON_VERSION 10
+# sudo update-alternatives --install /usr/bin/python python /usr/bin/python$PYTHON_VERSION 10
+# sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python$PYTHON_VERSION 10
